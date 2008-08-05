@@ -33,10 +33,7 @@ implements ActionBeanContextFactory
         {
             return delegate.getContextInstance(request, response);
         }
-        else
-        {
-            return delegate.getContextInstance(new StripesGlobRequestWrapper(request, mapping.getParameters()), response);
-        }
+        return delegate.getContextInstance(new StripesGlobRequestWrapper(request, mapping.getParameters()), response);
     }
 }
 

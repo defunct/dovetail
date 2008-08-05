@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import net.sourceforge.stripes.exception.StripesServletException;
-
 public class StripesGlobRequestWrapper
 extends HttpServletRequestWrapper
 {
@@ -18,7 +16,6 @@ extends HttpServletRequestWrapper
     
     @SuppressWarnings("unchecked")
     public StripesGlobRequestWrapper(HttpServletRequest request, Map<String, String[]> parameters)
-    throws StripesServletException
     {
         super(request);
         
