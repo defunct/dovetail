@@ -18,6 +18,7 @@ import com.agtrz.dovetail.DovetailBinding;
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
 import net.sourceforge.stripes.action.SessionScope;
+import net.sourceforge.stripes.config.Configuration;
 import net.sourceforge.stripes.controller.NameBasedActionResolver;
 import net.sourceforge.stripes.controller.UrlBinding;
 import net.sourceforge.stripes.controller.UrlBindingFactory;
@@ -39,6 +40,16 @@ extends NameBasedActionResolver
     
     private Map<Class<? extends ActionBean>,Map<String,Method>> eventMappings = new HashMap<Class<? extends ActionBean>, Map<String,Method>>();
 
+    @Override
+    public void init(Configuration configuration) throws Exception
+    {
+        GlobFactory.getInstance().clear();
+        actionBeanTypes.clear();
+        paths.clear();
+        eventMappings.clear();
+        super.init(configuration);
+    }
+    
     @Override
     protected void addActionBean(Class<? extends ActionBean> clazz)
     {

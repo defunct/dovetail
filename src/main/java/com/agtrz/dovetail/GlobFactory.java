@@ -22,6 +22,11 @@ public class GlobFactory
         return INSTANCE;
     }
     
+    public void clear()
+    {
+        priorities.clear();
+    }
+    
     public void add(int priority, Glob glob)
     {
         List<Glob> globs = priorities.get(- priority);
