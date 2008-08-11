@@ -21,7 +21,8 @@ extends StripesFilter
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, final FilterChain filterChain) throws IOException, ServletException
     {
-        final GlobMapping mapping = GlobFactory.getInstance().map((HttpServletRequest) request);
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        final GlobMapping mapping = GlobFactory.getInstance(httpRequest.getSession().getServletContext()).map((HttpServletRequest) request);
         if (mapping == null)
         {
             super.doFilter(request, response, filterChain);

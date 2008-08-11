@@ -28,7 +28,7 @@ implements ActionBeanContextFactory
                                                 HttpServletResponse response)
         throws ServletException
     {
-        GlobMapping mapping = GlobFactory.getInstance().map(request);
+        GlobMapping mapping = GlobFactory.getInstance(request.getSession().getServletContext()).map(request);
         if (mapping == null)
         {
             return delegate.getContextInstance(request, response);

@@ -8,12 +8,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import com.agtrz.dovetail.Glob;
-import com.agtrz.dovetail.GlobFactory;
-import com.agtrz.dovetail.GlobMapping;
-import com.agtrz.dovetail.DovetailBinding;
 
 import net.sourceforge.stripes.action.ActionBean;
 import net.sourceforge.stripes.action.ActionBeanContext;
@@ -27,10 +23,17 @@ import net.sourceforge.stripes.exception.StripesRuntimeException;
 import net.sourceforge.stripes.exception.StripesServletException;
 import net.sourceforge.stripes.util.Log;
 
+import com.agtrz.dovetail.DovetailBinding;
+import com.agtrz.dovetail.Glob;
+import com.agtrz.dovetail.GlobFactory;
+import com.agtrz.dovetail.GlobMapping;
+
 
 public class DovetailNameResolver
 extends NameBasedActionResolver
 {
+    private ServletContext servletContext;
+    
     /** Log instance used to log information from this class. */
     private static final Log log = Log.getInstance(DovetailNameResolver.class);
 
@@ -43,10 +46,7 @@ extends NameBasedActionResolver
     @Override
     public void init(Configuration configuration) throws Exception
     {
-        GlobFactory.getInstance().clear();
-        actionBeanTypes.clear();
-        paths.clear();
-        eventMappings.clear();
+        servletContext = configuration.getServletContext();
         super.init(configuration);
     }
     
@@ -69,14 +69,14 @@ extends NameBasedActionResolver
     private void addActionBean(Class<? extends ActionBean> clazz, int priority, String pattern)
     {
         Glob glob = new Glob(clazz, pattern);
-        GlobFactory.getInstance().add(priority, glob);
+        GlobFactory.getInstance(servletContext).add(priority, glob);
         actionBeanTypes.put(glob, clazz);
         paths.put(clazz, glob.getPattern());
     }
 
     public ActionBean getActionBean(ActionBeanContext context, String path) throws StripesServletException
     {
-        GlobMapping mapping = GlobFactory.getInstance().map(context.getRequest(), path);
+        GlobMapping mapping = GlobFactory.getInstance(context.getServletContext()).map(context.getRequest(), path);
 
         if (mapping == null)
         {
@@ -140,7 +140,7 @@ extends NameBasedActionResolver
         UrlBinding binding = UrlBindingFactory.getInstance().getBindingPrototype(request);
         String path = binding == null ? getRequestedPath(request) : binding.getPath();
         ActionBean bean = getActionBean(context, path);
-        GlobMapping mapping = GlobFactory.getInstance().map(context.getRequest());
+        GlobMapping mapping = GlobFactory.getInstance(context.getServletContext()).map(context.getRequest());
         if (mapping == null)
         {
             request.setAttribute(RESOLVED_ACTION, super.getUrlBindingFromPath(path));
@@ -181,7 +181,7 @@ extends NameBasedActionResolver
 
     public Class<? extends ActionBean> getActionBeanType(String path)
     {
-        Glob glob = GlobFactory.getInstance().getGlob(path);
+        Glob glob = GlobFactory.getInstance(servletContext).getGlob(path);
         if (glob != null)
         {
             return actionBeanTypes.get(glob);
@@ -220,7 +220,7 @@ extends NameBasedActionResolver
         }
         if (!mappings.containsKey(path))
         {
-            mappings.put(path, GlobFactory.getInstance().map(path));
+            mappings.put(path, GlobFactory.getInstance(request.getSession().getServletContext()).map(path));
         }
         return mappings.get(path);
     }
@@ -256,7 +256,7 @@ extends NameBasedActionResolver
     public String getUrlBindingFromPath(String path)
     {
         // FIXME Globs need to match up to a certain point, the remainder can be an event action.
-        Glob glob = GlobFactory.getInstance().getGlob(path);
+        Glob glob = GlobFactory.getInstance(servletContext).getGlob(path);
 
         if (glob != null)
         {

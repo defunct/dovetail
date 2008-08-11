@@ -7,19 +7,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.stripes.controller.StripesConstants;
 
 public class GlobFactory
 {
-    private static GlobFactory INSTANCE = new GlobFactory();
-    
     private Map<Integer, List<Glob>> priorities = new TreeMap<Integer, List<Glob>>();
     
-    public static GlobFactory getInstance()
+    public static GlobFactory getInstance(ServletContext servletContext)
     {
-        return INSTANCE;
+        GlobFactory factory = (GlobFactory) servletContext.getAttribute(GlobFactory.class.getName());
+        if (factory == null)
+        {
+            factory = new GlobFactory();
+            servletContext.setAttribute(GlobFactory.class.getName(), factory);
+        }
+        return factory;
     }
     
     public void clear()
@@ -102,7 +107,7 @@ public class GlobFactory
         }
         if (!mappings.containsKey(path))
         {
-            mappings.put(path, GlobFactory.getInstance().map(path));
+            mappings.put(path, map(path));
         }
         return mappings.get(path);
     }
