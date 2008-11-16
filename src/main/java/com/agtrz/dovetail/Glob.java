@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import net.sourceforge.stripes.action.ActionBean;
+
 public final class Glob
 {
     private final static short PROPERTY = 1;
@@ -20,6 +22,8 @@ public final class Glob
     private final static short GROUP = 4;
     
     private final static short DONE = 5;
+    
+    private final Class<? extends ActionBean> target;
     
     private final String pattern;
 
@@ -38,7 +42,7 @@ public final class Glob
         return builder.toString();
     }
     
-    public Glob(Class<?> target, String pattern)
+    public Glob(Class<? extends ActionBean> target, String pattern)
     {
         int min = 1;
         int max = 1;
@@ -85,6 +89,12 @@ public final class Glob
         }
         this.matches = matches.toArray(new Match[matches.size()]);
         this.pattern = pattern;
+        this.target = target;
+    }
+    
+    public Class<? extends ActionBean> getTargetClass()
+    {
+        return target;
     }
 
     private interface Match

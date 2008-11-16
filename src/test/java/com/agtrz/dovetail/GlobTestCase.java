@@ -7,13 +7,25 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
+import net.sourceforge.stripes.action.ActionBean;
+import net.sourceforge.stripes.action.ActionBeanContext;
+
 import org.testng.annotations.Test;
 
 import com.agtrz.dovetail.Glob;
 import com.agtrz.dovetail.GlobMapping;
 
-public class GlobTestCase
+public class GlobTestCase implements ActionBean
 {
+    public ActionBeanContext getContext()
+    {
+        return null;
+    }
+    
+    public void setContext(ActionBeanContext context)
+    {
+    }
+
     @Test public void startWithProperty()
     {
         Glob glob = new Glob(GlobTestCase.class, "/{account}/optout/{key}/{receipt}");

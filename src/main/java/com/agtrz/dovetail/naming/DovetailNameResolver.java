@@ -25,8 +25,8 @@ import net.sourceforge.stripes.util.Log;
 
 import com.agtrz.dovetail.DovetailBinding;
 import com.agtrz.dovetail.Glob;
-import com.agtrz.dovetail.GlobFactory;
 import com.agtrz.dovetail.GlobMapping;
+import com.agtrz.dovetail.GlobSet;
 
 
 public class DovetailNameResolver
@@ -36,17 +36,46 @@ extends NameBasedActionResolver
     
     /** Log instance used to log information from this class. */
     private static final Log log = Log.getInstance(DovetailNameResolver.class);
-
-    private Map<Glob, Class<? extends ActionBean>> actionBeanTypes = new HashMap<Glob, Class<? extends ActionBean>>();
     
     private Map<Class<? extends ActionBean>, String> paths = new HashMap<Class<? extends ActionBean>, String>();
     
     private Map<Class<? extends ActionBean>,Map<String,Method>> eventMappings = new HashMap<Class<? extends ActionBean>, Map<String,Method>>();
+    
+    private GlobSet globs = new GlobSet();
+    
+    private ThreadLocal<MatchCacheCounter> matchCache = new ThreadLocal<MatchCacheCounter>()
+    {
+        @Override
+        protected MatchCacheCounter initialValue()
+        {
+            return new MatchCacheCounter(0);
+        }
+    };
+
+    public void pushRequest()
+    {
+        MatchCacheCounter counter = matchCache.get();
+        if (counter.count == 0)
+        {
+            matchCache.set(new MatchCacheCounter(1));
+        }
+        else
+        {
+            counter.count++;
+        }
+    }
+    
+    public void popRequest()
+    {
+        MatchCacheCounter counter = matchCache.get();
+        counter.count--;
+    }
 
     @Override
     public void init(Configuration configuration) throws Exception
     {
         servletContext = configuration.getServletContext();
+        servletContext.setAttribute(DovetailNameResolver.class.getCanonicalName(), this);
         super.init(configuration);
     }
     
@@ -66,24 +95,21 @@ extends NameBasedActionResolver
         super.addActionBean(clazz);
     }
 
-    private void addActionBean(Class<? extends ActionBean> clazz, int priority, String pattern)
+    private void addActionBean(Class<? extends ActionBean> bean, int priority, String pattern)
     {
-        Glob glob = new Glob(clazz, pattern);
-        GlobFactory.getInstance(servletContext).add(priority, glob);
-        actionBeanTypes.put(glob, clazz);
-        paths.put(clazz, glob.getPattern());
+        globs.bind(pattern, bean, priority, null);
     }
 
     public ActionBean getActionBean(ActionBeanContext context, String path) throws StripesServletException
     {
-        GlobMapping mapping = GlobFactory.getInstance(context.getServletContext()).map(context.getRequest(), path);
+        GlobMapping mapping = globs.map(path);
 
         if (mapping == null)
         {
             return super.getActionBean(context, path);
         }
         
-        Class<? extends ActionBean> beanClass = actionBeanTypes.get(mapping.getGlob());
+        Class<? extends ActionBean> beanClass = mapping.getGlob().getTargetClass();
 
         ActionBean bean;
 
@@ -134,13 +160,14 @@ extends NameBasedActionResolver
         return bean;
     }
 
-    public ActionBean getActionBean(ActionBeanContext context) throws StripesServletException
+    public ActionBean getActionBean(ActionBeanContext context)
+        throws StripesServletException
     {
         HttpServletRequest request = context.getRequest();
         UrlBinding binding = UrlBindingFactory.getInstance().getBindingPrototype(request);
         String path = binding == null ? getRequestedPath(request) : binding.getPath();
         ActionBean bean = getActionBean(context, path);
-        GlobMapping mapping = GlobFactory.getInstance(context.getServletContext()).map(context.getRequest());
+        GlobMapping mapping = globs.map(path);
         if (mapping == null)
         {
             request.setAttribute(RESOLVED_ACTION, super.getUrlBindingFromPath(path));
@@ -178,13 +205,23 @@ extends NameBasedActionResolver
     {
         return super.getActionBeanClasses();
     }
+    
+    public Map<String, String[]> getParamaters(HttpServletRequest request)
+    {
+        GlobMapping mapping = globs.map(getRequestedPath(request));
+        if (mapping != null)
+        {
+            return mapping.getParameters();
+        }
+        return null;
+    }
 
     public Class<? extends ActionBean> getActionBeanType(String path)
     {
-        Glob glob = GlobFactory.getInstance(servletContext).getGlob(path);
-        if (glob != null)
+        GlobMapping mapping = globs.map(path);
+        if (mapping != null)
         {
-            return actionBeanTypes.get(glob);
+            return mapping.getGlob().getTargetClass();
         }
         return super.getActionBeanType(path);
     }
@@ -209,21 +246,21 @@ extends NameBasedActionResolver
         return super.getHandler(bean, eventName);
     }
     
-    protected GlobMapping getGlobMappingFromRequest(HttpServletRequest request)
-    {
-        String path = getRequestedPath(request);
-        Map<String, GlobMapping> mappings = getGlobMappings(request);
-        if (mappings == null)
-        {
-            mappings = new HashMap<String, GlobMapping>();
-            request.setAttribute(DovetailNameResolver.class.getName(), mappings);
-        }
-        if (!mappings.containsKey(path))
-        {
-            mappings.put(path, GlobFactory.getInstance(request.getSession().getServletContext()).map(path));
-        }
-        return mappings.get(path);
-    }
+//    protected GlobMapping getGlobMappingFromRequest(HttpServletRequest request)
+//    {
+//        String path = getRequestedPath(request);
+//        Map<String, GlobMapping> mappings = getGlobMappings(request);
+//        if (mappings == null)
+//        {
+//            mappings = new HashMap<String, GlobMapping>();
+//            request.setAttribute(DovetailNameResolver.class.getName(), mappings);
+//        }
+//        if (!mappings.containsKey(path))
+//        {
+//            mappings.put(path, GlobFactory.getInstance(request.getSession().getServletContext()).map(path));
+//        }
+//        return mappings.get(path);
+//    }
     
     @SuppressWarnings("unchecked")
     protected Map<String, GlobMapping> getGlobMappings(HttpServletRequest request)
@@ -234,7 +271,7 @@ extends NameBasedActionResolver
     protected String getEventNameFromPath(Class<? extends ActionBean> bean,
                                           ActionBeanContext context)
     {
-        GlobMapping mapping = getGlobMappingFromRequest(context.getRequest());
+        GlobMapping mapping = globs.map(getRequestedPath(context.getRequest()));
         
         if (mapping == null)
         {
@@ -255,10 +292,9 @@ extends NameBasedActionResolver
 
     public String getUrlBindingFromPath(String path)
     {
-        // FIXME Globs need to match up to a certain point, the remainder can be an event action.
-        Glob glob = GlobFactory.getInstance(servletContext).getGlob(path);
+        GlobMapping mapping = globs.map(path);
 
-        if (glob != null)
+        if (mapping != null)
         {
             return path;
         }

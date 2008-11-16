@@ -9,13 +9,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-public class StripesGlobRequestWrapper
+public class MergedRequestWrapper
 extends HttpServletRequestWrapper
 {
     private final Map<String, String[]> parameters;
     
     @SuppressWarnings("unchecked")
-    public StripesGlobRequestWrapper(HttpServletRequest request, Map<String, String[]> parameters)
+    public MergedRequestWrapper(HttpServletRequest request, Map<String, String[]> parameters)
     {
         super(request);
         
