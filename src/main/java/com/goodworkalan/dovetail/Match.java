@@ -1,4 +1,4 @@
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 /**
  * A test against a range of path parts in a glob.

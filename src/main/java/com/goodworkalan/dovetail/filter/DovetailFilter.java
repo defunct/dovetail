@@ -1,5 +1,5 @@
 /* Copyright Alan Gutierrez 2006 */
-package com.agtrz.dovetail.filter;
+package com.goodworkalan.dovetail.filter;
 
 import java.io.IOException;
 import java.util.Map;
@@ -13,8 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.agtrz.dovetail.MergedRequestWrapper;
-import com.agtrz.dovetail.naming.DovetailNameResolver;
+import com.goodworkalan.dovetail.MergedRequestWrapper;
+import com.goodworkalan.dovetail.naming.DovetailNameResolver;
 
 /**
  * A servlet filter that initializes the matched pattern cache for each

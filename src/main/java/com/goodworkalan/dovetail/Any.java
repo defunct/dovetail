@@ -1,4 +1,4 @@
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 /**
  * Match any part of a path.

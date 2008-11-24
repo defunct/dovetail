@@ -1,6 +1,9 @@
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 import org.testng.annotations.Test;
+
+import com.goodworkalan.dovetail.Glob;
+import com.goodworkalan.dovetail.GlobTree;
 
 public class GlobTreeTest
 {

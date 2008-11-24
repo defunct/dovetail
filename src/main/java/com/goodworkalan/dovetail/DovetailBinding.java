@@ -1,5 +1,5 @@
 /* Copyright Alan Gutierrez 2006 */
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

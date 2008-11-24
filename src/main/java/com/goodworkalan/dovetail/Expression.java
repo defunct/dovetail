@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

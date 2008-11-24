@@ -1,4 +1,4 @@
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 import java.util.ArrayList;
 import java.util.HashMap;

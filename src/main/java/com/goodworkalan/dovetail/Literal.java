@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 final class Literal
 implements Match

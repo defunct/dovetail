@@ -1,7 +1,7 @@
-package com.agtrz.dovetail.naming;
+package com.goodworkalan.dovetail.naming;
 
-import com.agtrz.dovetail.CoreMatchCache;
-import com.agtrz.dovetail.MatchCache;
+import com.goodworkalan.dovetail.CoreMatchCache;
+import com.goodworkalan.dovetail.MatchCache;
 
 public class MatchCacheCounter
 {

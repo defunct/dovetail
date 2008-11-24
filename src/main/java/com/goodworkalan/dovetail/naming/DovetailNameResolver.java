@@ -1,5 +1,5 @@
 /* Copyright Alan Gutierrez 2006 */
-package com.agtrz.dovetail.naming;
+package com.goodworkalan.dovetail.naming;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -23,10 +23,10 @@ import net.sourceforge.stripes.exception.StripesRuntimeException;
 import net.sourceforge.stripes.exception.StripesServletException;
 import net.sourceforge.stripes.util.Log;
 
-import com.agtrz.dovetail.DovetailBinding;
-import com.agtrz.dovetail.Glob;
-import com.agtrz.dovetail.GlobMapping;
-import com.agtrz.dovetail.GlobSet;
+import com.goodworkalan.dovetail.DovetailBinding;
+import com.goodworkalan.dovetail.Glob;
+import com.goodworkalan.dovetail.GlobMapping;
+import com.goodworkalan.dovetail.GlobSet;
 
 
 public class DovetailNameResolver

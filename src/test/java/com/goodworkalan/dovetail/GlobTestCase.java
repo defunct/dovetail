@@ -1,5 +1,5 @@
 /* Copyright Alan Gutierrez 2006 */
-package com.agtrz.dovetail;
+package com.goodworkalan.dovetail;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -12,8 +12,8 @@ import net.sourceforge.stripes.action.ActionBeanContext;
 
 import org.testng.annotations.Test;
 
-import com.agtrz.dovetail.Glob;
-import com.agtrz.dovetail.GlobMapping;
+import com.goodworkalan.dovetail.Glob;
+import com.goodworkalan.dovetail.GlobMapping;
 
 public class GlobTestCase implements ActionBean
 {
