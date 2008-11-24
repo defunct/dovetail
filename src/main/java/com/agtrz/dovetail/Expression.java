@@ -301,4 +301,39 @@ implements Match
     {
         return max;
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj instanceof Expression)
+        {
+            Expression other = (Expression) obj;
+            return command == other.command
+                && manyTest.equals(other.manyTest)
+                && min == other.min
+                && max == other.max
+                && parameter.equals(other.parameter)
+                && pattern.pattern().equals(other.pattern.pattern())
+                && test.equals(other.test);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 1;
+        hash = hash * 37 + (command ? 1231 : 1237);
+        hash = hash * 37 + manyTest.hashCode();
+        hash = hash * 37 + max;
+        hash = hash * 37 + min;
+        hash = hash * 37 + parameter.hashCode();
+        hash = hash * 37 + pattern.hashCode();
+        hash = hash * 37 + test.hashCode();
+        return hash;
+    }
 }

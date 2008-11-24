@@ -22,6 +22,31 @@ implements TestMethod
     {
         return (String) method.invoke(null, test.test(matcher));
     }
+    
+    @Override
+    public boolean equals(Object object)
+    {
+        if (this == object)
+        {
+            return true;
+        }
+        if (object instanceof StringTestMethod)
+        {
+            StringTestMethod stringTestMethod = (StringTestMethod) object;
+            return test.equals(stringTestMethod.test)
+                && method.equals(stringTestMethod.method);
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        int hash = 1;
+        hash = hash * 37 + test.hashCode();
+        hash = hash * 37 + method.hashCode();
+        return hash;
+    }
 }
 
 /* vim: set et sw=4 ts=4 ai tw=78 nowrap: */

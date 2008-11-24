@@ -44,4 +44,28 @@ final class Any implements Match
     {
         return max;
     }
+    
+    @Override
+    public boolean equals(Object object)
+    {
+        if (object == this)
+        {
+            return true;
+        }
+        if (object instanceof Any)
+        {
+            Any any = (Any) object;
+            return min == any.min && max == any.max;
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        int hash = 1;
+        hash = hash * 37 + min;
+        hash = hash * 37 + max;
+        return hash;
+    }
 }

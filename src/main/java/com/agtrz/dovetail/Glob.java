@@ -88,6 +88,16 @@ public final class Glob
         this.target = target;
     }
     
+    public int size()
+    {
+        return matches.length;
+    }
+    
+    public Match get(int i)
+    {
+        return matches[i];
+    }
+    
     public Class<? extends ActionBean> getTargetClass()
     {
         return target;

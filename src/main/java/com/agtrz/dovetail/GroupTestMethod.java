@@ -26,6 +26,27 @@ implements TestMethod
         }
         return matcher.group(group);
     }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (this == object)
+        {
+            return true;
+        }
+        if (object instanceof GroupTestMethod)
+        {
+            GroupTestMethod groupTestMethod = (GroupTestMethod) object;
+            return group == groupTestMethod.group;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return group;
+    }
 }
 
 /* vim: set et sw=4 ts=4 ai tw=78 nowrap: */

@@ -40,4 +40,27 @@ implements Match
     {
         return max;
     }
+    
+    @Override
+    public boolean equals(Object object)
+    {
+        if (object instanceof Literal)
+        {
+            Literal literal = (Literal) object;
+            return literal.equals(literal.literal)
+                && min == literal.min
+                && max == literal.max;
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        int hash = 1;
+        hash = hash * 37 + literal.hashCode();
+        hash = hash * 37 + min;
+        hash = hash * 37 + max;
+        return hash;
+    }
 }
