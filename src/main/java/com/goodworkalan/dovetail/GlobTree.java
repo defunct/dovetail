@@ -2,28 +2,42 @@ package com.goodworkalan.dovetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import net.sourceforge.stripes.action.ActionBean;
-
-public class GlobTree
+public class GlobTree<T>
 {
-    private final Node root = new Node(new Literal("", 1, 1));
+    private final Node<T> root = new Node<T>(null);
     
+    @SuppressWarnings("unchecked")
     public void add(Glob glob)
     {
-        Node parent = root;
-        for (int i = 0; i < glob.size() - 1; i++)
-        {
-            parent = getChild(parent, glob.get(i));
-        }
-        Node child = getChild(parent, glob.get(glob.size() - 1));
-        child.value = glob.getTargetClass();
+        add(glob, (T) glob.getTargetClass());
     }
 
-    private Node getChild(Node parent, Match match)
+    public void add(Glob glob, T value)
     {
-        Node child = null;
-        for (Node node : parent.listOfNodes)
+        int[] matchesLeft = new int[glob.size()];
+        matchesLeft[matchesLeft.length - 1] = 0;
+        for (int i = matchesLeft.length - 2; i >= 0; i--)
+        {
+            matchesLeft[i] = matchesLeft[i + 1] + glob.get(i + 1).getMin();
+        }
+        Node<T> node = root;
+        for (int i = 0; i < glob.size(); i++)
+        {
+            node = getChild(node, glob.get(i));
+            if (node.matchesLeft > matchesLeft[i])
+            {
+                node.matchesLeft = matchesLeft[i];
+            }
+        }
+        node.value = value;
+    }
+
+    private Node<T> getChild(Node<T> parent, Match match)
+    {
+        Node<T> child = null;
+        for (Node<T> node : parent.listOfNodes)
         {
             if (node.match.equals(match))
             {
@@ -33,24 +47,90 @@ public class GlobTree
         }
         if (child == null)
         {
-            child = new Node(match);
+            child = new Node<T>(match);
             parent.listOfNodes.add(child);
         }
         return child;
     }
     
-    final static class Node
+    public boolean match(String path)
+    {
+        return match(new TreeMapper<T>(), path);
+    }
+    
+    public Mapping<T> map(String path)
+    {
+        TreeMapper<T> mapper = new TreeMapper<T>();
+        if (match(mapper, path)) 
+        {
+            return mapper.mappings().get(0);
+        }
+        return null;
+    }
+    
+    public boolean match(TreeMapper<T> mapper, String path)
+    {
+        return descend(mapper, root.listOfNodes.get(0), path.split("/"), 0);
+    }
+    
+    private boolean descend(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex)
+    {
+        int partsLeft = parts.length - partIndex;
+        int matchesLeft = node.match.getMin() + node.matchesLeft;
+        int min = node.match.getMin();
+        int max = Math.min(partsLeft - matchesLeft + 1, node.match.getMax());
+        for (int i = min; i <= max; i++)
+        {
+            Set<String> mark = mapper.mark();
+            if (match(mapper.duplicate(), node, parts, partIndex, i))
+            {
+                return true;
+            }
+            mapper.revert(mark);
+        }
+        return false;
+    }
+
+    private boolean match(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex, int length)
+    {
+        if (length == 0 || node.match.match(mapper, parts, partIndex, partIndex + length))
+        {
+            partIndex += length;
+
+            if (partIndex == parts.length)
+            {
+                mapper.map(0, node.value);
+                return node.matchesLeft == 0;
+            }
+            if (node.listOfNodes.isEmpty())
+            {
+                return false;
+            }
+            boolean matched = false;
+            for (Node<T> child : node.listOfNodes)
+            {
+                matched = descend(mapper, child, parts, partIndex) || matched;
+            }
+            return matched;
+        }
+        return false;
+    }
+
+    final static class Node<T>
     {
         public final Match match;
         
-        public final List<Node> listOfNodes;
+        public final List<Node<T>> listOfNodes;
         
-        public Class<? extends ActionBean> value;
+        public T value;
+        
+        public int matchesLeft;
         
         public Node(Match match)
         {
             this.match = match;
-            this.listOfNodes = new ArrayList<Node>();
+            this.listOfNodes = new ArrayList<Node<T>>();
+            this.matchesLeft = Integer.MAX_VALUE;
         }
     }
 }
