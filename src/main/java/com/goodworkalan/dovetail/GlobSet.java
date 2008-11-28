@@ -27,7 +27,7 @@ public class GlobSet
     public void bind(String pattern, Class<? extends ActionBean> bean,
         int priority, String name)
     {
-        Glob glob = new Glob(bean, pattern);
+        Glob glob = new GlobCompiler(bean).compile(pattern);
 
         priority = -priority;
 

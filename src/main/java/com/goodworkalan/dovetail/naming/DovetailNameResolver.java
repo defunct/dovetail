@@ -100,6 +100,7 @@ extends NameBasedActionResolver
         globs.bind(pattern, bean, priority, null);
     }
 
+    @SuppressWarnings("unchecked")
     public ActionBean getActionBean(ActionBeanContext context, String path) throws StripesServletException
     {
         GlobMapping mapping = globs.map(path);
@@ -109,7 +110,7 @@ extends NameBasedActionResolver
             return super.getActionBean(context, path);
         }
         
-        Class<? extends ActionBean> beanClass = mapping.getGlob().getTargetClass();
+        Class<? extends ActionBean> beanClass = (Class<? extends ActionBean>) mapping.getGlob().getConditionalClass();
 
         ActionBean bean;
 
@@ -216,12 +217,13 @@ extends NameBasedActionResolver
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public Class<? extends ActionBean> getActionBeanType(String path)
     {
         GlobMapping mapping = globs.map(path);
         if (mapping != null)
         {
-            return mapping.getGlob().getTargetClass();
+            return (Class<? extends ActionBean>) mapping.getGlob().getConditionalClass();
         }
         return super.getActionBeanType(path);
     }

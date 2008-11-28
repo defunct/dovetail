@@ -1,11 +1,7 @@
 /* Copyright Alan Gutierrez 2006 */
 package com.goodworkalan.dovetail;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-
-import net.sourceforge.stripes.action.ActionBean;
 
 public final class Glob
 {
@@ -19,11 +15,16 @@ public final class Glob
     
     final static short DONE = 5;
     
-    private final Class<? extends ActionBean> target;
-    
     private final String pattern;
 
     private final Match[] matches;
+    
+    private final Class<?> conditionals;
+    
+    public Class<?> getConditionalClass()
+    {
+        return conditionals;
+    }
         
     public static String manyTest(String[] parts)
     {
@@ -38,54 +39,11 @@ public final class Glob
         return builder.toString();
     }
     
-    public Glob(Class<? extends ActionBean> target, String pattern)
+    public Glob(Match[] matches, String pattern, Class<?> conditionals)
     {
-        int min = 1;
-        int max = 1;
-        String[] parts = pattern.split("/");
-        List<Match> matches = new ArrayList<Match>();
-        for (int i = 0; i < parts.length; i++)
-        {
-            String part = parts[i];
-            if (part.length() > 0 && part.charAt(0) == '?')
-            {
-                if (max == Integer.MAX_VALUE)
-                {
-                    throw new DovetailException();
-                }
-                part = part.substring(1);
-                min = 0;
-            }
-            if (part.length() == 0)
-            {
-                if (i == 0)
-                {
-                    matches.add(new Literal(parts[i], min, max));
-                }
-                else 
-                {
-                    max = Integer.MAX_VALUE;
-                }
-            }
-            else if (part.charAt(0) == '{')
-            {
-                matches.add(new Expression(target, part, min, max));
-                min = max = 1;
-            }
-            else if (part.equals("*"))
-            {
-                matches.add(new Any(min, max));
-                min = max = 1;
-            }
-            else
-            {
-                matches.add(new Literal(part, min, max));
-                min = max = 1;
-            }
-        }
-        this.matches = matches.toArray(new Match[matches.size()]);
+        this.matches = matches;
         this.pattern = pattern;
-        this.target = target;
+        this.conditionals = conditionals;
     }
     
     public int size()
@@ -96,11 +54,6 @@ public final class Glob
     public Match get(int i)
     {
         return matches[i];
-    }
-    
-    public Class<? extends ActionBean> getTargetClass()
-    {
-        return target;
     }
 
     public String getPattern()

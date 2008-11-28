@@ -8,12 +8,6 @@ public class GlobTree<T>
 {
     private final Node<T> root = new Node<T>(null);
     
-    @SuppressWarnings("unchecked")
-    public void add(Glob glob)
-    {
-        add(glob, (T) glob.getTargetClass());
-    }
-
     public void add(Glob glob, T value)
     {
         int[] matchesLeft = new int[glob.size()];
