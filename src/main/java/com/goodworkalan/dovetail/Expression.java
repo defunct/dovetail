@@ -25,8 +25,6 @@ implements Match
     
     private final int max;
     
-    private final boolean command;
-    
     public Expression(Class<?> target, String expression, int min, int max)
     {
         StringBuilder parameter = new StringBuilder();
@@ -148,16 +146,7 @@ implements Match
         {
             throw new DovetailException();
         }
-        if (parameter.charAt(0) == '@')
-        {
-            this.parameter = parameter.substring(1);
-            this.command = true;
-        }
-        else
-        {
-            this.parameter = parameter.toString();
-            this.command = false;
-        }
+        this.parameter = parameter.toString();
         if (pattern.length() == 0)
         {
             this.pattern = Pattern.compile(".*");
@@ -274,14 +263,7 @@ implements Match
             String catenated = (String) manyTest.invoke(null, new Object[] { path.toArray(new String[path.size()]) });
             if (catenated != null)
             {
-                if (command)
-                {
-                    mapper.addCommand(parameter, catenated);
-                }
-                else
-                {
-                    mapper.addParameter(parameter, catenated);
-                }
+                mapper.addParameter(parameter, catenated);
                 return true;
             }
         }
@@ -312,8 +294,7 @@ implements Match
         if (obj instanceof Expression)
         {
             Expression other = (Expression) obj;
-            return command == other.command
-                && manyTest.equals(other.manyTest)
+            return manyTest.equals(other.manyTest)
                 && min == other.min
                 && max == other.max
                 && parameter.equals(other.parameter)
@@ -327,7 +308,6 @@ implements Match
     public int hashCode()
     {
         int hash = 1;
-        hash = hash * 37 + (command ? 1231 : 1237);
         hash = hash * 37 + manyTest.hashCode();
         hash = hash * 37 + max;
         hash = hash * 37 + min;

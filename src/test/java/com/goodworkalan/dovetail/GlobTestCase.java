@@ -87,10 +87,10 @@ public class GlobTestCase implements ActionBean
     
     @Test public void command()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{page}/optout/{key}/{receipt}/{@event}");
+        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{page}/optout/{key}/{receipt}/{event}");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
-        assertEquals("view", mapping.getCommands().get("event"));
+        assertEquals("view", mapping.getParameters().get("event"));
     }
 
     @Test public void zeroOrOne()
@@ -107,13 +107,13 @@ public class GlobTestCase implements ActionBean
 
     @Test public void optionalEvent()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}/?{@event}");
+        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}/?{event}");
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
         assertNotNull(mapping);
-        assertEquals("view", mapping.getCommands().get("event"));
+        assertEquals("view", mapping.getParameters().get("event"));
         mapping = glob.map("/hello/optout/4XGe1E/1");
         assertNotNull(mapping);
-        assertNull(mapping.getCommands().get("event"));
+        assertNull(mapping.getParameters().get("event"));
     }
 
     public static String test(String input)

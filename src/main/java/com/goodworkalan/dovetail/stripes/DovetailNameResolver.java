@@ -279,7 +279,12 @@ extends NameBasedActionResolver
             return super.getEventNameFromPath(bean, context);
         }
         
-        return mapping.getCommands().get("event");
+        String[] parameters = mapping.getParameters().get("event");
+        if (parameters == null || parameters.length == 0)
+        {
+            return null;
+        }
+        return parameters[0];
     }
 
     public String getUrlBinding(Class<? extends ActionBean> clazz)

@@ -14,13 +14,10 @@ implements GlobMapping, GlobMapper
 
     private final Map<String, String[]> parameters;
     
-    private final Map<String, String> commands;
-    
     public CoreGlobMapping(Glob glob)
     {
         this.glob = glob;
         this.parameters = new LinkedHashMap<String, String[]>();
-        this.commands = new LinkedHashMap<String, String>();
     }
     
     public Glob getGlob()
@@ -32,14 +29,12 @@ implements GlobMapping, GlobMapper
     {
         Set<String> set = new HashSet<String>();
         set.addAll(parameters.keySet());
-        set.addAll(commands.keySet());
         return set;
     }
     
     public void revert(Set<String> mark)
     {
         parameters.keySet().retainAll(mark);
-        commands.keySet().retainAll(mark);
     }
     
     public void addParameter(String name, String value)
@@ -50,16 +45,6 @@ implements GlobMapping, GlobMapper
     public Map<String, String[]> getParameters()
     {
         return parameters;
-    }
-    
-    public void addCommand(String name, String value)
-    {
-        commands.put(name, value);
-    }
-    
-    public Map<String, String> getCommands()
-    {
-        return commands;
     }
 }
 
