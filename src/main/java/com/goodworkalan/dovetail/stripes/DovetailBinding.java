@@ -1,5 +1,5 @@
 /* Copyright Alan Gutierrez 2006 */
-package com.goodworkalan.dovetail;
+package com.goodworkalan.dovetail.stripes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

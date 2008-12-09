@@ -1,5 +1,5 @@
 /* Copyright Alan Gutierrez 2006 */
-package com.goodworkalan.dovetail.naming;
+package com.goodworkalan.dovetail.stripes;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -23,7 +23,6 @@ import net.sourceforge.stripes.exception.StripesRuntimeException;
 import net.sourceforge.stripes.exception.StripesServletException;
 import net.sourceforge.stripes.util.Log;
 
-import com.goodworkalan.dovetail.DovetailBinding;
 import com.goodworkalan.dovetail.Glob;
 import com.goodworkalan.dovetail.GlobMapping;
 import com.goodworkalan.dovetail.GlobSet;

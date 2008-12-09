@@ -108,12 +108,12 @@ public class GlobTreeTest
     
     @Test public void command()
     {
-        Glob glob = newGlob(GlobTestCase.class, "//{page}/optout/{key}/{receipt}/{@event}");
+        Glob glob = newGlob(GlobTestCase.class, "//{page}/optout/{key}/{receipt}/{event}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/hello/optout/4XGe1E/1/view"));
         Mapping<Object> mapping = tree.map("/hello/optout/4XGe1E/1/view");
-        assertEquals("view", mapping.getCommands().get("event"));
+        assertEquals("view", mapping.getParameters().get("event"));
     }
 
     @Test public void zeroOrOne()
@@ -132,14 +132,14 @@ public class GlobTreeTest
 
     @Test public void optionalEvent()
     {
-        Glob glob = newGlob(GlobTestCase.class, "/{account}/optout/{key}/{receipt}/?{@event}");
+        Glob glob = newGlob(GlobTestCase.class, "/{account}/optout/{key}/{receipt}/?{event}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         Mapping<Object> mapping = tree.map("/hello/optout/4XGe1E/1/view");
         assertNotNull(mapping);
-        assertEquals("view", mapping.getCommands().get("event"));
+        assertEquals("view", mapping.getParameters().get("event"));
         mapping = tree.map("/hello/optout/4XGe1E/1");
         assertNotNull(mapping);
-        assertNull(mapping.getCommands().get("event"));
+        assertNull(mapping.getParameters().get("event"));
     }   
 }

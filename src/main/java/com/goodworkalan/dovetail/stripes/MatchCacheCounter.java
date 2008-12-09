@@ -1,4 +1,4 @@
-package com.goodworkalan.dovetail.naming;
+package com.goodworkalan.dovetail.stripes;
 
 import com.goodworkalan.dovetail.CoreMatchCache;
 import com.goodworkalan.dovetail.MatchCache;
