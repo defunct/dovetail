@@ -7,25 +7,10 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
-import net.sourceforge.stripes.action.ActionBean;
-import net.sourceforge.stripes.action.ActionBeanContext;
-
 import org.testng.annotations.Test;
 
-import com.goodworkalan.dovetail.Glob;
-import com.goodworkalan.dovetail.GlobMapping;
-
-public class GlobTestCase implements ActionBean
+public class GlobTestCase
 {
-    public ActionBeanContext getContext()
-    {
-        return null;
-    }
-    
-    public void setContext(ActionBeanContext context)
-    {
-    }
-
     @Test public void startWithProperty()
     {
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}");
@@ -90,7 +75,7 @@ public class GlobTestCase implements ActionBean
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{page}/optout/{key}/{receipt}/{event}");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
-        assertEquals("view", mapping.getParameters().get("event"));
+        assertEquals("view", mapping.getParameters().get("event")[0]);
     }
 
     @Test public void zeroOrOne()
@@ -110,7 +95,7 @@ public class GlobTestCase implements ActionBean
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}/?{event}");
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
         assertNotNull(mapping);
-        assertEquals("view", mapping.getParameters().get("event"));
+        assertEquals("view", mapping.getParameters().get("event")[0]);
         mapping = glob.map("/hello/optout/4XGe1E/1");
         assertNotNull(mapping);
         assertNull(mapping.getParameters().get("event"));
