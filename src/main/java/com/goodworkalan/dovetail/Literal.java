@@ -1,20 +1,17 @@
-/**
- * 
- */
 package com.goodworkalan.dovetail;
 
 final class Literal
 implements Match
 {
-    private final String literal;
+    private final String text;
     
     private final int min;
     
     private final int max;
 
-    public Literal(String literal, int min, int max)
+    public Literal(String text, int min, int max)
     {
-        this.literal = literal;
+        this.text = text;
         this.min = min;
         this.max = max;
     }
@@ -23,7 +20,7 @@ implements Match
     {
         for (int i = start; i < end; i++)
         {
-            if (!literal.equals(parts[i]))
+            if (!text.equals(parts[i]))
             {
                 return false;
             }
@@ -44,10 +41,14 @@ implements Match
     @Override
     public boolean equals(Object object)
     {
+        if (object == this)
+        {
+            return true;
+        }
         if (object instanceof Literal)
         {
             Literal literal = (Literal) object;
-            return literal.equals(literal.literal)
+            return text.equals(literal.text)
                 && min == literal.min
                 && max == literal.max;
         }
@@ -58,7 +59,7 @@ implements Match
     public int hashCode()
     {
         int hash = 1;
-        hash = hash * 37 + literal.hashCode();
+        hash = hash * 37 + text.hashCode();
         hash = hash * 37 + min;
         hash = hash * 37 + max;
         return hash;
