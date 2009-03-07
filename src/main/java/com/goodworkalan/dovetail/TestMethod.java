@@ -3,8 +3,10 @@ package com.goodworkalan.dovetail;
 
 import java.util.regex.Matcher;
 
+// TODO Document.
 public interface TestMethod
 {
+    // TODO Document.
     public String test(Matcher matcher) throws Exception;
 }
 

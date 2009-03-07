@@ -1,14 +1,19 @@
 package com.goodworkalan.dovetail;
 
+// TODO Document.
 final class Literal
 implements Match
 {
+    // TODO Document.
     private final String text;
     
+    // TODO Document.
     private final int min;
     
+    // TODO Document.
     private final int max;
 
+    // TODO Document.
     public Literal(String text, int min, int max)
     {
         this.text = text;
@@ -16,6 +21,7 @@ implements Match
         this.max = max;
     }
 
+    // TODO Document.
     public boolean match(GlobMapper mapper, String[] parts, int start, int end)
     {
         for (int i = start; i < end; i++)
@@ -28,16 +34,19 @@ implements Match
         return true;
     }
     
+    // TODO Document.
     public int getMin()
     {
         return min;
     }
     
+    // TODO Document.
     public int getMax()
     {
         return max;
     }
     
+    // TODO Document.
     @Override
     public boolean equals(Object object)
     {
@@ -55,6 +64,7 @@ implements Match
         return false;
     }
     
+    // TODO Document.
     @Override
     public int hashCode()
     {

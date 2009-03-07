@@ -3,11 +3,13 @@ package com.goodworkalan.dovetail;
 
 import java.util.Map;
 
-
+// TODO Document.
 public interface GlobMapping
 {
+    // TODO Document.
     public Glob getGlob();
 
+    // TODO Document.
     public Map<String, String[]> getParameters();
 }
 

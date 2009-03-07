@@ -3,12 +3,16 @@ package com.goodworkalan.dovetail;
 
 import java.util.Set;
 
+// TODO Document.
 public interface GlobMapper
 {
+    // TODO Document.
     public Set<String> mark();
     
+    // TODO Document.
     public void revert(Set<String> mark);
     
+    // TODO Document.
     public void addParameter(String name, String value);
 }
 

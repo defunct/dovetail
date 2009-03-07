@@ -3,17 +3,20 @@ package com.goodworkalan.dovetail;
 
 import java.util.regex.Matcher;
 
-
+// TODO Document.
 public class GroupTestMethod
 implements TestMethod
 {
+    // TODO Document.
     private final int group;
     
+    // TODO Document.
     public GroupTestMethod(int group)
     {
         this.group = group;
     }
 
+    // TODO Document.
     public String test(Matcher matcher)
     {
         if (group == -1)
@@ -27,6 +30,7 @@ implements TestMethod
         return matcher.group(group);
     }
 
+    // TODO Document.
     @Override
     public boolean equals(Object object)
     {
@@ -42,6 +46,7 @@ implements TestMethod
         return false;
     }
 
+    // TODO Document.
     @Override
     public int hashCode()
     {

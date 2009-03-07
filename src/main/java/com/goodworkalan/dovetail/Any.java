@@ -30,21 +30,25 @@ final class Any implements Match
         this.max = max;
     }
 
+    // TODO Document.
     public boolean match(GlobMapper mapper, String[] parts, int start, int end)
     {
         return true;
     }
 
+    // TODO Document.
     public int getMin()
     {
         return min;
     }
 
+    // TODO Document.
     public int getMax()
     {
         return max;
     }
     
+    // TODO Document.
     @Override
     public boolean equals(Object object)
     {
@@ -60,6 +64,7 @@ final class Any implements Match
         return false;
     }
     
+    // TODO Document.
     @Override
     public int hashCode()
     {

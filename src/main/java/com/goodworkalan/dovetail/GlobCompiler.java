@@ -3,15 +3,19 @@ package com.goodworkalan.dovetail;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO Document.
 public class GlobCompiler
 {
+    // TODO Document.
     private final Class<?> conditionals;
     
+    // TODO Document.
     public GlobCompiler(Class<?> conditionals)
     {
         this.conditionals = conditionals;
     }
     
+    // TODO Document.
     public Glob compile(String pattern)
     {
         int min = 1;

@@ -3,29 +3,40 @@ package com.goodworkalan.dovetail;
 
 import java.util.Set;
 
+// TODO Document.
 public final class Glob
 {
+    // TODO Document.
     final static short PROPERTY = 1;
     
+    // TODO Document.
     final static short PATTERN = 2;
 
+    // TODO Document.
     final static short TEST = 3;
     
+    // TODO Document.
     final static short GROUP = 4;
     
+    // TODO Document.
     final static short DONE = 5;
     
+    // TODO Document.
     private final String pattern;
 
+    // TODO Document.
     private final Match[] matches;
     
+    // TODO Document.
     private final Class<?> conditionals;
     
+    // TODO Document.
     public Class<?> getConditionalClass()
     {
         return conditionals;
     }
         
+    // TODO Document.
     public static String manyTest(String[] parts)
     {
         StringBuilder builder = new StringBuilder();
@@ -39,6 +50,7 @@ public final class Glob
         return builder.toString();
     }
     
+    // TODO Document.
     public Glob(Match[] matches, String pattern, Class<?> conditionals)
     {
         this.matches = matches;
@@ -46,21 +58,25 @@ public final class Glob
         this.conditionals = conditionals;
     }
     
+    // TODO Document.
     public int size()
     {
         return matches.length;
     }
     
+    // TODO Document.
     public Match get(int i)
     {
         return matches[i];
     }
 
+    // TODO Document.
     public String getPattern()
     {
         return pattern;
     }
 
+    // TODO Document.
     public GlobMapping map(String path)
     {
         CoreGlobMapping globMapping = new CoreGlobMapping(this);
@@ -71,16 +87,19 @@ public final class Glob
         return null;
     }
     
+    // TODO Document.
     public boolean match(String path)
     {
         return match(new NullGlobMapper(), path);
     }
     
+    // TODO Document.
     public boolean match(GlobMapper mapper, String path)
     {
         return descend(mapper, matches, 0, path.split("/"), 0);
     }
 
+    // TODO Document.
     private static boolean descend(GlobMapper mapper, Match[] matches, int matchIndex, String[] parts, int partIndex)
     {
         int partsLeft = parts.length - partIndex;
@@ -106,6 +125,7 @@ public final class Glob
         return false;
     }
 
+    // TODO Document.
     private static boolean match(GlobMapper mapper, Match[] matches, int matchIndex, String[] parts, int partIndex, int length)
     {
         if (length == 0 || matches[matchIndex].match(mapper, parts, partIndex, partIndex + length))

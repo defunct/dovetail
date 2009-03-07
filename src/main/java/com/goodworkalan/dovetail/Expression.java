@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.goodworkalan.dovetail;
 
 import java.lang.reflect.Method;
@@ -10,21 +7,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+// TODO Document.
 final class Expression
 implements Match
 {
+    // TODO Document.
     private final String parameter;
     
+    // TODO Document.
     private final Pattern pattern;
     
+    // TODO Document.
     private final TestMethod test;
     
+    // TODO Document.
     private final Method manyTest;
     
+    // TODO Document.
     private final int min;
     
+    // TODO Document.
     private final int max;
     
+    // TODO Document.
     public Expression(Class<?> target, String expression, int min, int max)
     {
         StringBuilder parameter = new StringBuilder();
@@ -180,6 +185,7 @@ implements Match
         }
     }
     
+    // TODO Document.
     public int toGroup(CharSequence group)
     {
         if (group.length() == 0)
@@ -189,6 +195,7 @@ implements Match
         return Integer.parseInt(group.toString());
     }
     
+    // TODO Document.
     private TestMethod getTestMethod(Class<?> target, String methodName, CharSequence group)
     {
         Method method;
@@ -219,6 +226,7 @@ implements Match
         }
     }
     
+    // TODO Document.
     public static Method getManyTestMethod(Class<?> target, String methodName)
     {
         try
@@ -231,6 +239,7 @@ implements Match
         }
     }
 
+    // TODO Document.
     public boolean match(GlobMapper mapper, String[] parts, int start, int end)
     {
         List<String> path = new ArrayList<String>();
@@ -274,16 +283,19 @@ implements Match
         return false;
     }
     
+    // TODO Document.
     public int getMin()
     {
         return min;
     }
     
+    // TODO Document.
     public int getMax()
     {
         return max;
     }
 
+    // TODO Document.
     @Override
     public boolean equals(Object obj)
     {
@@ -304,6 +316,7 @@ implements Match
         return false;
     }
 
+    // TODO Document.
     @Override
     public int hashCode()
     {

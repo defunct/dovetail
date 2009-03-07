@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+// TODO Document.
 public class GlobTree<T>
 {
+    // TODO Document.
     private final Node<T> root = new Node<T>(null);
     
+    // TODO Document.
     public void add(Glob glob, T value)
     {
         int[] matchesLeft = new int[glob.size()];
@@ -28,6 +31,7 @@ public class GlobTree<T>
         node.value = value;
     }
 
+    // TODO Document.
     private Node<T> getChild(Node<T> parent, Match match)
     {
         Node<T> child = null;
@@ -47,11 +51,13 @@ public class GlobTree<T>
         return child;
     }
     
+    // TODO Document.
     public boolean match(String path)
     {
         return match(new TreeMapper<T>(), path);
     }
     
+    // TODO Document.
     public Mapping<T> map(String path)
     {
         TreeMapper<T> mapper = new TreeMapper<T>();
@@ -62,11 +68,13 @@ public class GlobTree<T>
         return null;
     }
     
+    // TODO Document.
     public boolean match(TreeMapper<T> mapper, String path)
     {
         return descend(mapper, root.listOfNodes.get(0), path.split("/"), 0);
     }
     
+    // TODO Document.
     private boolean descend(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex)
     {
         int partsLeft = parts.length - partIndex;
@@ -85,6 +93,7 @@ public class GlobTree<T>
         return false;
     }
 
+    // TODO Document.
     private boolean match(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex, int length)
     {
         if (length == 0 || node.match.match(mapper, parts, partIndex, partIndex + length))
@@ -110,6 +119,7 @@ public class GlobTree<T>
         return false;
     }
 
+    // TODO Document.
     final static class Node<T>
     {
         public final Match match;
