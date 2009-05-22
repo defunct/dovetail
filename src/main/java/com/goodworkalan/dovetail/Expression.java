@@ -7,7 +7,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-// TODO Document.
+/**
+ * An expression that matches a part or sub path in a path pattern. This 
+ * class includes a constructor that will parse the pattern.
+ * 
+ * @author Alan Gutierrez
+ */
 final class Expression
 implements Match
 {

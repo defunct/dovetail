@@ -1,27 +1,49 @@
 package com.goodworkalan.dovetail;
 
-// TODO Document.
+/**
+ * Matches a part by matching a litteral path.
+ * 
+ * @author Alan Gutierrez
+ */
 final class Literal
 implements Match
 {
-    // TODO Document.
+    /** The literal text to compare against the part. */
     private final String text;
     
-    // TODO Document.
+    /** The minimum number of parts that this match can match. */
     private final int min;
-    
-    // TODO Document.
-    private final int max;
 
-    // TODO Document.
-    public Literal(String text, int min, int max)
+    /**
+     * Create a match that will compare the given text against a part for
+     * equality the given minimum and given maximum number of times in a URL
+     * path. The only valid values for minimum are zero and one.
+     * 
+     * @param text
+     *            The literal text to compare against the part.
+     * @param min
+     *            The minimum number of times to apply the match.
+     */
+    public Literal(String text, int min)
     {
         this.text = text;
         this.min = min;
-        this.max = max;
     }
 
-    // TODO Document.
+    /**
+     * Return true if the literal matches the string parts from the ranges
+     * specified by the start inclusive and end exclusive.
+     * 
+     * @param mapper
+     *            A state for captures.
+     * @param parts
+     *            The component parts of a URL path.
+     * @param start
+     *            The part at which to begin the match.
+     * @param end
+     *            The part at which to end the match.
+     * @return True if this match matches.
+     */
     public boolean match(GlobMapper mapper, String[] parts, int start, int end)
     {
         for (int i = start; i < end; i++)
@@ -34,19 +56,36 @@ implements Match
         return true;
     }
     
-    // TODO Document.
+    /**
+     * The minimum number of parts that this match can match, either zero or
+     * one.
+     * 
+     * @return The minimum number of parts that this match can match.
+     */
     public int getMin()
     {
         return min;
     }
-    
-    // TODO Document.
+
+    /**
+     * The maximum number of parts of a URL path that this literal can match,
+     * which in the case of literal is always 1.
+     * 
+     * @return The maximum number of parts that this match can match.
+     */
     public int getMax()
     {
-        return max;
+        return 1;
     }
-    
-    // TODO Document.
+
+    /**
+     * A literal is equal to another literal object with the same match text
+     * property and the same minimum number of matches property.
+     * 
+     * @param object
+     *            An object to which to compare this object.
+     * @return True if the given object is equal to this literal.
+     */
     @Override
     public boolean equals(Object object)
     {
@@ -58,20 +97,23 @@ implements Match
         {
             Literal literal = (Literal) object;
             return text.equals(literal.text)
-                && min == literal.min
-                && max == literal.max;
+                && min == literal.min;
         }
         return false;
     }
-    
-    // TODO Document.
+
+    /**
+     * Return a hash code that combines the hash code of the match text property
+     * and the minimum number of matches property.
+     * 
+     * @return The hash code.
+     */
     @Override
     public int hashCode()
     {
         int hash = 1;
         hash = hash * 37 + text.hashCode();
         hash = hash * 37 + min;
-        hash = hash * 37 + max;
         return hash;
     }
 }

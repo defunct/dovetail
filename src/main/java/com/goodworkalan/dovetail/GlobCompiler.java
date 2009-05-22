@@ -38,7 +38,7 @@ public class GlobCompiler
             {
                 if (i == 0)
                 {
-                    matches.add(new Literal(parts[i], min, max));
+                    matches.add(new Literal(parts[i], min));
                 }
                 else 
                 {
@@ -52,14 +52,14 @@ public class GlobCompiler
             }
             else
             {
-                matches.add(new Literal(part, min, max));
+                matches.add(new Literal(part, min));
                 min = max = 1;
             }
         }
         
         if (parts.length != matches.size() && max == Integer.MAX_VALUE)
         {
-            matches.add(new Literal("", 1, 1));
+            matches.add(new Literal("", 1));
         }
         
         return new Glob(matches.toArray(new Match[matches.size()]), pattern, conditionals);
