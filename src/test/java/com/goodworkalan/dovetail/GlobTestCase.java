@@ -80,7 +80,7 @@ public class GlobTestCase
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{page}/optout/{key}/{receipt}/{event}");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
-        assertEquals("view", mapping.getParameters().get("event")[0]);
+        assertEquals("view", mapping.getParameters().get("event"));
     }
 
     @Test public void zeroOrOne()
@@ -88,8 +88,8 @@ public class GlobTestCase
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("/?{account}/optout/{key}/{receipt}");
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1");
         assertNotNull(mapping);
-        assertEquals("hello", mapping.getParameters().get("account")[0]);
-        assertEquals("4XGe1E", mapping.getParameters().get("key")[0]);
+        assertEquals("hello", mapping.getParameters().get("account"));
+        assertEquals("4XGe1E", mapping.getParameters().get("key"));
         mapping = glob.map("/optout/4XGe1E/1");
         assertNotNull(mapping);
         assertNull(mapping.getParameters().get("account"));
@@ -100,7 +100,7 @@ public class GlobTestCase
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}/?{event}");
         GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
         assertNotNull(mapping);
-        assertEquals("view", mapping.getParameters().get("event")[0]);
+        assertEquals("view", mapping.getParameters().get("event"));
         mapping = glob.map("/hello/optout/4XGe1E/1");
         assertNotNull(mapping);
         assertNull(mapping.getParameters().get("event"));

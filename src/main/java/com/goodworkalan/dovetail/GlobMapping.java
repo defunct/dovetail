@@ -10,7 +10,7 @@ public interface GlobMapping
     public Glob getGlob();
 
     // TODO Document.
-    public Map<String, String[]> getParameters();
+    public Map<String, String> getParameters();
 }
 
 /* vim: set et sw=4 ts=4 ai tw=78 nowrap: */

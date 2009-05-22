@@ -14,13 +14,13 @@ implements GlobMapping, GlobMapper
     private final Glob glob;
 
     // TODO Document.
-    private final Map<String, String[]> parameters;
+    private final Map<String, String> parameters;
     
     // TODO Document.
     public CoreGlobMapping(Glob glob)
     {
         this.glob = glob;
-        this.parameters = new LinkedHashMap<String, String[]>();
+        this.parameters = new LinkedHashMap<String, String>();
     }
     
     // TODO Document.
@@ -46,11 +46,11 @@ implements GlobMapping, GlobMapper
     // TODO Document.
     public void addParameter(String name, String value)
     {
-        parameters.put(name, new String[] { value });
+        parameters.put(name, value );
     }
     
     // TODO Document.
-    public Map<String, String[]> getParameters()
+    public Map<String, String> getParameters()
     {
         return parameters;
     }
