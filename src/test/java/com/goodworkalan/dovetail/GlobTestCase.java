@@ -31,7 +31,7 @@ public class GlobTestCase
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{account}/optout/{key}/{receipt}//*");
+        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{account}/optout/{key}/{receipt}//{ignore}");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(glob.match("/one/two/three/optout/4XGe1E/1/2"));
         assertFalse(glob.match("/one/two/three/snap/4XGe1E/1/2"));
@@ -59,6 +59,11 @@ public class GlobTestCase
         assertFalse(glob.match("/an-thinknola.d/optout/4XGe1E/1"));
         assertFalse(glob.match("/example/optout/4XGe1E/1"));
         assertTrue(glob.match("/an-example/optout/4XGe1E/1"));
+    }
+    
+    public void thinkingOutLoud() 
+    {
+        new GlobCompiler(Object.class).compile("//{path}/{page,extension (.+)\\.([^.]+) %1$s.%2$s}");
     }
     
     @Test public void regularExpressionGroup()

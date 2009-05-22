@@ -50,11 +50,6 @@ public class GlobCompiler
                 matches.add(new Expression(conditionals, part, min, max));
                 min = max = 1;
             }
-            else if (part.equals("*"))
-            {
-                matches.add(new Any(min, max));
-                min = max = 1;
-            }
             else
             {
                 matches.add(new Literal(part, min, max));

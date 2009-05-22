@@ -57,7 +57,7 @@ public class GlobTreeTest
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = newGlob(GlobTestCase.class, "//{account}/optout/{key}/{receipt}//*");
+        Glob glob = newGlob(GlobTestCase.class, "//{account}/optout/{key}/{receipt}//{ignore}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1/2"));
