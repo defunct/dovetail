@@ -1,5 +1,7 @@
 package com.goodworkalan.dovetail;
 
+import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_QUESION_MARK; 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class GlobCompiler
             {
                 if (max == Integer.MAX_VALUE)
                 {
-                    throw new DovetailException();
+                    throw new DovetailException(UNEXPECTED_QUESION_MARK);
                 }
                 part = part.substring(1);
                 min = 0;

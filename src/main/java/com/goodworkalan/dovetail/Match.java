@@ -21,7 +21,12 @@ public class Match<T>
     /** The parameters extracted from the match. */
     private final Map<String, String> parameters; 
     
-    // TODO Document.
+    /**
+     * Create a match of the given 
+     * @param object
+     * @param priority
+     * @param mapOfParameters
+     */
     public Match(T object, int priority, Map<String, String> mapOfParameters)
     {
         this.object = object;

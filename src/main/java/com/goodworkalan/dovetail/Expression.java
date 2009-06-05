@@ -1,5 +1,7 @@
 package com.goodworkalan.dovetail;
 
+import static com.goodworkalan.dovetail.DovetailException.*;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +75,7 @@ implements Test
                     }
                     else
                     {
-                        throw new DovetailException();
+                        throw new DovetailException(0);
                     }
                     break;
                 case Glob.PATTERN:
@@ -109,7 +111,7 @@ implements Test
                     {
                          if (method.length() != 0)
                          {
-                             throw new DovetailException();
+                             throw new DovetailException(USELESS_ERROR_CODE);
                          }
                     }
                     else if(Character.isJavaIdentifierPart(chars[i]))
@@ -119,7 +121,7 @@ implements Test
                     }
                     else
                     {
-                        throw new DovetailException();
+                        throw new DovetailException(USELESS_ERROR_CODE);
                     }
                     break;
                 case Glob.GROUP:
@@ -131,7 +133,7 @@ implements Test
                     {
                          if (group.length() != 0)
                          {
-                             throw new DovetailException();
+                             throw new DovetailException(USELESS_ERROR_CODE);
                          }
                     }
                     else if (Character.isDigit(chars[i]))
@@ -140,13 +142,13 @@ implements Test
                     }
                     else
                     {
-                        throw new DovetailException();
+                        throw new DovetailException(USELESS_ERROR_CODE);
                     }
                     break;
                 case Glob.DONE:
                     if (chars[i] != ' ')
                     {
-                        throw new DovetailException();
+                        throw new DovetailException(USELESS_ERROR_CODE);
                     }
                     break;
             }
@@ -155,7 +157,7 @@ implements Test
         this.max = max;
         if (parameter.length() == 0)
         {
-            throw new DovetailException();
+            throw new DovetailException(USELESS_ERROR_CODE);
         }
         this.parameter = parameter.toString();
         if (pattern.length() == 0)
@@ -170,7 +172,7 @@ implements Test
             }
             catch (PatternSyntaxException e)
             {
-                throw new DovetailException(e);
+                throw new DovetailException(USELESS_ERROR_CODE, e);
             }
         }
         if (method.length() == 0)
@@ -228,7 +230,7 @@ implements Test
         }
         catch (Exception e)
         {
-            throw new DovetailException(e);
+            throw new DovetailException(USELESS_ERROR_CODE, e);
         }
     }
     
@@ -265,7 +267,7 @@ implements Test
                 }
                 catch (Exception e)
                 {
-                    throw new DovetailException(e);
+                    throw new DovetailException(USELESS_ERROR_CODE, e);
                 }
             }
             else
@@ -284,7 +286,7 @@ implements Test
         }
         catch (Exception e)
         {
-            throw new DovetailException(e);
+            throw new DovetailException(USELESS_ERROR_CODE, e);
         }
         return false;
     }
