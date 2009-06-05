@@ -25,7 +25,7 @@ public final class Glob
     private final String pattern;
 
     // TODO Document.
-    private final Match[] matches;
+    private final Test[] matches;
     
     // TODO Document.
     private final Class<?> conditionals;
@@ -51,7 +51,7 @@ public final class Glob
     }
     
     // TODO Document.
-    public Glob(Match[] matches, String pattern, Class<?> conditionals)
+    public Glob(Test[] matches, String pattern, Class<?> conditionals)
     {
         this.matches = matches;
         this.pattern = pattern;
@@ -65,7 +65,7 @@ public final class Glob
     }
     
     // TODO Document.
-    public Match get(int i)
+    public Test get(int i)
     {
         return matches[i];
     }
@@ -101,7 +101,7 @@ public final class Glob
     }
 
     // TODO Document.
-    private static boolean descend(GlobMapper mapper, Match[] matches, int matchIndex, String[] parts, int partIndex)
+    private static boolean descend(GlobMapper mapper, Test[] matches, int matchIndex, String[] parts, int partIndex)
     {
         int partsLeft = parts.length - partIndex;
         int matchesLeft = matches.length - matchIndex;
@@ -127,7 +127,7 @@ public final class Glob
     }
 
     // TODO Document.
-    private static boolean match(GlobMapper mapper, Match[] matches, int matchIndex, String[] parts, int partIndex, int length)
+    private static boolean match(GlobMapper mapper, Test[] matches, int matchIndex, String[] parts, int partIndex, int length)
     {
         if (length == 0 || matches[matchIndex].match(mapper, parts, partIndex, partIndex + length))
         {

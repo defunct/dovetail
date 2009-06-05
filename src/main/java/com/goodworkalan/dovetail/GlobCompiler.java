@@ -21,7 +21,7 @@ public class GlobCompiler
         int min = 1;
         int max = 1;
         String[] parts = pattern.split("/", -1);
-        List<Match> matches = new ArrayList<Match>();
+        List<Test> matches = new ArrayList<Test>();
         for (int i = 0; i < parts.length; i++)
         {
             String part = parts[i];
@@ -62,6 +62,6 @@ public class GlobCompiler
             matches.add(new Literal("", 1));
         }
         
-        return new Glob(matches.toArray(new Match[matches.size()]), pattern, conditionals);
+        return new Glob(matches.toArray(new Test[matches.size()]), pattern, conditionals);
     }
 }

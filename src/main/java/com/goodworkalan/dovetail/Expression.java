@@ -14,7 +14,7 @@ import java.util.regex.PatternSyntaxException;
  * @author Alan Gutierrez
  */
 final class Expression
-implements Match
+implements Test
 {
     // TODO Document.
     private final String parameter;

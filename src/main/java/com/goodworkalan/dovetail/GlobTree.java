@@ -38,7 +38,7 @@ public class GlobTree<T>
     }
 
     // TODO Document.
-    private Node<T> getChild(Node<T> parent, Match match)
+    private Node<T> getChild(Node<T> parent, Test match)
     {
         Node<T> child = null;
         for (Node<T> node : parent.listOfNodes)
@@ -128,7 +128,7 @@ public class GlobTree<T>
     // TODO Document.
     final static class Node<T>
     {
-        public final Match match;
+        public final Test match;
         
         public final List<Node<T>> listOfNodes;
         
@@ -136,7 +136,7 @@ public class GlobTree<T>
         
         public int matchesLeft;
         
-        public Node(Match match)
+        public Node(Test match)
         {
             this.match = match;
             this.listOfNodes = new ArrayList<Node<T>>();

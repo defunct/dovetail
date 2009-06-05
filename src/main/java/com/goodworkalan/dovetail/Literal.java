@@ -6,7 +6,7 @@ package com.goodworkalan.dovetail;
  * @author Alan Gutierrez
  */
 final class Literal
-implements Match
+implements Test
 {
     /** The literal text to compare against the part. */
     private final String text;

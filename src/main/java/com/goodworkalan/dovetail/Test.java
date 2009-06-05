@@ -5,7 +5,7 @@ package com.goodworkalan.dovetail;
  * 
  * FIXME Rename Test.
  */
-interface Match
+interface Test
 {
     /**
      * Return true if the glob matches the string parts from the ranges
