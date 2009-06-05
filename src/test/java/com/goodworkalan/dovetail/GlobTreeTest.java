@@ -113,7 +113,7 @@ public class GlobTreeTest
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/hello/optout/4XGe1E/1/view"));
-        List<Mapping<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
+        List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
         assertEquals("view", mappings.get(0).getParameters().get("event"));
     }
 
@@ -122,7 +122,7 @@ public class GlobTreeTest
         Glob glob = newGlob(GlobTestCase.class, "/?{account}/optout/{key}/{receipt}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
-        List<Mapping<Object>> mappings = tree.map("/hello/optout/4XGe1E/1");
+        List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1");
         assertFalse(mappings.isEmpty());
         assertEquals("hello", mappings.get(0).getParameters().get("account"));
         assertEquals("4XGe1E", mappings.get(0).getParameters().get("key"));
@@ -136,7 +136,7 @@ public class GlobTreeTest
         Glob glob = newGlob(GlobTestCase.class, "/{account}/optout/{key}/{receipt}/?{event}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
-        List<Mapping<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
+        List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
         assertFalse(mappings.isEmpty());
         assertEquals("view", mappings.get(0).getParameters().get("event"));
         mappings = tree.map("/hello/optout/4XGe1E/1");

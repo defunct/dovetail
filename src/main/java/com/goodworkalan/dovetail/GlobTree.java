@@ -64,7 +64,7 @@ public class GlobTree<T>
     }
     
     // TODO Document.
-    public List<Mapping<T>> map(String path)
+    public List<Match<T>> map(String path)
     {
         TreeMapper<T> mapper = new TreeMapper<T>();
         if (descend(mapper, root.listOfNodes.get(0), path.split("/"), 0)) 

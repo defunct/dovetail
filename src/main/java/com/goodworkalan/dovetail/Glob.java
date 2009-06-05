@@ -83,7 +83,7 @@ public final class Glob
     {
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(this, new Object());
-        List<Mapping<Object>> mapping = tree.map(path);
+        List<Match<Object>> mapping = tree.map(path);
         if (mapping.isEmpty())
         {
             return null;

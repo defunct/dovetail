@@ -9,10 +9,8 @@ import java.util.Map;
  * @author Alan Gutierrez
  *
  * @param <T> The type to which globs are mapped.
- * 
- * FIXME Rename Test.
  */
-public class Mapping<T>
+public class Match<T>
 {
     /** The mapped object. */
     private final T object;
@@ -24,7 +22,7 @@ public class Mapping<T>
     private final Map<String, String> parameters; 
     
     // TODO Document.
-    public Mapping(T object, int priority, Map<String, String> mapOfParameters)
+    public Match(T object, int priority, Map<String, String> mapOfParameters)
     {
         this.object = object;
         this.priority = priority;
