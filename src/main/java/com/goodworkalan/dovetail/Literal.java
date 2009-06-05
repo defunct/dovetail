@@ -1,7 +1,7 @@
 package com.goodworkalan.dovetail;
 
 /**
- * Matches a part by matching a litteral path.
+ * Matches a part by matching a literal path.
  * 
  * @author Alan Gutierrez
  */

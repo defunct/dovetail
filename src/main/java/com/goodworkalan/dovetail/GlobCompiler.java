@@ -6,7 +6,7 @@ import java.util.List;
 // TODO Document.
 public class GlobCompiler
 {
-    // TODO Document.
+    // FIXME This becomes a factory specific to this package.
     private final Class<?> conditionals;
     
     // TODO Document.

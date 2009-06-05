@@ -3,24 +3,32 @@ package com.goodworkalan.dovetail;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO Document.
+/**
+ * The results of an individual match of a path against a glob tree.  
+ *  
+ * @author Alan Gutierrez
+ *
+ * @param <T> The type to which globs are mapped.
+ * 
+ * FIXME Rename Test.
+ */
 public class Mapping<T>
 {
-    // TODO Document.
+    /** The mapped object. */
     private final T object;
     
-    // TODO Document.
+    /** The mapping priority. */
     private final int priority;
     
-    // TODO Document.
-    private final Map<String, String> mapOfParameters; 
+    /** The parameters extracted from the match. */
+    private final Map<String, String> parameters; 
     
     // TODO Document.
-    public Mapping(T object, int priority, Map<String, String> mapOfCommands, Map<String, String> mapOfParameters)
+    public Mapping(T object, int priority, Map<String, String> mapOfParameters)
     {
         this.object = object;
         this.priority = priority;
-        this.mapOfParameters = new HashMap<String, String>(mapOfParameters);
+        this.parameters = new HashMap<String, String>(mapOfParameters);
     }
     
     // TODO Document.
@@ -38,6 +46,6 @@ public class Mapping<T>
     // TODO Document.
     public Map<String, String> getParameters()
     {
-        return mapOfParameters;
+        return parameters;
     }
 }

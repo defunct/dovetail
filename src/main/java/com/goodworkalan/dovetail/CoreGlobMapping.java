@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 // TODO Document.
-public class CoreGlobMapping
+class CoreGlobMapping
 implements GlobMapping, GlobMapper
 {
     // TODO Document.

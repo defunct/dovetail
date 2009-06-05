@@ -76,7 +76,8 @@ public final class Glob
         return pattern;
     }
 
-    // TODO Document.
+    // FIXME Sure, we can keep it, but let's just use the tree logic, create
+    // a tree and match against that.
     public GlobMapping map(String path)
     {
         CoreGlobMapping globMapping = new CoreGlobMapping(this);

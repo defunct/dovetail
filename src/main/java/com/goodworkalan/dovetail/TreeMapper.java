@@ -9,73 +9,95 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-// TODO Document.
+/**
+ * Used to collect the results of a match of a path against a tree of globs.
+ * Because more than one glob in the tree of globs, a tree mapper will gather
+ * a list of mappings.
+ * 
+ * @author Alan Gutierrez
+ *
+ * @param <T>
+ */
 public class TreeMapper<T> implements GlobMapper
 {
-    // TODO Document.
-    private final Map<String, String> mapOfCommands;
+    /** A working list of matched parameters. */
+    private final Map<String, String> parameters;
     
-    // TODO Document.
-    private final Map<String, String> mapOfParameters;
+    /** A map of glob priorities to mappings. */
+    private final SortedMap<Integer, Mapping<T>> mappings;
     
-    // TODO Document.
-    private final SortedMap<Integer, Mapping<T>> mapOfMappings;
-    
-    // TODO Document.
+    /**
+     * Create an empty tree mapper.
+     */
     public TreeMapper()
     {
-        this.mapOfCommands = new HashMap<String, String>();
-        this.mapOfParameters = new HashMap<String, String>();
-        this.mapOfMappings = new TreeMap<Integer, Mapping<T>>(Collections.reverseOrder());
+        this.parameters = new HashMap<String, String>();
+        this.mappings = new TreeMap<Integer, Mapping<T>>(Collections.reverseOrder());
     }
     
-    // TODO Document.
-    private TreeMapper(SortedMap<Integer, Mapping<T>> mapOfMappings, Map<String, String> mapOfCommands, Map<String, String> mapOfParameters)
+    /**
+     * Create a copy of a tree mapper.
+     * 
+     * @param mappings The mapping list.
+     * @param parameters The current state of the working parameter map.
+     */
+    private TreeMapper(SortedMap<Integer, Mapping<T>> mappings, Map<String, String> parameters)
     {
-        this.mapOfMappings = mapOfMappings;
-        this.mapOfCommands = new HashMap<String, String>(mapOfCommands);
-        this.mapOfParameters = new HashMap<String, String>(mapOfParameters);
+        this.mappings = mappings;
+        this.parameters = new HashMap<String, String>(parameters);
     }
 
-    // TODO Document.
-    public void addCommand(String name, String value)
-    {
-        mapOfCommands.put(name, value);
-    }
-    
-    // TODO Document.
+    /**
+     * Add a parameter to the parameter map.
+     * 
+     * @param name
+     *            The parameter name.
+     * @param value
+     *            The parameter value.
+     */
     public void addParameter(String name, String value)
     {
-        mapOfParameters.put(name, value);
+        parameters.put(name, value);
     }
     
-    // TODO Document.
+    /**
+     * FIXME Why is this defunct?
+     */
     public Set<String> mark()
     {
         return null;
     }
     
-    // TODO Document.
+    /**
+     * FIXME Why is this defunct? Did duplicate replace it?
+     */
     public void revert(Set<String> mark)
     {
     }
     
-    // TODO Document.
+    /**
+     * Create a type-safe clone of this tree mapper with it's own copy of the
+     * working parameter to capture the parameters matched so far. The duplicate
+     * will share the list of mappings with this tree mapper, so that when
+     * a match is discovered, it is added to the common list.
+     *  
+     * @return A duplicate of this tree mapper.
+     */
     public TreeMapper<T> duplicate()
     {
-        return new TreeMapper<T>(mapOfMappings, mapOfCommands, mapOfParameters);
+        return new TreeMapper<T>(mappings, parameters);
     }
     
     // TODO Document.
     public void map(int priority, T object)
     {
-        Mapping<T> mapping = new Mapping<T>(object, priority, mapOfCommands, mapOfParameters);
-        mapOfMappings.put(priority, mapping);
+        Mapping<T> mapping = new Mapping<T>(object, priority, parameters);
+        mappings.put(priority, mapping);
     }
     
     // TODO Document.
     public List<Mapping<T>> mappings()
     {
-        return new ArrayList<Mapping<T>>(mapOfMappings.values());
+        return new ArrayList<Mapping<T>>(mappings.values());
     }
 }

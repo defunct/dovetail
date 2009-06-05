@@ -7,10 +7,16 @@ import java.util.Set;
 // TODO Document.
 public class GlobTree<T>
 {
-    // TODO Document.
+    /** The root node of the tree. */
     private final Node<T> root = new Node<T>(null);
     
-    // TODO Document.
+    /**
+     * Map the given glob to the given tree value. When a path given to the
+     * tree matches the given glob, the given value will be returned  
+     * 
+     * @param glob
+     * @param value
+     */
     public void add(Glob glob, T value)
     {
         int[] matchesLeft = new int[glob.size()];

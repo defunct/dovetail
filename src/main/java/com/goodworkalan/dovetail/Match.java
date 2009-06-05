@@ -2,6 +2,8 @@ package com.goodworkalan.dovetail;
 
 /**
  * A test against a range of path parts in a glob.
+ * 
+ * FIXME Rename Test.
  */
 interface Match
 {
