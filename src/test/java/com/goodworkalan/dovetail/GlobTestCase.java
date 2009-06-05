@@ -7,6 +7,8 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.testng.annotations.Test;
 
 public class GlobTestCase
@@ -79,31 +81,31 @@ public class GlobTestCase
     {
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{page}/optout/{key}/{receipt}/{event}");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
-        GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
-        assertEquals("view", mapping.getParameters().get("event"));
+        Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
+        assertEquals("view", parameters.get("event"));
     }
 
     @Test public void zeroOrOne()
     {
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("/?{account}/optout/{key}/{receipt}");
-        GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1");
-        assertNotNull(mapping);
-        assertEquals("hello", mapping.getParameters().get("account"));
-        assertEquals("4XGe1E", mapping.getParameters().get("key"));
-        mapping = glob.map("/optout/4XGe1E/1");
-        assertNotNull(mapping);
-        assertNull(mapping.getParameters().get("account"));
+        Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1");
+        assertNotNull(parameters);
+        assertEquals("hello", parameters.get("account"));
+        assertEquals("4XGe1E", parameters.get("key"));
+        parameters = glob._map("/optout/4XGe1E/1");
+        assertNotNull(parameters);
+        assertNull(parameters.get("account"));
     }
 
     @Test public void optionalEvent()
     {
         Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}/?{event}");
-        GlobMapping mapping = glob.map("/hello/optout/4XGe1E/1/view");
-        assertNotNull(mapping);
-        assertEquals("view", mapping.getParameters().get("event"));
-        mapping = glob.map("/hello/optout/4XGe1E/1");
-        assertNotNull(mapping);
-        assertNull(mapping.getParameters().get("event"));
+        Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
+        assertNotNull(parameters);
+        assertEquals("view", parameters.get("event"));
+        parameters = glob._map("/hello/optout/4XGe1E/1");
+        assertNotNull(parameters);
+        assertNull(parameters.get("event"));
     }
 
     public static String test(String input)

@@ -1,5 +1,7 @@
 package com.goodworkalan.dovetail;
 
+import java.util.Map;
+
 /**
  * A test against a range of path parts in a glob.
  * 
@@ -11,8 +13,8 @@ interface Test
      * Return true if the glob matches the string parts from the ranges
      * specified by the start inclusive and end exclusive.
      * 
-     * @param mapper
-     *            A state for captures.
+     * @param parameters
+     *            A map of captured parameters.
      * @param parts
      *            The component parts of a URL path.
      * @param start
@@ -21,7 +23,7 @@ interface Test
      *            The part at which to end the match.
      * @return True if this match matches.
      */
-    public boolean match(GlobMapper mapper, String[] parts, int start, int end);
+    public boolean match(Map<String, String> parameters, String[] parts, int start, int end);
 
     /**
      * The minimum number of parts that this match can match, either zero or

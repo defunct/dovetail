@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -18,7 +17,7 @@ import java.util.TreeMap;
  *
  * @param <T>
  */
-public class TreeMapper<T> implements GlobMapper
+class TreeMapper<T>
 {
     /** A working list of matched parameters. */
     private final Map<String, String> parameters;
@@ -59,20 +58,15 @@ public class TreeMapper<T> implements GlobMapper
     {
         parameters.put(name, value);
     }
-    
+
     /**
-     * FIXME Why is this defunct?
+     * Get the current working parameter map.
+     * 
+     * @return The working parameter map.
      */
-    public Set<String> mark()
+    public Map<String, String> getParameters()
     {
-        return null;
-    }
-    
-    /**
-     * FIXME Why is this defunct? Did duplicate replace it?
-     */
-    public void revert(Set<String> mark)
-    {
+        return parameters;
     }
     
     /**
@@ -87,8 +81,15 @@ public class TreeMapper<T> implements GlobMapper
     {
         return new TreeMapper<T>(mappings, parameters);
     }
-    
-    // TODO Document.
+
+    /**
+     * Record a successful match against a path.
+     * 
+     * @param priority
+     *            The glob priority.
+     * @param object
+     *            The object mapped to the glob.
+     */
     public void map(int priority, T object)
     {
         Mapping<T> mapping = new Mapping<T>(object, priority, parameters);

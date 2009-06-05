@@ -1,8 +1,8 @@
 package com.goodworkalan.dovetail;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 // TODO Document.
 public class GlobTree<T>
@@ -60,24 +60,18 @@ public class GlobTree<T>
     // TODO Document.
     public boolean match(String path)
     {
-        return match(new TreeMapper<T>(), path);
+        return ! map(path).isEmpty();
     }
     
     // TODO Document.
-    public Mapping<T> map(String path)
+    public List<Mapping<T>> map(String path)
     {
         TreeMapper<T> mapper = new TreeMapper<T>();
-        if (match(mapper, path)) 
+        if (descend(mapper, root.listOfNodes.get(0), path.split("/"), 0)) 
         {
-            return mapper.mappings().get(0);
+            return mapper.mappings();
         }
-        return null;
-    }
-    
-    // TODO Document.
-    public boolean match(TreeMapper<T> mapper, String path)
-    {
-        return descend(mapper, root.listOfNodes.get(0), path.split("/"), 0);
+        return Collections.emptyList();
     }
     
     // TODO Document.
@@ -89,12 +83,10 @@ public class GlobTree<T>
         int max = Math.min(partsLeft - matchesLeft + 1, node.match.getMax());
         for (int i = min; i <= max; i++)
         {
-            Set<String> mark = mapper.mark();
             if (match(mapper.duplicate(), node, parts, partIndex, i))
             {
                 return true;
             }
-            mapper.revert(mark);
         }
         return false;
     }
@@ -102,7 +94,7 @@ public class GlobTree<T>
     // TODO Document.
     private boolean match(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex, int length)
     {
-        if (length == 0 || node.match.match(mapper, parts, partIndex, partIndex + length))
+        if (length == 0 || node.match.match(mapper.getParameters(), parts, partIndex, partIndex + length))
         {
             partIndex += length;
 

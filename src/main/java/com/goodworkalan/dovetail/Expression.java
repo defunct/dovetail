@@ -3,6 +3,7 @@ package com.goodworkalan.dovetail;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -245,7 +246,7 @@ implements Test
     }
 
     // TODO Document.
-    public boolean match(GlobMapper mapper, String[] parts, int start, int end)
+    public boolean match(Map<String, String> parameters, String[] parts, int start, int end)
     {
         List<String> path = new ArrayList<String>();
         for (int i = start; i < end; i++)
@@ -277,7 +278,7 @@ implements Test
             String catenated = (String) manyTest.invoke(null, new Object[] { path.toArray(new String[path.size()]) });
             if (catenated != null)
             {
-                mapper.addParameter(parameter, catenated);
+                parameters.put(parameter, catenated);
                 return true;
             }
         }

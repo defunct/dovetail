@@ -1,5 +1,7 @@
 package com.goodworkalan.dovetail;
 
+import java.util.Map;
+
 /**
  * Matches a part by matching a literal path.
  * 
@@ -44,7 +46,7 @@ implements Test
      *            The part at which to end the match.
      * @return True if this match matches.
      */
-    public boolean match(GlobMapper mapper, String[] parts, int start, int end)
+    public boolean match(Map<String, String> parameters, String[] parts, int start, int end)
     {
         for (int i = start; i < end; i++)
         {

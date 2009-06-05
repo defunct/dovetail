@@ -2,9 +2,10 @@ package com.goodworkalan.dovetail;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+
+import java.util.List;
 
 import org.testng.annotations.Test;
 
@@ -112,8 +113,8 @@ public class GlobTreeTest
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/hello/optout/4XGe1E/1/view"));
-        Mapping<Object> mapping = tree.map("/hello/optout/4XGe1E/1/view");
-        assertEquals("view", mapping.getParameters().get("event"));
+        List<Mapping<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
+        assertEquals("view", mappings.get(0).getParameters().get("event"));
     }
 
     @Test public void zeroOrOne()
@@ -121,13 +122,13 @@ public class GlobTreeTest
         Glob glob = newGlob(GlobTestCase.class, "/?{account}/optout/{key}/{receipt}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
-        Mapping<Object> mapping = tree.map("/hello/optout/4XGe1E/1");
-        assertNotNull(mapping);
-        assertEquals("hello", mapping.getParameters().get("account"));
-        assertEquals("4XGe1E", mapping.getParameters().get("key"));
-        mapping = tree.map("/optout/4XGe1E/1");
-        assertNotNull(mapping);
-        assertNull(mapping.getParameters().get("account"));
+        List<Mapping<Object>> mappings = tree.map("/hello/optout/4XGe1E/1");
+        assertFalse(mappings.isEmpty());
+        assertEquals("hello", mappings.get(0).getParameters().get("account"));
+        assertEquals("4XGe1E", mappings.get(0).getParameters().get("key"));
+        mappings = tree.map("/optout/4XGe1E/1");
+        assertFalse(mappings.isEmpty());
+        assertNull(mappings.get(0).getParameters().get("account"));
     }
 
     @Test public void optionalEvent()
@@ -135,11 +136,11 @@ public class GlobTreeTest
         Glob glob = newGlob(GlobTestCase.class, "/{account}/optout/{key}/{receipt}/?{event}");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
-        Mapping<Object> mapping = tree.map("/hello/optout/4XGe1E/1/view");
-        assertNotNull(mapping);
-        assertEquals("view", mapping.getParameters().get("event"));
-        mapping = tree.map("/hello/optout/4XGe1E/1");
-        assertNotNull(mapping);
-        assertNull(mapping.getParameters().get("event"));
+        List<Mapping<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
+        assertFalse(mappings.isEmpty());
+        assertEquals("view", mappings.get(0).getParameters().get("event"));
+        mappings = tree.map("/hello/optout/4XGe1E/1");
+        assertFalse(mappings.isEmpty());
+        assertNull(mappings.get(0).getParameters().get("event"));
     }   
 }

@@ -1,7 +1,8 @@
 /* Copyright Alan Gutierrez 2006 */
 package com.goodworkalan.dovetail;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 // TODO Document.
 public final class Glob
@@ -78,82 +79,24 @@ public final class Glob
 
     // FIXME Sure, we can keep it, but let's just use the tree logic, create
     // a tree and match against that.
-    public GlobMapping map(String path)
+    public Map<String, String> _map(String path)
     {
-        CoreGlobMapping globMapping = new CoreGlobMapping(this);
-        if (match(globMapping, path))
+        GlobTree<Object> tree = new GlobTree<Object>();
+        tree.add(this, new Object());
+        List<Mapping<Object>> mapping = tree.map(path);
+        if (mapping.isEmpty())
         {
-            return globMapping;
+            return null;
         }
-        return null;
+        return mapping.get(0).getParameters();
     }
     
     // TODO Document.
     public boolean match(String path)
     {
-        return match(new NullGlobMapper(), path);
-    }
-    
-    // TODO Document.
-    public boolean match(GlobMapper mapper, String path)
-    {
-        return descend(mapper, matches, 0, path.split("/"), 0);
-    }
-
-    // TODO Document.
-    private static boolean descend(GlobMapper mapper, Test[] matches, int matchIndex, String[] parts, int partIndex)
-    {
-        int partsLeft = parts.length - partIndex;
-        int matchesLeft = matches.length - matchIndex;
-        for (int i = matchIndex; i < matches.length; i++)
-        {
-            if (matches[i].getMin() == 0)
-            {
-                matchesLeft--;
-            }
-        }
-        int min = matches[matchIndex].getMin();
-        int max = Math.min(partsLeft - matchesLeft + 1, matches[matchIndex].getMax());
-        for (int i = min; i <= max; i++)
-        {
-            Set<String> mark = mapper.mark();
-            if (match(mapper, matches, matchIndex, parts, partIndex, i))
-            {
-                return true;
-            }
-            mapper.revert(mark);
-        }
-        return false;
-    }
-
-    // TODO Document.
-    private static boolean match(GlobMapper mapper, Test[] matches, int matchIndex, String[] parts, int partIndex, int length)
-    {
-        if (length == 0 || matches[matchIndex].match(mapper, parts, partIndex, partIndex + length))
-        {
-            matchIndex++;
-            
-            partIndex += length;
-
-            if (partIndex == parts.length)
-            {
-                int matchesLeft = matches.length - matchIndex;
-                for (int i = matchIndex; i < matches.length; i++)
-                {
-                    if (matches[matchIndex].getMin() == 0)
-                    {
-                        matchesLeft--;
-                    }
-                }
-                return matchesLeft == 0;
-            }
-            if (matchIndex == matches.length)
-            {
-                return false;
-            }
-            return descend(mapper, matches, matchIndex, parts, partIndex);
-        }
-        return false;
+        GlobTree<Object> tree = new GlobTree<Object>();
+        tree.add(this, new Object());
+        return tree.match(path);
     }
 }
 
