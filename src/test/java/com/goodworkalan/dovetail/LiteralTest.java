@@ -11,12 +11,10 @@ public class LiteralTest
     @Test
     public void equality()
     {
-        Literal foo = new Literal("foo", 1);
+        Literal foo = new Literal("foo");
         assertTrue(foo.equals(foo));
-        assertTrue(foo.equals(new Literal("foo", 1)));
-        assertFalse(foo.equals(new Literal("foo", 2)));
-        assertFalse(foo.equals(new Literal("bar", 1)));
         assertFalse(foo.equals(new Object()));
-        assertEquals(foo.hashCode(), new Literal("foo", 1).hashCode());
+        assertEquals(foo, new Literal("foo"));
+        assertEquals(foo.hashCode(), new Literal("foo").hashCode());
     }
 }

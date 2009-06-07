@@ -29,14 +29,8 @@ public final class Glob
     private final Test[] matches;
     
     // TODO Document.
-    private final Class<?> conditionals;
+    private final MatchTest[] matchTests;
     
-    // TODO Document.
-    public Class<?> getConditionalClass()
-    {
-        return conditionals;
-    }
-        
     // TODO Document.
     public static String manyTest(String[] parts)
     {
@@ -52,11 +46,11 @@ public final class Glob
     }
     
     // TODO Document.
-    public Glob(Test[] matches, String pattern, Class<?> conditionals)
+    public Glob(Test[] matches, String pattern, MatchTest[] matchTests)
     {
         this.matches = matches;
         this.pattern = pattern;
-        this.conditionals = conditionals;
+        this.matchTests = matchTests;
     }
     
     // TODO Document.
@@ -75,6 +69,18 @@ public final class Glob
     public String getPattern()
     {
         return pattern;
+    }
+    
+    public boolean matchTests(String path, Map<String, String> parameters)
+    {
+        for (MatchTest matchTest : matchTests)
+        {
+            if (!matchTest.test(path, parameters))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     // FIXME Sure, we can keep it, but let's just use the tree logic, create

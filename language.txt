@@ -5,5 +5,5 @@
 /foo//(bar)a/(baz)
 /foo//(bar)ia/(baz)
 /foo//(bar)fi/(baz)
-/foo//(bar,foo (.+)-(.+) %s-%s){2,3}fi/(baz)
+/foo//(bar,foo (.+)-(.+) {1}-{2})[2,3]fi/(baz)
 /foo/(bar,foo (.+)-(.+) %s-%s)/(baz .*.cfm %s.cfm)

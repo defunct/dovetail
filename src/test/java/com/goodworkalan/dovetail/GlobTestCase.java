@@ -15,7 +15,7 @@ public class GlobTestCase
 {
     @Test public void startWithProperty()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}");
+        Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.match("/thinknola/optout/4XGe1E/1/2"));
         assertFalse(glob.match("/thinknola/snap/4XGe1E/1"));
@@ -23,7 +23,7 @@ public class GlobTestCase
     
     @Test public void matchOneOrMore()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{account}/optout/{key}/{receipt}");
+        Glob glob = new GlobCompiler().compile("//(account)/optout/(key)/(receipt)");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1"));
         assertTrue(glob.match("/thinknola/path/optout/4XGe1E/1"));
         assertTrue(glob.match("/one/two/three/optout/4XGe1E/1"));
@@ -33,7 +33,7 @@ public class GlobTestCase
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{account}/optout/{key}/{receipt}//{ignore}");
+        Glob glob = new GlobCompiler().compile("//(account)/optout/(key)/(receipt)//(ignore)");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(glob.match("/one/two/three/optout/4XGe1E/1/2"));
         assertFalse(glob.match("/one/two/three/snap/4XGe1E/1/2"));
@@ -41,36 +41,14 @@ public class GlobTestCase
     
     @Test public void matchRegularExpression()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account [A-Za-z0-9-]+}/optout/{key}/{receipt}");
+        Glob glob = new GlobCompiler().compile("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.match("/thinknola.d/optout/4XGe1E/1"));
     }
         
-    @Test public void matchTestMethod()
-    {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account [A-Za-z0-9-]+ #test}/optout/{key}/{receipt}");
-        assertFalse(glob.match("/thinknola/optout/4XGe1E/1"));
-        assertFalse(glob.match("/thinknola.d/optout/4XGe1E/1"));
-        assertTrue(glob.match("/example/optout/4XGe1E/1"));
-    }
-    
-    @Test public void matchTestGroup()
-    {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account an-([A-Za-z0-9-]+) #test %1}/optout/{key}/{receipt}");
-        assertFalse(glob.match("/an-thinknola/optout/4XGe1E/1"));
-        assertFalse(glob.match("/an-thinknola.d/optout/4XGe1E/1"));
-        assertFalse(glob.match("/example/optout/4XGe1E/1"));
-        assertTrue(glob.match("/an-example/optout/4XGe1E/1"));
-    }
-    
-    public void thinkingOutLoud() 
-    {
-        new GlobCompiler(Object.class).compile("//{path}/{page,extension (.+)\\.([^.]+) %1$s.%2$s}");
-    }
-    
     @Test public void regularExpressionGroup()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account an-([A-Za-z0-9-]+) %1}/optout/{key}/{receipt}");
+        Glob glob = new GlobCompiler().compile("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
         assertTrue(glob.match("/an-thinknola/optout/4XGe1E/1"));
         assertFalse(glob.match("/an-thinknola.d/optout/4XGe1E/1"));
         assertFalse(glob.match("/example/optout/4XGe1E/1"));
@@ -79,7 +57,7 @@ public class GlobTestCase
     
     @Test public void command()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("//{page}/optout/{key}/{receipt}/{event}");
+        Glob glob = new GlobCompiler().compile("//(page)/optout/(key)/(receipt)/(event)");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
         Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
         assertEquals("view", parameters.get("event"));
@@ -87,7 +65,7 @@ public class GlobTestCase
 
     @Test public void zeroOrOne()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/?{account}/optout/{key}/{receipt}");
+        Glob glob = new GlobCompiler().compile("//(account)[0,1]/optout/(key)/(receipt)");
         Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertEquals("hello", parameters.get("account"));
@@ -99,7 +77,7 @@ public class GlobTestCase
 
     @Test public void optionalEvent()
     {
-        Glob glob = new GlobCompiler(GlobTestCase.class).compile("/{account}/optout/{key}/{receipt}/?{event}");
+        Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)//(event)[0,1]");
         Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
         assertNotNull(parameters);
         assertEquals("view", parameters.get("event"));

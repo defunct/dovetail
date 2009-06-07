@@ -13,9 +13,6 @@ implements Test
     /** The literal text to compare against the part. */
     private final String text;
     
-    /** The minimum number of parts that this match can match. */
-    private final int min;
-
     /**
      * Create a match that will compare the given text against a part for
      * equality the given minimum and given maximum number of times in a URL
@@ -23,13 +20,10 @@ implements Test
      * 
      * @param text
      *            The literal text to compare against the part.
-     * @param min
-     *            The minimum number of times to apply the match.
      */
-    public Literal(String text, int min)
+    public Literal(String text)
     {
         this.text = text;
-        this.min = min;
     }
 
     /**
@@ -66,7 +60,7 @@ implements Test
      */
     public int getMin()
     {
-        return min;
+        return 1;
     }
 
     /**
@@ -98,8 +92,7 @@ implements Test
         if (object instanceof Literal)
         {
             Literal literal = (Literal) object;
-            return text.equals(literal.text)
-                && min == literal.min;
+            return text.equals(literal.text);
         }
         return false;
     }
@@ -113,9 +106,6 @@ implements Test
     @Override
     public int hashCode()
     {
-        int hash = 1;
-        hash = hash * 37 + text.hashCode();
-        hash = hash * 37 + min;
-        return hash;
+        return text.hashCode();
     }
 }

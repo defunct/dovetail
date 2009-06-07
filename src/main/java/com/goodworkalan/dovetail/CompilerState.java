@@ -1,0 +1,6 @@
+package com.goodworkalan.dovetail;
+
+enum CompilerState
+{
+    SEPARATOR, LITERAL, CAPTURE, PATTERN, IDENTIFIERS, REGEX, SPRINTF, LIMITS_OPEN, LIMITS, LIMITS_CLOSE, COMPLETE 
+}

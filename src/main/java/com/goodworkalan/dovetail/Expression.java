@@ -1,14 +1,11 @@
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.*;
+import static com.goodworkalan.dovetail.DovetailException.MISMATCHED_IDENTIFIERS;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * An expression that matches a part or sub path in a path pattern. This 
@@ -20,16 +17,12 @@ final class Expression
 implements Test
 {
     // TODO Document.
-    private final String parameter;
+    private final List<String> identifiers;
     
     // TODO Document.
-    private final Pattern pattern;
+    private final Pattern regex;
     
-    // TODO Document.
-    private final TestMethod test;
-    
-    // TODO Document.
-    private final Method manyTest;
+    private final String sprintf;
     
     // TODO Document.
     private final int min;
@@ -37,161 +30,7 @@ implements Test
     // TODO Document.
     private final int max;
     
-    // TODO Document.
-    public Expression(Class<?> target, String expression, int min, int max)
-    {
-        StringBuilder parameter = new StringBuilder();
-        StringBuilder pattern = new StringBuilder();
-        StringBuilder method = new StringBuilder();
-        StringBuilder group = new StringBuilder();
-
-        boolean eatWhite = true;
-        short state = Glob.PROPERTY;
-
-        char[] chars = expression.toCharArray();
-        
-        for (int i = 1; i < chars.length - 1; i++)
-        {
-            switch (state)
-            {
-                case Glob.PROPERTY:
-                    if (chars[i] == ' ')
-                    {
-                        if (!eatWhite)
-                        {
-                            state = Glob.PATTERN;
-                            eatWhite = true;
-                        }
-                    }
-                    else if (chars[i] == '@' && parameter.length() == 0)
-                    {
-                        parameter.append(chars[i]);
-                        eatWhite = false;
-                    }
-                    else if (Character.isJavaIdentifierPart(chars[i]))
-                    {
-                        parameter.append(chars[i]);
-                        eatWhite = false;
-                    }
-                    else
-                    {
-                        throw new DovetailException(0);
-                    }
-                    break;
-                case Glob.PATTERN:
-                    if (chars[i] == ' ')
-                    {
-                        if (!eatWhite)
-                        {
-                            state = Glob.TEST;
-                            eatWhite = true;
-                        }
-                    }
-                    else
-                    {
-                        pattern.append(chars[i]);
-                        eatWhite = false;
-                    }
-                    break;
-                case Glob.TEST:
-                    if (chars[i] == ' ')
-                    {
-                        if (!eatWhite)
-                        {
-                            state = Glob.GROUP;
-                            eatWhite = true;
-                        }
-                    }
-                    else if(chars[i] == '%' && method.length() == 0)
-                    {
-                        eatWhite = false;
-                        state = Glob.GROUP;
-                    }
-                    else if(chars[i] == '#')
-                    {
-                         if (method.length() != 0)
-                         {
-                             throw new DovetailException(USELESS_ERROR_CODE);
-                         }
-                    }
-                    else if(Character.isJavaIdentifierPart(chars[i]))
-                    {
-                        method.append(chars[i]);
-                        eatWhite = false;
-                    }
-                    else
-                    {
-                        throw new DovetailException(USELESS_ERROR_CODE);
-                    }
-                    break;
-                case Glob.GROUP:
-                    if (chars[i] == ' ')
-                    {
-                        state = Glob.DONE;
-                    }
-                    else if(chars[i] == '%')
-                    {
-                         if (group.length() != 0)
-                         {
-                             throw new DovetailException(USELESS_ERROR_CODE);
-                         }
-                    }
-                    else if (Character.isDigit(chars[i]))
-                    {
-                        group.append(chars[i]);
-                    }
-                    else
-                    {
-                        throw new DovetailException(USELESS_ERROR_CODE);
-                    }
-                    break;
-                case Glob.DONE:
-                    if (chars[i] != ' ')
-                    {
-                        throw new DovetailException(USELESS_ERROR_CODE);
-                    }
-                    break;
-            }
-        }
-        this.min = min;
-        this.max = max;
-        if (parameter.length() == 0)
-        {
-            throw new DovetailException(USELESS_ERROR_CODE);
-        }
-        this.parameter = parameter.toString();
-        if (pattern.length() == 0)
-        {
-            this.pattern = Pattern.compile(".*");
-        }
-        else
-        {
-            try
-            {
-                this.pattern = Pattern.compile(pattern.toString());
-            }
-            catch (PatternSyntaxException e)
-            {
-                throw new DovetailException(USELESS_ERROR_CODE, e);
-            }
-        }
-        if (method.length() == 0)
-        {
-            this.test = new GroupTestMethod(toGroup(group));
-        }
-        else
-        {
-            this.test = getTestMethod(target, method.toString(), group);
-        }
-        if (method.length() == 0)
-        {
-            this.manyTest = getManyTestMethod(Glob.class, "manyTest");
-        }
-        else
-        {
-            this.manyTest = getManyTestMethod(Glob.class, method.toString());
-        }
-    }
+    private final boolean deep;
     
     // TODO Document.
     public int toGroup(CharSequence group)
@@ -203,90 +42,81 @@ implements Test
         return Integer.parseInt(group.toString());
     }
     
-    // TODO Document.
-    private TestMethod getTestMethod(Class<?> target, String methodName, CharSequence group)
+    public Expression(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean deep)
     {
-        Method method;
-        try
-        {
-            method = target.getMethod(methodName, Matcher.class);
-            return new MatcherTestMethod(method);
-        }
-        catch (Exception e)
-        {
-        }
-        try
-        {
-            method = target.getMethod(methodName, String.class);
-            return new StringTestMethod(method, toGroup(group));
-        }
-        catch (Exception e)
-        {
-        }
-        try
-        {
-            target.getMethod(methodName, String[].class);
-            return new GroupTestMethod(toGroup(group));
-        }
-        catch (Exception e)
-        {
-            throw new DovetailException(USELESS_ERROR_CODE, e);
-        }
-    }
-    
-    // TODO Document.
-    public static Method getManyTestMethod(Class<?> target, String methodName)
-    {
-        try
-        {
-            return target.getMethod(methodName, String[].class);
-        }
-        catch (Exception e)
-        {
-            return getManyTestMethod(Glob.class, "manyTest");
-        }
+        this.identifiers = identifiers;
+        this.regex = regex;
+        this.sprintf = sprintf;
+        this.min = min;
+        this.max = max;
+        this.deep = deep;
     }
 
     // TODO Document.
     public boolean match(Map<String, String> parameters, String[] parts, int start, int end)
     {
-        List<String> path = new ArrayList<String>();
-        for (int i = start; i < end; i++)
+        if (min == 0 && end - start == 0)
         {
-            Matcher matcher = pattern.matcher(parts[i]);
-            if (matcher.matches())
+            return true;
+        }
+        else
+        {
+            if (deep)
             {
-                try
+                StringBuilder path = new StringBuilder();
+                for (int i = start; i < end; i++)
                 {
-                    String value = test.test(matcher);
-                    if (value == null)
-                    {
-                        return false;
-                    }
-                    path.add(value);
+                    path.append(parts[i]).append("/");
                 }
-                catch (Exception e)
+                Matcher matcher = regex.matcher(path);
+                if (matcher.matches())
                 {
-                    throw new DovetailException(USELESS_ERROR_CODE, e);
+                    parameters(matcher, parameters);
+                    return true;
                 }
+                
+            }
+            else if (end - start != 1)
+            {
+                throw new IllegalStateException();
             }
             else
             {
-                return false;
+                Matcher matcher = regex.matcher(parts[start]);
+                if (matcher.matches())
+                {
+                    parameters(matcher, parameters);
+                    return true;
+                }
             }
         }
-        try
+        return false;
+    }
+    
+    private boolean parameters(Matcher matcher, Map<String, String> parameters)
+    {
+        if (matcher.matches())
         {
-            String catenated = (String) manyTest.invoke(null, new Object[] { path.toArray(new String[path.size()]) });
-            if (catenated != null)
+            if (matcher.groupCount() == 0)
             {
-                parameters.put(parameter, catenated);
-                return true;
+                if (identifiers.size() != 1)
+                {
+                    throw new DovetailException(MISMATCHED_IDENTIFIERS).add(1, identifiers.size());
+                }
+                parameters.put(identifiers.get(0), matcher.group());
             }
-        }
-        catch (Exception e)
-        {
-            throw new DovetailException(USELESS_ERROR_CODE, e);
+            else
+            {
+                if (identifiers.size() != matcher.groupCount())
+                {
+                    throw new DovetailException(MISMATCHED_IDENTIFIERS).add(matcher.groupCount(), identifiers.size());
+                }
+                for (int i = 0; i < matcher.groupCount(); i++)
+                {
+                    parameters.put(identifiers.get(i), matcher.group(i + 1));
+                }
+            }
+            return true;
         }
         return false;
     }
@@ -314,12 +144,12 @@ implements Test
         if (obj instanceof Expression)
         {
             Expression other = (Expression) obj;
-            return manyTest.equals(other.manyTest)
-                && min == other.min
+            return min == other.min
                 && max == other.max
-                && parameter.equals(other.parameter)
-                && pattern.pattern().equals(other.pattern.pattern())
-                && test.equals(other.test);
+                && identifiers.equals(other.identifiers)
+                && regex.pattern().equals(other.regex.pattern())
+                && sprintf.equals(other.sprintf)
+                && deep == deep;
         }
         return false;
     }
@@ -329,12 +159,12 @@ implements Test
     public int hashCode()
     {
         int hash = 1;
-        hash = hash * 37 + manyTest.hashCode();
         hash = hash * 37 + max;
         hash = hash * 37 + min;
-        hash = hash * 37 + parameter.hashCode();
-        hash = hash * 37 + pattern.hashCode();
-        hash = hash * 37 + test.hashCode();
+        hash = hash * 37 + identifiers.hashCode();
+        hash = hash * 37 + regex.pattern().hashCode();
+        hash = hash * 37 + sprintf.hashCode();
+        hash = hash * 37 + (deep ? 15485867 : 32452843);
         return hash;
     }
 }

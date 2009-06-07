@@ -23,8 +23,45 @@ extends RuntimeException
     /** A list of arguments to the formatted error message. */
     private final List<Object> arguments = new ArrayList<Object>();
     
+    /** The compiler has been given an empty pattern. */
+    public final static int EMPTY_PATTERN = 301;
+    
+    /** A pattern must begin with a forward slash. */
+    public final static int FIRST_FORWARD_SLASH_MISSING = 302;
+    
+    /** Expecting an open parenthesis after a multi-level match specifier. */
+    public final static int EXPECTING_OPEN_PARENTESIS = 303;
+    
+    public final static int IDENTIFER_MISSING = 304;
+
     /** Unexpected question mark at a given position. */
-    public final static int UNEXPECTED_QUESION_MARK = 301;
+    public final static int EXPECTING_JAVA_IDENTIFIER_START = 305;
+
+    public final static int EXPECTING_JAVA_IDENTIFIER_PART = 306;
+    
+    public final static int UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION = 307;
+
+    public final static int CANNOT_PARSE_REGULAR_EXPESSION = 308;
+    
+    public final static int INVALID_LIMIT_CHARACTER = 309;
+    
+    public final static int UNEXPECTED_COMMA_IN_LIMIT = 310;
+
+    public final static int MINIMUM_LIMIT_REQUIRED = 311;
+    
+    public final static int CANNOT_PARSE_LIMIT_VALUE = 312;
+    
+    public final static int CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE = 313;
+    
+    public final static int CLOSING_BRACKED_EXPECTED = 314;
+    
+    public final static int PATH_SEPARATOR_EXPECTED = 315;
+    
+    public final static int MISMATCHED_IDENTIFIERS = 401;
+    
+    public final static int MATCH_TEST_CONSTRUCTOR_THREW_EXCEPTION = 501;
+
+    public final static int MATCH_TEST_CONSTRUCTOR_NOT_VISIBLE = 502;
     
     /** Have not gotten around to creating a meaninful error message. */
     public final static int USELESS_ERROR_CODE = 0;
@@ -77,9 +114,12 @@ extends RuntimeException
      *            The format argument.
      * @return This sheaf exception for chained invocation of add.
      */
-    public DovetailException add(Object argument)
+    public DovetailException add(Object...args)
     {
-        arguments.add(argument);
+        for (Object argument : args)
+        {
+            arguments.add(argument);
+        }
         return this;
     }
 
@@ -93,7 +133,7 @@ extends RuntimeException
     public String getMessage()
     {
         String key = Integer.toString(code);
-        ResourceBundle exceptions = ResourceBundle.getBundle("com.goodworkalan.sheaf.exceptions");
+        ResourceBundle exceptions = ResourceBundle.getBundle("com.goodworkalan.dovetail.exceptions");
         String format;
         try
         {
