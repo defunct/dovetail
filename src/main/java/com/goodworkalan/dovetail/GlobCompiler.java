@@ -9,38 +9,89 @@ import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLAS
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO Document.
+/**
+ * Creates a glob from a glob pattern.
+ * <p>
+ * Additional tests can be specified using <code>test</code> methods.
+ * 
+ * @author Alan Gutierrez
+ */
 public final class GlobCompiler
 {
-    // FIXME This becomes a factory specific to this package.
+    /** A factory used to create match tests. */
     private final MatchTestFactory factory;
     
+    /** The list of match tests to apply when a glob successfully matches. */
     private final List<MatchTest> matchTests;
     
-    // TODO Document.
+    /**
+     * Create a glob compiler that will create match tests using the given
+     * match test factory, when match tests are specified by providing a class.
+     * 
+     * @param factory A match test factory.
+     */
     public GlobCompiler(MatchTestFactory factory)
     {
         this.factory = factory;
         this.matchTests = new ArrayList<MatchTest>();
     }
-    
+
+    /**
+     * Create a glob compiler. The glob compiler will be created with a default
+     * match test factory. If match tests are specified by class, the match
+     * tests will be instantiated by calling their default constructor.
+     */
     public GlobCompiler()
     {
         this(new SimpleMatchTestFactory());
     }
-    
+
+    /**
+     * Add a match test that will be applied to the path and the extracted
+     * parameters after a glob matches. If any of match tests associated with a
+     * glob returns false, the glob match will be considered a mismatch.
+     * <p>
+     * And instance of the given match test class will be created using the
+     * match test factory associated with this glob compiler. This gives the
+     * client programmer the opportunity to construct a match test initialized
+     * with application resources, such as a database connection so that a user
+     * name parameter can be sought in a database, and the match rejected if no
+     * such user exists.
+     * 
+     * @param matchTestClass
+     *            The class of a match test to apply to otherwise successful glob
+     *            matches.
+     * @return This glob compiler as part of a chained builder.
+     */
     public GlobCompiler test(Class<? extends MatchTest> matchTestClass)
     {
         matchTests.add(new FactoryBuiltMatchTest(factory, matchTestClass));
         return this;
     }
-    
+
+    /**
+     * Add a match test that will be applied to the path and the extracted
+     * parameters after a glob matches. If any of match tests associated with a
+     * glob returns false, the glob match will be considered a mismatch.
+     * 
+     * @param matchTest
+     *            The match test to apply to otherwise successful glob matches.
+     * @return This glob compiler as part of a chained builder.
+     */
     public GlobCompiler test(MatchTest matchTest)
     {
         matchTests.add(matchTest);
         return this;
     }
-    
+
+    /**
+     * Compile a glob from the given glob pattern that will apply the match
+     * tests added to the glob compiler through the <code>test</code> methods.
+     * 
+     * @param pattern
+     *            The glob pattern.
+     * @return A glob object.
+     */
     public Glob compile(String pattern)
     {
         if (pattern == null)
@@ -53,7 +104,7 @@ public final class GlobCompiler
         }
         if (pattern.charAt(0) != '/')
         {
-            throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 0);
+            throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 1);
         }
         Compilation compilation = new Compilation(pattern);
         while (compilation.hasMoreTokens())
@@ -271,7 +322,13 @@ public final class GlobCompiler
         }
         return new Glob(compilation.getTests(), pattern, getMatchTests());
     }
-    
+
+    /**
+     * Convert the list of match tests to an array and clear the match test
+     * list.
+     * 
+     * @return The list of match tests as an array.
+     */
     private MatchTest[] getMatchTests()
     {
         MatchTest[] array = matchTests.toArray(new MatchTest[matchTests.size()]);

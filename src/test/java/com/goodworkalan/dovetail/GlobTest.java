@@ -1,7 +1,7 @@
 /* Copyright Alan Gutierrez 2006 */
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATTERN;
+import static com.goodworkalan.dovetail.DovetailException.*;
 import static com.goodworkalan.dovetail.DovetailException.FIRST_FORWARD_SLASH_MISSING;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -112,7 +112,7 @@ public class GlobTest
         catch (DovetailException e)
         {
             assertEquals(e.getCode(), FIRST_FORWARD_SLASH_MISSING);
-            assertEquals(e.getMessage(), "A pattern must begin with a forward slash. Pattern hello at position 0.");
+            assertEquals(e.getMessage(), "A pattern must begin with a forward slash. Pattern hello at position 1.");
             throw e;
         }
     }
@@ -120,6 +120,20 @@ public class GlobTest
     @Test(expectedExceptions=NullPointerException.class) public void compileNullPointer() 
     {
         new GlobCompiler().compile(null);
+    }
+    
+    @Test(expectedExceptions=DovetailException.class) public void expectingOpenParenthesis() 
+    {
+        try
+        {
+            new GlobCompiler().compile("//hello");
+        }
+        catch (DovetailException e)
+        {
+            assertEquals(e.getCode(), EXPECTING_OPEN_PARENTESIS);
+            assertEquals(e.getMessage(), "An open parenthesis is expected following a double-slash path match specifier. Pattern //hello at position 3.");
+            throw e;
+        }
     }
 }
 
