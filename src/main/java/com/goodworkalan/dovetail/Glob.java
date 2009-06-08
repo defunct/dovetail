@@ -25,8 +25,8 @@ public final class Glob
     // TODO Document.
     private final String pattern;
 
-    // TODO Document.
-    private final Test[] matches;
+    /** The array of tests to apply against a path. */
+    private final Test[] tests;
     
     // TODO Document.
     private final MatchTest[] matchTests;
@@ -48,7 +48,7 @@ public final class Glob
     // TODO Document.
     public Glob(Test[] matches, String pattern, MatchTest[] matchTests)
     {
-        this.matches = matches;
+        this.tests = matches;
         this.pattern = pattern;
         this.matchTests = matchTests;
     }
@@ -56,13 +56,13 @@ public final class Glob
     // TODO Document.
     public int size()
     {
-        return matches.length;
+        return tests.length;
     }
     
     // TODO Document.
     public Test get(int i)
     {
-        return matches[i];
+        return tests[i];
     }
 
     // TODO Document.
@@ -70,7 +70,22 @@ public final class Glob
     {
         return pattern;
     }
-    
+
+    /**
+     * Apply the match tests in this glob to the given path and map of
+     * parameters.
+     * <p>
+     * FIXME Not quite right. Rethink creation pattern. Tests should be
+     * applied by the tree, they should not be in two places. Glob might become
+     * internal, or only a limited interface, a GlobTree returns a compiler, the
+     * compiler builds the Glob and adds it to the tree.
+     * 
+     * @param path
+     *            The path to text.
+     * @param parameters
+     *            The parameters to test.
+     * @return True if all the match tests in this glob pass.
+     */
     public boolean matchTests(String path, Map<String, String> parameters)
     {
         for (MatchTest matchTest : matchTests)
@@ -83,8 +98,14 @@ public final class Glob
         return true;
     }
 
-    // FIXME Sure, we can keep it, but let's just use the tree logic, create
-    // a tree and match against that.
+    /**
+     * Test the glob against the given path returning a map of the captured
+     * parameters if it matches, null if it does not match.
+     * 
+     * @param path
+     *            The path to match.
+     * @return A map of the cpatured parameters of null if it does not match.
+     */
     public Map<String, String> _map(String path)
     {
         GlobTree<Object> tree = new GlobTree<Object>();
@@ -96,13 +117,44 @@ public final class Glob
         }
         return mapping.get(0).getParameters();
     }
-    
-    // TODO Document.
+
+    /**
+     * Return true if the given path is matched by this glob.
+     * 
+     * @param path
+     *            The path to match.
+     * @return True if the path matches this glob.
+     */
     public boolean match(String path)
     {
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(this, new Object());
         return tree.match(path);
+    }
+
+    /**
+     * Recreate a path from this glob using the parameters in the given
+     * parameter map to replace the parameter captures in glob pattern.
+     * 
+     * @param path
+     *            The path buffer.
+     * @param parameters
+     *            The parameters used to replace parameter captures in the glob
+     *            pattern.
+     */
+    public String path(Map<String, String> parameters)
+    {
+        StringBuilder path = new StringBuilder();
+        path.append("/");
+        for (int i = 1, size = tests.length; i < size; i++)
+        {
+            if (path.charAt(path.length() - 1) != '/')
+            {
+                path.append('/');
+            }
+            tests[i].append(path, parameters);
+        }
+        return path.toString();
     }
 }
 

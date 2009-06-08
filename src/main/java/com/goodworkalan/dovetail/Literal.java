@@ -108,4 +108,10 @@ implements Test
     {
         return text.hashCode();
     }
+    
+    // TODO Document.
+    public void append(StringBuilder path, Map<String, String> parameters)
+    {
+        path.append(text);
+    }
 }

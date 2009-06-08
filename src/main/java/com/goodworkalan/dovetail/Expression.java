@@ -1,5 +1,6 @@
 package com.goodworkalan.dovetail;
 
+import static com.goodworkalan.dovetail.DovetailException.*;
 import static com.goodworkalan.dovetail.DovetailException.MISMATCHED_IDENTIFIERS;
 
 import java.util.List;
@@ -131,6 +132,20 @@ implements Test
     public int getMax()
     {
         return max;
+    }
+    
+    public void append(StringBuilder path, Map<String, String> parameters)
+    {
+        Object[] args = new Object[identifiers.size()];
+        for (int i = 0; i < identifiers.size(); i++)
+        {
+            args[i] = parameters.get(identifiers.get(i));
+            if (args[i] == null)
+            {
+                throw new DovetailException(FORMAT_PARAMETER_IS_NULL).add(identifiers.get(i));
+            }
+        }
+        path.append(String.format(sprintf, args));
     }
 
     // TODO Document.

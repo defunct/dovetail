@@ -135,6 +135,29 @@ public class GlobTest
             throw e;
         }
     }
+    
+    @Test public void eatWhiteAfterParenthesis()
+    {
+        Glob glob = new GlobCompiler().compile("/( account)/optout/(key)/(receipt)");
+        assertTrue(glob.match("/thinknola/optout/4XGe1E/1"));
+        assertFalse(glob.match("/thinknola/optout/4XGe1E/1/2"));
+        assertFalse(glob.match("/thinknola/snap/4XGe1E/1"));
+    }
+
+    @Test public void multipleIdentifiers()
+    {
+        Glob glob = new GlobCompiler().compile("/(bar,baz (.*)-(.*) %s-%s)/foo");
+        
+        assertTrue(glob.match("/a-b/foo"));
+        assertFalse(glob.match("/a+b/foo"));
+        assertFalse(glob.match("/a+b/bar"));
+        
+        Map<String, String> parameters = glob._map("/a-b/foo");
+        assertEquals("a", parameters.get("bar"));
+        assertEquals("b", parameters.get("baz"));
+        
+        assertEquals(glob.path(parameters), "/a-b/foo");
+    }
 }
 
 /* vim: set et sw=4 ts=4 ai tw=78 nowrap: */

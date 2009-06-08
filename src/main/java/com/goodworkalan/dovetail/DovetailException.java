@@ -63,6 +63,8 @@ extends RuntimeException
 
     public final static int MATCH_TEST_CONSTRUCTOR_NOT_VISIBLE = 502;
     
+    public final static int FORMAT_PARAMETER_IS_NULL = 601;
+    
     /** Have not gotten around to creating a meaninful error message. */
     public final static int USELESS_ERROR_CODE = 0;
     

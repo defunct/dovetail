@@ -40,4 +40,17 @@ interface Test
      * @return The maximum number of parts that this match can match.
      */
     public int getMax();
+
+    /**
+     * Recreate this part of the path and append it to the given path buffer
+     * using the given parameters map to replace the parameter captures in glob
+     * pattern.
+     * 
+     * @param path
+     *            The path buffer.
+     * @param parameters
+     *            The parameters used to replace parameter captures in the glob
+     *            pattern.
+     */
+    public void append(StringBuilder path, Map<String, String> parameters);
 }

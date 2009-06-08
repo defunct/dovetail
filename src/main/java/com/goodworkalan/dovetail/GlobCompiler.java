@@ -164,7 +164,6 @@ public final class GlobCompiler
                 else if (token == ',')
                 {
                     compilation.addIdentifier();
-                    compilation.setState(CompilerState.REGEX);
                     compilation.startParenthesisMatching();
                 }
                 else if (token == ')')
@@ -213,7 +212,7 @@ public final class GlobCompiler
                     if (!compilation.isEatWhite())
                     {
                         compilation.setRegex();
-                        compilation.setState(CompilerState.LIMITS_OPEN);
+                        compilation.setState(CompilerState.SPRINTF);
                         compilation.startParenthesisMatching();
                     }
                 }
