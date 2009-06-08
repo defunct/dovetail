@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.testng.annotations.Test;
 
-public class GlobTestCase
+public class GlobTest
 {
     @Test public void startWithProperty()
     {
@@ -86,17 +86,7 @@ public class GlobTestCase
         parameters = glob._map("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertNull(parameters.get("event"));
-    }
-
-    public static String test(String input)
-    {
-        if (input.equals("example"))
-        {
-            return input;
-        }
-        return null;
-    }
-    
+    }    
     
     @Test(expectedExceptions=DovetailException.class) public void emptyString() 
     {
