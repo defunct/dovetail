@@ -37,32 +37,46 @@ extends RuntimeException
     /** Unexpected question mark at a given position. */
     public final static int EXPECTING_JAVA_IDENTIFIER_START = 305;
 
+    // TODO Document.
     public final static int EXPECTING_JAVA_IDENTIFIER_PART = 306;
     
+    // TODO Document.
     public final static int UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION = 307;
 
+    // TODO Document.
     public final static int CANNOT_PARSE_REGULAR_EXPESSION = 308;
     
+    // TODO Document.
     public final static int INVALID_LIMIT_CHARACTER = 309;
     
+    // TODO Document.
     public final static int UNEXPECTED_COMMA_IN_LIMIT = 310;
 
+    // TODO Document.
     public final static int MINIMUM_LIMIT_REQUIRED = 311;
     
+    // TODO Document.
     public final static int CANNOT_PARSE_LIMIT_VALUE = 312;
     
+    // TODO Document.
     public final static int CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE = 313;
     
+    // TODO Document.
     public final static int CLOSING_BRACKED_EXPECTED = 314;
     
+    // TODO Document.
     public final static int PATH_SEPARATOR_EXPECTED = 315;
     
+    // TODO Document.
     public final static int MISMATCHED_IDENTIFIERS = 401;
     
+    // TODO Document.
     public final static int MATCH_TEST_CONSTRUCTOR_THREW_EXCEPTION = 501;
 
+    // TODO Document.
     public final static int MATCH_TEST_CONSTRUCTOR_NOT_VISIBLE = 502;
     
+    // TODO Document.
     public final static int FORMAT_PARAMETER_IS_NULL = 601;
     
     /** Have not gotten around to creating a meaninful error message. */

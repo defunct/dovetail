@@ -2,8 +2,10 @@ package com.goodworkalan.dovetail;
 
 import static com.goodworkalan.dovetail.DovetailException.*;
 
+// TODO Document.
 public class SimpleMatchTestFactory implements MatchTestFactory
 {
+    // TODO Document.
     public MatchTest getInstance(Class<? extends MatchTest> matchTestClass)
     {
         try

@@ -31,18 +31,10 @@ implements Test
     // TODO Document.
     private final int max;
     
+    // TODO Document.
     private final boolean deep;
     
     // TODO Document.
-    public int toGroup(CharSequence group)
-    {
-        if (group.length() == 0)
-        {
-            return -1;
-        }
-        return Integer.parseInt(group.toString());
-    }
-    
     public Expression(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean deep)
     {
         this.identifiers = identifiers;
@@ -94,6 +86,7 @@ implements Test
         return false;
     }
     
+    // TODO Document.
     private boolean parameters(Matcher matcher, Map<String, String> parameters)
     {
         if (matcher.matches())
@@ -134,6 +127,7 @@ implements Test
         return max;
     }
     
+    // TODO Document.
     public void append(StringBuilder path, Map<String, String> parameters)
     {
         Object[] args = new Object[identifiers.size()];

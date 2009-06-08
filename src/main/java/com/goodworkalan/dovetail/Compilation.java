@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * A structure to maintain the state of the compilation of a glob pattern.
+ *
+ * @author Alan Guiterrez
+ */
 final class Compilation
 {
     /** The glob expression to parse. */
@@ -36,20 +41,34 @@ final class Compilation
     /** The compiler state. */
     private CompilerState state;
 
+    /** True if any white space encountered should be eaten. */
     private boolean eatWhite;
     
+    /** True if the previous character encountered was an escape character. */
     private boolean escape;
     
+    /** True if the match is supposed to match multiple path parts. */
+    // FIXME Rename multi.
     private boolean deep;
     
-    private int min;
+    /** The minimum number of times a part expression can match. */
+    private int minimum;
     
-    private int max;
+    /** The maximum number of times a part expression can match. */
+    private int maximum;
     
+    /** The count of open parenthesis. */
     private int parenthesis;
 
+    /** The index of the next character in the glob to process. */
     private int index;
 
+    /**
+     * Create a new compilation that will process the given glob pattern.
+     * 
+     * @param glob
+     *            The glob pattern.
+     */
     public Compilation(String glob)
     {
         this.glob = glob;
@@ -58,74 +77,122 @@ final class Compilation
         this.state = CompilerState.SEPARATOR;
         this.identifiers = new ArrayList<String>();
         this.index = 1;
-        this.min = -1;
-        this.max = -1;
+        this.minimum = -1;
+        this.maximum = -1;
 
         // First test is always an empty string literal.
         tests.add(new Literal(""));
     }
-    
+
+    /**
+     * Return true if the compilation has more characters to process.
+     * 
+     * @return True if there are more token.
+     */
     public boolean hasMoreTokens()
     {
         return index < glob.length();
     }
     
+    /**
+     * Return the next character to process and advance the index.
+     * 
+     * @return The next token.
+     */
     public char nextToken()
     {
         return glob.charAt(index++);
     }
-    
+
+    /**
+     * Add the glob and the 1 based position of the current character to the
+     * format arguments of the {@link DovetailException}.
+     * 
+     * @param e
+     *            An exception.
+     * @return The given exception.
+     */
     public DovetailException ex(DovetailException e)
     {
         return e.add(glob, index); 
     }
     
+    /**
+     * Set the compiler state.
+     * 
+     * @param state The compiler state.
+     */
     public void setState(CompilerState state)
     {
         this.state = state;
     }
     
+    /**
+     * Get the compiler state.
+     * 
+     * @return The compiler state.
+     */
     public CompilerState getState()
     {
         return state;
     }
     
+    /**
+     * Set minimum and maximum parts that the test can match to exactly one.
+     */
     public void setExactlyOne()
     {
-        min = max = 1;
+        minimum = maximum = 1;
     }
-    
+
+    /**
+     * Return true of the minimum and maximum parts that the test can match are
+     * set to exactly one.
+     * 
+     * @return True if test will match exactly one part.
+     */
     public boolean isExactlyOne()
     {
-        return min == 1 && max == 1;
+        return minimum == 1 && maximum == 1;
     }
-    
+
+    /**
+     * Return true of white space characters encountered in the pattern is to be
+     * be eaten.
+     * 
+     * @return True if white space is to be eaten.
+     */
     public boolean isEatWhite()
     {
         return eatWhite;
     }
     
+    // TODO Document.
     public void setEatWhite()
     {
         this.eatWhite = glob.charAt(index - 1) == ' ';
     }
     
+    // TODO Document.
     public boolean isEscape()
     {
         return escape;
     }
 
+    // TODO Document.
     public void setEscapeIf(char escaper)
     {
         escape = glob.charAt(index - 1) == escaper;
     }
     
+    // TODO Document.
     public void startParenthesisMatching()
     {
         eatWhite = true;
         parenthesis = 0;
     }
     
+    // TODO Document.
     public void openParenthesis()
     {
         if (!escape)
@@ -134,11 +201,13 @@ final class Compilation
         }
     }
     
+    // TODO Document.
     public boolean closeParenthesis()
     {
         return escape || parenthesis-- != 0;
     }
     
+    // TODO Document.
     public void setRegex()
     {
         try
@@ -152,12 +221,14 @@ final class Compilation
         capture.setLength(0);
     }
     
+    // TODO Document.
     public void setSprintf()
     {
         sprintf = capture.toString();
         capture.setLength(0);
     }
 
+    // TODO Document.
     public void assertIdentifierCharacter(char token)
     {
         if (capture.length() == 0 && !Character.isJavaIdentifierStart(token))
@@ -170,22 +241,26 @@ final class Compilation
         }
     }
 
+    // TODO Document.
     public void setDeep(boolean deep)
     {
         this.deep = deep;
     }
     
+    // TODO Document.
     public void addLiteral()
     {
         tests.add(new Literal(capture.toString()));
         capture.setLength(0);
     }
     
+    // TODO Document.
     public void append(char token)
     {
         capture.append(token);
     }
     
+    // TODO Document.
     public void addIdentifier()
     {
         if (capture.length() == 0)
@@ -196,6 +271,7 @@ final class Compilation
         capture.setLength(0);
     }
 
+    // TODO Document.
     public void addExpression()
     {
         if (regex == null)
@@ -206,28 +282,29 @@ final class Compilation
         {
             sprintf = "%s";
         }
-        if (min == -1)
+        if (minimum == -1)
         {
-            min = 1;
+            minimum = 1;
         }
-        if (max == -1)
+        if (maximum == -1)
         {
-            max = Integer.MAX_VALUE;
+            maximum = Integer.MAX_VALUE;
         }
-        Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, min, max, deep);
+        Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, deep);
         tests.add(expression);
         identifiers.clear();
         regex = null;
         sprintf = null;
         deep = false;
-        min = -1;
-        max = -1;
+        minimum = -1;
+        maximum = -1;
         parenthesis = 0;
     }
     
+    // TODO Document.
     public void setMinimum()
     {
-        if (min != -1)
+        if (minimum != -1)
         {
             throw new DovetailException(UNEXPECTED_COMMA_IN_LIMIT);
         }
@@ -237,7 +314,7 @@ final class Compilation
         }
         try
         {
-            min = Integer.parseInt(capture.toString());
+            minimum = Integer.parseInt(capture.toString());
         }
         catch (NumberFormatException e)
         {
@@ -246,24 +323,25 @@ final class Compilation
         capture.setLength(0);
     }
     
+    // TODO Document.
     public void setLimit()
     {
-        if (min == -1)
+        if (minimum == -1)
         {
             setMinimum();
-            max = min;
+            maximum = minimum;
         }
         else
         {
             if (capture.length() == 0)
             {
-                max = Integer.MAX_VALUE;
+                maximum = Integer.MAX_VALUE;
             }
             else
             {
                 try
                 {
-                    max = Integer.parseInt(capture.toString());
+                    maximum = Integer.parseInt(capture.toString());
                 }
                 catch (NumberFormatException e)
                 {
@@ -274,6 +352,11 @@ final class Compilation
         capture.setLength(0);
     }
     
+    /**
+     * Convert the list of tests to an array.
+     *  
+     * @return The list of tests as an array.
+     */
     public Test[] getTests()
     {
         return tests.toArray(new Test[tests.size()]);

@@ -7,3 +7,6 @@
 /foo//(bar)fi/(baz)
 /foo//(bar,foo (.+)-(.+) {1}-{2})[2,3]fi/(baz)
 /foo/(bar,foo (.+)-(.+) %s-%s)/(baz .*.cfm %s.cfm)
+/foo/(bar,foo (.+)-(.+) %s-%s)+/(baz .*.cfm %s.cfm)
+
+# Ah, but // makes it "multi".
