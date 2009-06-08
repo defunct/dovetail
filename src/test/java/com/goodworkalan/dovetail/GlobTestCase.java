@@ -1,11 +1,13 @@
 /* Copyright Alan Gutierrez 2006 */
 package com.goodworkalan.dovetail;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATTERN;
+import static com.goodworkalan.dovetail.DovetailException.FIRST_FORWARD_SLASH_MISSING;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
 
@@ -93,6 +95,41 @@ public class GlobTestCase
             return input;
         }
         return null;
+    }
+    
+    
+    @Test(expectedExceptions=DovetailException.class) public void emptyString() 
+    {
+        try
+        {
+            new GlobCompiler().compile("");
+        }
+        catch (DovetailException e)
+        {
+            assertEquals(e.getCode(), EMPTY_PATTERN);
+            assertEquals(e.getMessage(), "Cannot create a glob from an empty string.");
+            throw e;
+        }
+    }
+
+    
+    @Test(expectedExceptions=DovetailException.class) public void errorNotLeadingSlash() 
+    {
+        try
+        {
+            new GlobCompiler().compile("hello");
+        }
+        catch (DovetailException e)
+        {
+            assertEquals(e.getCode(), FIRST_FORWARD_SLASH_MISSING);
+            assertEquals(e.getMessage(), "A pattern must begin with a forward slash. Pattern hello at position 0.");
+            throw e;
+        }
+    }
+    
+    @Test(expectedExceptions=NullPointerException.class) public void compileNullPointer() 
+    {
+        new GlobCompiler().compile(null);
     }
 }
 

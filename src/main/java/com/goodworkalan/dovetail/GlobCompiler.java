@@ -53,7 +53,7 @@ public final class GlobCompiler
         }
         if (pattern.charAt(0) != '/')
         {
-            throw new DovetailException(FIRST_FORWARD_SLASH_MISSING);
+            throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 0);
         }
         Compilation compilation = new Compilation(pattern);
         while (compilation.hasMoreTokens())
