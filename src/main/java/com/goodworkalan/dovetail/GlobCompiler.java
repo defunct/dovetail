@@ -1,14 +1,14 @@
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE;
+import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATH_PART;
 import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATTERN;
 import static com.goodworkalan.dovetail.DovetailException.FIRST_FORWARD_SLASH_MISSING;
 import static com.goodworkalan.dovetail.DovetailException.INVALID_LIMIT_CHARACTER;
 import static com.goodworkalan.dovetail.DovetailException.LIMIT_OR_SEPARATOR_EXPECTED;
-import static com.goodworkalan.dovetail.DovetailException.OPEN_PARENTESIS_EXPECTED;
 import static com.goodworkalan.dovetail.DovetailException.PATH_SEPARATOR_EXPECTED;
 import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_FORMAT;
 import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION;
+import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_END_OF_GLOB_EXPESSION;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,13 +119,11 @@ public final class GlobCompiler
             case SEPARATOR:
                 if (token == '/')
                 {
-                    compilation.setState(CompilerState.PATTERN);
-                    compilation.setDeep(true);
+                    throw compilation.ex(new DovetailException(EMPTY_PATH_PART));
                 }
                 else if (token == '(')
                 {
                     compilation.setState(CompilerState.IDENTIFIERS);
-                    compilation.setExactlyOne();
                     compilation.startParenthesisMatching();
                 }
                 else
@@ -143,16 +141,6 @@ public final class GlobCompiler
                 else
                 {
                     compilation.append(token);
-                }
-                break;
-            case PATTERN:
-                if (token != '(')
-                {
-                    throw compilation.ex(new DovetailException(OPEN_PARENTESIS_EXPECTED));
-                }
-                else
-                {
-                    compilation.setState(CompilerState.IDENTIFIERS);
                 }
                 break;
             case IDENTIFIERS:
@@ -283,16 +271,31 @@ public final class GlobCompiler
                 compilation.setEatWhite();
                 break;
             case LIMITS_OPEN:
-                if (token == '[')
+                if (token == '?')
                 {
-                    if (compilation.isExactlyOne())
-                    {
-                        throw compilation.ex(new DovetailException(CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE));
-                    }
+                    compilation.setLimits(0, 1);
+                    compilation.setState(CompilerState.COMPLETE);
+                }
+                else if (token == '+')
+                {
+                    compilation.setLimits(1, Integer.MAX_VALUE);
+                    compilation.setMultiple(true);
+                    compilation.setState(CompilerState.COMPLETE);
+                }
+                else if (token == '*')
+                {
+                    compilation.setLimits(0, Integer.MAX_VALUE);
+                    compilation.setMultiple(true);
+                    compilation.setState(CompilerState.COMPLETE);
+                }
+                else if (token == '[')
+                {
+                    compilation.setMultiple(true);
                     compilation.setState(CompilerState.LIMITS);
                 }
                 else if (token == '/')
                 {
+                    compilation.setLimits(1, 1);
                     compilation.addExpression();
                     compilation.setState(CompilerState.SEPARATOR);
                 }
@@ -337,11 +340,14 @@ public final class GlobCompiler
             compilation.addLiteral();
             break;
         case LIMITS_OPEN:
+            compilation.setLimits(1, 1);
             compilation.addExpression();
             break;
         case COMPLETE:
             compilation.addExpression();
             break;
+        default:
+            throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
         }
         return new Glob(compilation.getTests(), pattern, getMatchTests());
     }

@@ -46,7 +46,7 @@ public class GlobTreeTest
     
     @Test public void matchOneOrMore()
     {
-        Glob glob = newGlob("//(account)/optout/(key)/(receipt)");
+        Glob glob = newGlob("/(account)+/optout/(key)/(receipt)");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1"));
@@ -58,7 +58,7 @@ public class GlobTreeTest
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = newGlob("//(account)/optout/(key)/(receipt)//(ignore)");
+        Glob glob = newGlob("/(account)+/optout/(key)/(receipt)/(ignore)+");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1/2"));
@@ -88,7 +88,7 @@ public class GlobTreeTest
     
     @Test public void command()
     {
-        Glob glob = newGlob("//(page)/optout/(key)/(receipt)/(event)");
+        Glob glob = newGlob("/(page)+/optout/(key)/(receipt)/(event)");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/hello/optout/4XGe1E/1/view"));
@@ -98,7 +98,7 @@ public class GlobTreeTest
 
     @Test public void zeroOrOne()
     {
-        Glob glob = newGlob("//(account)[0,1]/optout/(key)/(receipt)");
+        Glob glob = newGlob("/(account)?/optout/(key)/(receipt)");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1");
@@ -112,7 +112,7 @@ public class GlobTreeTest
 
     @Test public void optionalEvent()
     {
-        Glob glob = newGlob("/(account)/optout/(key)/(receipt)//(event)[0,1]");
+        Glob glob = newGlob("/(account)/optout/(key)/(receipt)/(event)?");
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(glob, new Object());
         List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");

@@ -29,8 +29,8 @@ extends RuntimeException
     /** A pattern must begin with a forward slash. */
     public final static int FIRST_FORWARD_SLASH_MISSING = 302;
     
-    /** Expecting an open parenthesis after a multi-level match specifier. */
-    public final static int OPEN_PARENTESIS_EXPECTED = 303;
+    /** Unexpected empty path part. */
+    public final static int EMPTY_PATH_PART = 303;
     
     public final static int IDENTIFER_MISSING = 304;
 
@@ -72,6 +72,9 @@ extends RuntimeException
     
     // TODO Document.
     public final static int UNESCAPED_FORWARD_SLASH_IN_FORMAT = 317;
+
+    // TODO Document.
+    public final static int UNEXPECTED_END_OF_GLOB_EXPESSION = 318;
     
     // TODO Document.
     public final static int MISMATCHED_IDENTIFIERS = 401;

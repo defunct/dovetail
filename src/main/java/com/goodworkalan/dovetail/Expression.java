@@ -32,7 +32,7 @@ implements Test
     private final int max;
     
     // TODO Document.
-    private final boolean deep;
+    private final boolean multiple;
     
     // TODO Document.
     public Expression(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean deep)
@@ -42,7 +42,7 @@ implements Test
         this.sprintf = sprintf;
         this.min = min;
         this.max = max;
-        this.deep = deep;
+        this.multiple = deep;
     }
 
     // TODO Document.
@@ -54,7 +54,7 @@ implements Test
         }
         else
         {
-            if (deep)
+            if (multiple)
             {
                 StringBuilder path = new StringBuilder();
                 for (int i = start; i < end; i++)
@@ -158,7 +158,7 @@ implements Test
                 && identifiers.equals(other.identifiers)
                 && regex.pattern().equals(other.regex.pattern())
                 && sprintf.equals(other.sprintf)
-                && deep == deep;
+                && multiple == multiple;
         }
         return false;
     }
@@ -173,7 +173,7 @@ implements Test
         hash = hash * 37 + identifiers.hashCode();
         hash = hash * 37 + regex.pattern().hashCode();
         hash = hash * 37 + sprintf.hashCode();
-        hash = hash * 37 + (deep ? 15485867 : 32452843);
+        hash = hash * 37 + (multiple ? 15485867 : 32452843);
         return hash;
     }
 }

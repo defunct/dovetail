@@ -25,7 +25,7 @@ public class GlobTest
     
     @Test public void matchOneOrMore()
     {
-        Glob glob = new GlobCompiler().compile("//(account)/optout/(key)/(receipt)");
+        Glob glob = new GlobCompiler().compile("/(account)+/optout/(key)/(receipt)");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1"));
         assertTrue(glob.match("/thinknola/path/optout/4XGe1E/1"));
         assertTrue(glob.match("/one/two/three/optout/4XGe1E/1"));
@@ -35,7 +35,7 @@ public class GlobTest
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = new GlobCompiler().compile("//(account)/optout/(key)/(receipt)//(ignore)");
+        Glob glob = new GlobCompiler().compile("/(account)+/optout/(key)/(receipt)/(ignore)+");
         assertTrue(glob.match("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(glob.match("/one/two/three/optout/4XGe1E/1/2"));
         assertFalse(glob.match("/one/two/three/snap/4XGe1E/1/2"));
@@ -59,7 +59,7 @@ public class GlobTest
     
     @Test public void command()
     {
-        Glob glob = new GlobCompiler().compile("//(page)/optout/(key)/(receipt)/(event)");
+        Glob glob = new GlobCompiler().compile("/(page)+/optout/(key)/(receipt)/(event)");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
         Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
         assertEquals("view", parameters.get("event"));
@@ -67,7 +67,7 @@ public class GlobTest
 
     @Test public void zeroOrOne()
     {
-        Glob glob = new GlobCompiler().compile("//(account)[0,1]/optout/(key)/(receipt)");
+        Glob glob = new GlobCompiler().compile("/(account)?/optout/(key)/(receipt)");
         Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertEquals("hello", parameters.get("account"));
@@ -79,7 +79,7 @@ public class GlobTest
 
     @Test public void optionalEvent()
     {
-        Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)//(event)[0,1]");
+        Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)/(event)?");
         Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
         assertNotNull(parameters);
         assertEquals("view", parameters.get("event"));
@@ -122,7 +122,7 @@ public class GlobTest
         new GlobCompiler().compile(null);
     }
     
-    @Test(expectedExceptions=DovetailException.class) public void expectingOpenParenthesis() 
+    @Test(expectedExceptions=DovetailException.class) public void emptyPathPart() 
     {
         try
         {
@@ -130,8 +130,8 @@ public class GlobTest
         }
         catch (DovetailException e)
         {
-            assertEquals(e.getCode(), OPEN_PARENTESIS_EXPECTED);
-            assertEquals(e.getMessage(), "An open parenthesis is expected following a double-slash path match specifier. Pattern //hello at position 3.");
+            assertEquals(e.getCode(), EMPTY_PATH_PART);
+            assertEquals(e.getMessage(), "Unexpected empty path part. Pattern //hello at position 2.");
             throw e;
         }
     }

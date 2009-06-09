@@ -48,8 +48,7 @@ final class Compilation
     private boolean escape;
     
     /** True if the match is supposed to match multiple path parts. */
-    // FIXME Rename multi.
-    private boolean deep;
+    private boolean multiple;
     
     /** The minimum number of times a part expression can match. */
     private int minimum;
@@ -138,22 +137,12 @@ final class Compilation
     }
     
     /**
-     * Set minimum and maximum parts that the test can match to exactly one.
+     * Set the minimum and maximum parts that can be matched.
      */
-    public void setExactlyOne()
+    public void setLimits(int minimum, int maximum)
     {
-        minimum = maximum = 1;
-    }
-
-    /**
-     * Return true of the minimum and maximum parts that the test can match are
-     * set to exactly one.
-     * 
-     * @return True if test will match exactly one part.
-     */
-    public boolean isExactlyOne()
-    {
-        return minimum == 1 && maximum == 1;
+        this.minimum = minimum;
+        this.maximum = maximum;
     }
 
     /**
@@ -242,9 +231,9 @@ final class Compilation
     }
 
     // TODO Document.
-    public void setDeep(boolean deep)
+    public void setMultiple(boolean deep)
     {
-        this.deep = deep;
+        this.multiple = deep;
     }
     
     // TODO Document.
@@ -282,7 +271,7 @@ final class Compilation
     {
         if (regex == null)
         {
-            regex = Pattern.compile(deep ? "(.*)/" : ".*");
+            regex = Pattern.compile(multiple ? "(.*)/" : ".*");
         }
         if (sprintf == null)
         {
@@ -296,12 +285,12 @@ final class Compilation
         {
             maximum = Integer.MAX_VALUE;
         }
-        Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, deep);
+        Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, multiple);
         tests.add(expression);
         identifiers.clear();
         regex = null;
         sprintf = null;
-        deep = false;
+        multiple = false;
         minimum = -1;
         maximum = -1;
         parenthesis = 0;
