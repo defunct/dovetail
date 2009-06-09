@@ -1,9 +1,13 @@
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.*;
-import static com.goodworkalan.dovetail.DovetailException.EXPECTING_OPEN_PARENTESIS;
+import static com.goodworkalan.dovetail.DovetailException.CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE;
+import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATTERN;
 import static com.goodworkalan.dovetail.DovetailException.FIRST_FORWARD_SLASH_MISSING;
 import static com.goodworkalan.dovetail.DovetailException.INVALID_LIMIT_CHARACTER;
+import static com.goodworkalan.dovetail.DovetailException.LIMIT_OR_SEPARATOR_EXPECTED;
+import static com.goodworkalan.dovetail.DovetailException.OPEN_PARENTESIS_EXPECTED;
+import static com.goodworkalan.dovetail.DovetailException.PATH_SEPARATOR_EXPECTED;
+import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_FORMAT;
 import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION;
 
 import java.util.ArrayList;
@@ -144,7 +148,7 @@ public final class GlobCompiler
             case PATTERN:
                 if (token != '(')
                 {
-                    throw compilation.ex(new DovetailException(EXPECTING_OPEN_PARENTESIS));
+                    throw compilation.ex(new DovetailException(OPEN_PARENTESIS_EXPECTED));
                 }
                 else
                 {
@@ -227,31 +231,46 @@ public final class GlobCompiler
                 if (token == '(')
                 {
                     compilation.openParenthesis();
+                    if (compilation.isEscape())
+                    {
+                        compilation.backspace();
+                    }
                     compilation.append(token);
                 }
                 else if (token == ')')
                 {
                     if (compilation.closeParenthesis())
                     {
+                        if (compilation.isEscape())
+                        {
+                            compilation.backspace();
+                        }
                         compilation.append(token);
                     }
                     else
                     {
-                        compilation.setSprintf();
+                        compilation.setFormat();
                         compilation.setState(CompilerState.LIMITS_OPEN);
                         compilation.startParenthesisMatching();
                     }
                 }
                 else if (token == '/')
                 {
-                    compilation.addExpression();
-                    compilation.setState(CompilerState.SEPARATOR);
+                    if (compilation.isEscape())
+                    {
+                        compilation.backspace();
+                        compilation.append(token);
+                    }
+                    else
+                    {
+                        throw compilation.ex(new DovetailException(UNESCAPED_FORWARD_SLASH_IN_FORMAT));
+                    }
                 }
                 else if (token == ' ')
                 {
                     if (!compilation.isEatWhite())
                     {
-                        compilation.setSprintf();
+                        compilation.setFormat();
                         compilation.setState(CompilerState.LIMITS_OPEN);
                         compilation.startParenthesisMatching();
                     }
@@ -277,6 +296,11 @@ public final class GlobCompiler
                     compilation.addExpression();
                     compilation.setState(CompilerState.SEPARATOR);
                 }
+                else
+                {
+                    throw compilation.ex(new DovetailException(LIMIT_OR_SEPARATOR_EXPECTED));
+                }
+                     
                 break;
             case LIMITS:
                 if (Character.isDigit(token))

@@ -102,6 +102,8 @@ public final class Glob
      * Test the glob against the given path returning a map of the captured
      * parameters if it matches, null if it does not match.
      * 
+     * FIXME RENAME.
+     * 
      * @param path
      *            The path to match.
      * @return A map of the cpatured parameters of null if it does not match.

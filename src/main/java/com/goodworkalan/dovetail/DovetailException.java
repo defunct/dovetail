@@ -30,15 +30,15 @@ extends RuntimeException
     public final static int FIRST_FORWARD_SLASH_MISSING = 302;
     
     /** Expecting an open parenthesis after a multi-level match specifier. */
-    public final static int EXPECTING_OPEN_PARENTESIS = 303;
+    public final static int OPEN_PARENTESIS_EXPECTED = 303;
     
     public final static int IDENTIFER_MISSING = 304;
 
     /** Unexpected question mark at a given position. */
-    public final static int EXPECTING_JAVA_IDENTIFIER_START = 305;
+    public final static int JAVA_IDENTIFIER_START_EXPECTED = 305;
 
     // TODO Document.
-    public final static int EXPECTING_JAVA_IDENTIFIER_PART = 306;
+    public final static int JAVA_IDENTIFIER_PART_EXPECTED = 306;
     
     // TODO Document.
     public final static int UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION = 307;
@@ -58,14 +58,20 @@ extends RuntimeException
     // TODO Document.
     public final static int CANNOT_PARSE_LIMIT_VALUE = 312;
     
-    // TODO Document.
-    public final static int CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE = 313;
+    /** A limit specifier or path separator is epected. */
+    public final static int LIMIT_OR_SEPARATOR_EXPECTED = 313;
     
     // TODO Document.
-    public final static int CLOSING_BRACKED_EXPECTED = 314;
+    public final static int CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE = 314;
     
     // TODO Document.
-    public final static int PATH_SEPARATOR_EXPECTED = 315;
+    public final static int CLOSING_BRACKED_EXPECTED = 315;
+    
+    // TODO Document.
+    public final static int PATH_SEPARATOR_EXPECTED = 316;
+    
+    // TODO Document.
+    public final static int UNESCAPED_FORWARD_SLASH_IN_FORMAT = 317;
     
     // TODO Document.
     public final static int MISMATCHED_IDENTIFIERS = 401;

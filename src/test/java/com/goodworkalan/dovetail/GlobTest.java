@@ -130,7 +130,7 @@ public class GlobTest
         }
         catch (DovetailException e)
         {
-            assertEquals(e.getCode(), EXPECTING_OPEN_PARENTESIS);
+            assertEquals(e.getCode(), OPEN_PARENTESIS_EXPECTED);
             assertEquals(e.getMessage(), "An open parenthesis is expected following a double-slash path match specifier. Pattern //hello at position 3.");
             throw e;
         }
@@ -157,6 +157,73 @@ public class GlobTest
         assertEquals("b", parameters.get("baz"));
         
         assertEquals(glob.path(parameters), "/a-b/foo");
+    }
+    
+    @Test public void escapedParenthesisInRegex()
+    {
+        Glob glob = new GlobCompiler().compile("/(bar \\(.*\\))/foo");
+        
+        assertTrue(glob.match("/(bar)/foo"));
+        assertFalse(glob.match("/bar/foo"));
+        
+        Map<String, String> parameters = glob._map("/(bar)/foo");
+        assertEquals("(bar)", parameters.get("bar"));
+        
+        assertEquals(glob.path(parameters), "/(bar)/foo");
+    }
+    
+    @Test(expectedExceptions = DovetailException.class) public void limitOrSeparatorExpected()
+    {
+        try
+        {
+            new GlobCompiler().compile("/(bar (.*)) (%s)/foo");
+        }
+        catch (DovetailException e)
+        {
+            assertEquals(e.getCode(), LIMIT_OR_SEPARATOR_EXPECTED);
+            assertEquals(e.getMessage(), "A limit specifier or a path separator is expected following a match specification closing parenthesis. Pattern /(bar (.*)) (%s)/foo at position 12.");
+            throw e;
+        }
+    }
+    
+    @Test(expectedExceptions = DovetailException.class) public void unescapedForwardSlash()
+    {
+        try
+        {
+            new GlobCompiler().compile("/(bar \\((.*)\\) (%s)/foo");
+        }
+        catch (DovetailException e)
+        {
+            assertEquals(e.getCode(), UNESCAPED_FORWARD_SLASH_IN_FORMAT);
+            assertEquals(e.getMessage(), "An unescaped forward slash was found in a match specification format. Pattern /(bar \\((.*)\\) (%s)/foo at position 20.");
+            throw e;
+        }
+    }
+    
+    @Test public void parenthesisInFormat()
+    {
+        Glob glob = new GlobCompiler().compile("/(bar \\((.*)\\) (%s))/foo");
+         
+        assertTrue(glob.match("/(bar)/foo"));
+        assertFalse(glob.match("/bar/foo"));
+        
+        Map<String, String> parameters = glob._map("/(bar)/foo");
+        assertEquals("bar", parameters.get("bar"));
+        
+        assertEquals(glob.path(parameters), "/(bar)/foo");
+    }
+    
+    @Test public void escapedParenthesisInFormat()
+    {
+        Glob glob = new GlobCompiler().compile("/(bar \\((.*)\\) %(%s%))/foo");
+         
+        assertTrue(glob.match("/(bar)/foo"));
+        assertFalse(glob.match("/bar/foo"));
+        
+        Map<String, String> parameters = glob._map("/(bar)/foo");
+        assertEquals("bar", parameters.get("bar"));
+        
+        assertEquals(glob.path(parameters), "/(bar)/foo");
     }
 }
 

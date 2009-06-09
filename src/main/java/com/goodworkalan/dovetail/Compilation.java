@@ -2,8 +2,8 @@ package com.goodworkalan.dovetail;
 
 import static com.goodworkalan.dovetail.DovetailException.CANNOT_PARSE_LIMIT_VALUE;
 import static com.goodworkalan.dovetail.DovetailException.CANNOT_PARSE_REGULAR_EXPESSION;
-import static com.goodworkalan.dovetail.DovetailException.EXPECTING_JAVA_IDENTIFIER_PART;
-import static com.goodworkalan.dovetail.DovetailException.EXPECTING_JAVA_IDENTIFIER_START;
+import static com.goodworkalan.dovetail.DovetailException.JAVA_IDENTIFIER_PART_EXPECTED;
+import static com.goodworkalan.dovetail.DovetailException.JAVA_IDENTIFIER_START_EXPECTED;
 import static com.goodworkalan.dovetail.DovetailException.IDENTIFER_MISSING;
 import static com.goodworkalan.dovetail.DovetailException.MINIMUM_LIMIT_REQUIRED;
 import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_COMMA_IN_LIMIT;
@@ -222,7 +222,7 @@ final class Compilation
     }
     
     // TODO Document.
-    public void setSprintf()
+    public void setFormat()
     {
         sprintf = capture.toString();
         capture.setLength(0);
@@ -233,11 +233,11 @@ final class Compilation
     {
         if (capture.length() == 0 && !Character.isJavaIdentifierStart(token))
         {
-            throw ex(new DovetailException(EXPECTING_JAVA_IDENTIFIER_START));
+            throw ex(new DovetailException(JAVA_IDENTIFIER_START_EXPECTED));
         }
         else if (capture.length() > 0 && !Character.isJavaIdentifierPart(token))
         {
-            throw ex(new DovetailException(EXPECTING_JAVA_IDENTIFIER_PART));
+            throw ex(new DovetailException(JAVA_IDENTIFIER_PART_EXPECTED));
         }
     }
 
@@ -252,6 +252,12 @@ final class Compilation
     {
         tests.add(new Literal(capture.toString()));
         capture.setLength(0);
+    }
+    
+    // TODO Document.
+    public void backspace()
+    {
+        capture.setLength(capture.length() - 1);
     }
     
     // TODO Document.
