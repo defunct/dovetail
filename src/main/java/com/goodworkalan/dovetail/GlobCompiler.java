@@ -1,7 +1,6 @@
 package com.goodworkalan.dovetail;
 
 import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATH_PART;
-import static com.goodworkalan.dovetail.DovetailException.EMPTY_PATTERN;
 import static com.goodworkalan.dovetail.DovetailException.FIRST_FORWARD_SLASH_MISSING;
 import static com.goodworkalan.dovetail.DovetailException.INVALID_LIMIT_CHARACTER;
 import static com.goodworkalan.dovetail.DovetailException.LIMIT_OR_SEPARATOR_EXPECTED;
@@ -93,9 +92,9 @@ public final class GlobCompiler
         {
             throw new NullPointerException();
         }
-        if (pattern.length() == 0)
+        if (pattern.trim().length() == 0)
         {
-            throw new DovetailException(EMPTY_PATTERN);
+            return glob.extend(new Glob(new Test[] { new Literal("") }, pattern, getMatchTests()));
         }
         if (pattern.charAt(0) != '/')
         {
@@ -338,7 +337,14 @@ public final class GlobCompiler
             compilation.addExpression();
             break;
         default:
-            throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
+            if (pattern.trim() == "/")
+            {
+                compilation.addLiteral();
+            }
+            else
+            {
+                throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
+            }
         }
         return glob.extend(new Glob(compilation.getTests(), pattern, getMatchTests()));
     }

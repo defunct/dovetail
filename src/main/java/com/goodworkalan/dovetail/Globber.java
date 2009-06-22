@@ -3,20 +3,44 @@ package com.goodworkalan.dovetail;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * Applies the patterns defined in a glob tree to a path. A <code>Globber</code>
+ * contains an immutable copy of a glob tree created with {@link GlobTree}.
+ * 
+ * @author Alan Gutierrez
+ * 
+ * @param <T>
+ *            The type of object mapped to a glob.
+ */
 public class Globber<T>
 {
     /** The root node of the tree. */
     private final Node<T> root;
     
+    /** The factory to use to create match tests. */
     private final MatchTestFactory factory;
-    
+
+    /**
+     * Create a new instace of a globber with the given root glob node and the
+     * given match test factory.
+     * 
+     * @param root
+     *            The root node of the tree.
+     * @param factory
+     *            The factory to use to create match tests.
+     */
     Globber(Node<T> root, MatchTestFactory factory)
     {
         this.root = root;
         this.factory = factory;
     }
     
+    /**
+     * Return true if a glob in the glob tree matches the given path.
+     * 
+     * @param path The path to test.
+     * @return True of a path in the glob tree matches the given path.
+     */
     public boolean match(String path)
     {
         return ! map(path).isEmpty();
@@ -26,7 +50,7 @@ public class Globber<T>
     public List<Match<T>> map(String path)
     {
         MatchBook<T> mapper = new MatchBook<T>();
-        if (descend(mapper, root.getFirstChild(), path.split("/"), 0, path)) 
+        if (descend(mapper, root.getFirstChild(), path.split("/", -1), 0, path)) 
         {
             return mapper.matches();
         }

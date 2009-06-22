@@ -23,7 +23,7 @@ extends RuntimeException
     /** A list of arguments to the formatted error message. */
     private final List<Object> arguments = new ArrayList<Object>();
     
-    /** The compiler has been given an empty pattern. */
+    /** TODO Outgoing! The compiler has been given an empty pattern. */
     public final static int EMPTY_PATTERN = 301;
     
     /** A pattern must begin with a forward slash. */

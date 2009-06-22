@@ -48,7 +48,7 @@ public class GlobTree<T>
                 node.setMatchesLeft(matchesLeft[i]);
             }
         }
-        for (int i = matchesLeft.length - 1; matchesLeft[i] == 0 && i >= 0; i--)
+        for (int i = matchesLeft.length - 1; i >= 0 && matchesLeft[i] == 0; i--)
         {
             path.get(i).setValue(value);
             path.get(i).setGlob(glob);

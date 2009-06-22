@@ -177,6 +177,19 @@ public final class Glob
         }
         return path.toString();
     }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder string = new StringBuilder();
+        String separator = "";
+        for (Test test : tests)
+        {
+            string.append(separator).append(test.toString());
+            separator = "/";
+        }
+        return string.toString();
+    }
 }
 
 /* vim: set et sw=4 ts=4 ai tw=78 nowrap: */

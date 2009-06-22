@@ -88,20 +88,18 @@ public class GlobTest
         assertNull(parameters.get("event"));
     }    
     
-    @Test(expectedExceptions=DovetailException.class) public void emptyString() 
+    @Test public void emptyString() 
     {
-        try
-        {
-            new GlobCompiler().compile("");
-        }
-        catch (DovetailException e)
-        {
-            assertEquals(e.getCode(), EMPTY_PATTERN);
-            assertEquals(e.getMessage(), "Cannot create a glob from an empty string.");
-            throw e;
-        }
+        Glob glob = new GlobCompiler().compile("");
+        assertTrue(glob.match(""));
     }
-
+    
+    @Test
+    public void slash()
+    {
+        Glob glob = new GlobCompiler().compile("/");
+        assertTrue(glob.match("/"));
+    }
     
     @Test(expectedExceptions=DovetailException.class) public void errorNotLeadingSlash() 
     {
