@@ -1,7 +1,6 @@
 package com.goodworkalan.dovetail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 // TODO Document.
@@ -9,6 +8,19 @@ public class GlobTree<T>
 {
     /** The root node of the tree. */
     private final Node<T> root = new Node<T>(null);
+    
+    /** The factory used to create match tests. */
+    private MatchTestFactory matchTestFactory = new SimpleMatchTestFactory();
+    
+    public void setMatchTestFactory(MatchTestFactory factory)
+    {
+        this.matchTestFactory = factory;
+    }
+    
+    public MatchTestFactory getMatchTestFactory()
+    {
+        return matchTestFactory;
+    }
     
     /**
      * Map the given glob to the given tree value. When a path given to the
@@ -25,25 +37,31 @@ public class GlobTree<T>
         {
             matchesLeft[i] = matchesLeft[i + 1] + glob.get(i + 1).getMin();
         }
+        List<Node<T>> path = new ArrayList<Node<T>>();
         Node<T> node = root;
         for (int i = 0; i < glob.size(); i++)
         {
             node = getChild(node, glob.get(i));
-            if (node.matchesLeft > matchesLeft[i])
+            path.add(node);
+            if (node.getMatchesLeft() > matchesLeft[i])
             {
-                node.matchesLeft = matchesLeft[i];
+                node.setMatchesLeft(matchesLeft[i]);
             }
         }
-        node.value = value;
+        for (int i = matchesLeft.length - 1; matchesLeft[i] == 0 && i >= 0; i--)
+        {
+            path.get(i).setValue(value);
+            path.get(i).setGlob(glob);
+        }
     }
 
     // TODO Document.
     private Node<T> getChild(Node<T> parent, Test match)
     {
         Node<T> child = null;
-        for (Node<T> node : parent.listOfNodes)
+        for (Node<T> node : parent)
         {
-            if (node.match.equals(match))
+            if (node.getMatch().equals(match))
             {
                 child = node;
                 break;
@@ -52,87 +70,30 @@ public class GlobTree<T>
         if (child == null)
         {
             child = new Node<T>(match);
-            parent.listOfNodes.add(child);
+            parent.addChild(child);
         }
         return child;
+    }
+    
+    public Globber<T> newGlobber(MatchTestFactory factory)
+    {
+        return new Globber<T>(root.duplicate(), factory);
+    }
+    
+    public Globber<T> newGlobber()
+    {
+        return new Globber<T>(root.duplicate(), new SimpleMatchTestFactory());
     }
     
     // TODO Document.
     public boolean match(String path)
     {
-        return ! map(path).isEmpty();
+        return newGlobber().match(path);
     }
     
     // TODO Document.
     public List<Match<T>> map(String path)
     {
-        TreeMapper<T> mapper = new TreeMapper<T>();
-        if (descend(mapper, root.listOfNodes.get(0), path.split("/"), 0)) 
-        {
-            return mapper.mappings();
-        }
-        return Collections.emptyList();
-    }
-    
-    // TODO Document.
-    private boolean descend(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex)
-    {
-        int partsLeft = parts.length - partIndex;
-        int matchesLeft = node.match.getMin() + node.matchesLeft;
-        int min = node.match.getMin();
-        int max = Math.min(partsLeft - matchesLeft + 1, node.match.getMax());
-        for (int i = min; i <= max; i++)
-        {
-            if (match(mapper.duplicate(), node, parts, partIndex, i))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // TODO Document.
-    private boolean match(TreeMapper<T> mapper, Node<T> node, String[] parts, int partIndex, int length)
-    {
-        if (length == 0 || node.match.match(mapper.getParameters(), parts, partIndex, partIndex + length))
-        {
-            partIndex += length;
-
-            if (partIndex == parts.length)
-            {
-                mapper.map(0, node.value);
-                return node.matchesLeft == 0;
-            }
-            if (node.listOfNodes.isEmpty())
-            {
-                return false;
-            }
-            boolean matched = false;
-            for (Node<T> child : node.listOfNodes)
-            {
-                matched = descend(mapper, child, parts, partIndex) || matched;
-            }
-            return matched;
-        }
-        return false;
-    }
-
-    // TODO Document.
-    final static class Node<T>
-    {
-        public final Test match;
-        
-        public final List<Node<T>> listOfNodes;
-        
-        public T value;
-        
-        public int matchesLeft;
-        
-        public Node(Test match)
-        {
-            this.match = match;
-            this.listOfNodes = new ArrayList<Node<T>>();
-            this.matchesLeft = Integer.MAX_VALUE;
-        }
+        return newGlobber().map(path);
     }
 }

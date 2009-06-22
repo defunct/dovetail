@@ -114,4 +114,15 @@ implements Test
     {
         path.append(text);
     }
+    
+    /**
+     * Return the literal text.
+     * 
+     * @return The literal text.
+     */
+    @Override
+    public String toString()
+    {
+        return text;
+    }
 }

@@ -61,18 +61,18 @@ public class GlobTest
     {
         Glob glob = new GlobCompiler().compile("/(page)+/optout/(key)/(receipt)/(event)");
         assertTrue(glob.match("/hello/optout/4XGe1E/1/view"));
-        Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
+        Map<String, String> parameters = glob.map("/hello/optout/4XGe1E/1/view");
         assertEquals("view", parameters.get("event"));
     }
 
     @Test public void zeroOrOne()
     {
         Glob glob = new GlobCompiler().compile("/(account)?/optout/(key)/(receipt)");
-        Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1");
+        Map<String, String> parameters = glob.map("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertEquals("hello", parameters.get("account"));
         assertEquals("4XGe1E", parameters.get("key"));
-        parameters = glob._map("/optout/4XGe1E/1");
+        parameters = glob.map("/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertNull(parameters.get("account"));
     }
@@ -80,10 +80,10 @@ public class GlobTest
     @Test public void optionalEvent()
     {
         Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)/(event)?");
-        Map<String, String> parameters = glob._map("/hello/optout/4XGe1E/1/view");
+        Map<String, String> parameters = glob.map("/hello/optout/4XGe1E/1/view");
         assertNotNull(parameters);
         assertEquals("view", parameters.get("event"));
-        parameters = glob._map("/hello/optout/4XGe1E/1");
+        parameters = glob.map("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertNull(parameters.get("event"));
     }    
@@ -152,7 +152,7 @@ public class GlobTest
         assertFalse(glob.match("/a+b/foo"));
         assertFalse(glob.match("/a+b/bar"));
         
-        Map<String, String> parameters = glob._map("/a-b/foo");
+        Map<String, String> parameters = glob.map("/a-b/foo");
         assertEquals("a", parameters.get("bar"));
         assertEquals("b", parameters.get("baz"));
         
@@ -166,7 +166,7 @@ public class GlobTest
         assertTrue(glob.match("/(bar)/foo"));
         assertFalse(glob.match("/bar/foo"));
         
-        Map<String, String> parameters = glob._map("/(bar)/foo");
+        Map<String, String> parameters = glob.map("/(bar)/foo");
         assertEquals("(bar)", parameters.get("bar"));
         
         assertEquals(glob.path(parameters), "/(bar)/foo");
@@ -207,7 +207,7 @@ public class GlobTest
         assertTrue(glob.match("/(bar)/foo"));
         assertFalse(glob.match("/bar/foo"));
         
-        Map<String, String> parameters = glob._map("/(bar)/foo");
+        Map<String, String> parameters = glob.map("/(bar)/foo");
         assertEquals("bar", parameters.get("bar"));
         
         assertEquals(glob.path(parameters), "/(bar)/foo");
@@ -220,7 +220,7 @@ public class GlobTest
         assertTrue(glob.match("/(bar)/foo"));
         assertFalse(glob.match("/bar/foo"));
         
-        Map<String, String> parameters = glob._map("/(bar)/foo");
+        Map<String, String> parameters = glob.map("/(bar)/foo");
         assertEquals("bar", parameters.get("bar"));
         
         assertEquals(glob.path(parameters), "/(bar)/foo");

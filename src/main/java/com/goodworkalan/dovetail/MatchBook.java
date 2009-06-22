@@ -17,21 +17,21 @@ import java.util.TreeMap;
  *
  * @param <T>
  */
-class TreeMapper<T>
+class MatchBook<T>
 {
     /** A working list of matched parameters. */
     private final Map<String, String> parameters;
     
     /** A map of glob priorities to mappings. */
-    private final SortedMap<Integer, Match<T>> mappings;
+    private final SortedMap<Integer, Match<T>> matches;
     
     /**
      * Create an empty tree mapper.
      */
-    public TreeMapper()
+    public MatchBook()
     {
         this.parameters = new HashMap<String, String>();
-        this.mappings = new TreeMap<Integer, Match<T>>(Collections.reverseOrder());
+        this.matches = new TreeMap<Integer, Match<T>>(Collections.reverseOrder());
     }
     
     /**
@@ -40,9 +40,9 @@ class TreeMapper<T>
      * @param mappings The mapping list.
      * @param parameters The current state of the working parameter map.
      */
-    private TreeMapper(SortedMap<Integer, Match<T>> mappings, Map<String, String> parameters)
+    private MatchBook(SortedMap<Integer, Match<T>> mappings, Map<String, String> parameters)
     {
-        this.mappings = mappings;
+        this.matches = mappings;
         this.parameters = new HashMap<String, String>(parameters);
     }
 
@@ -77,9 +77,9 @@ class TreeMapper<T>
      *  
      * @return A duplicate of this tree mapper.
      */
-    public TreeMapper<T> duplicate()
+    public MatchBook<T> duplicate()
     {
-        return new TreeMapper<T>(mappings, parameters);
+        return new MatchBook<T>(matches, parameters);
     }
 
     /**
@@ -92,13 +92,13 @@ class TreeMapper<T>
      */
     public void map(int priority, T object)
     {
-        Match<T> mapping = new Match<T>(object, priority, parameters);
-        mappings.put(priority, mapping);
+        Match<T> match = new Match<T>(object, priority, parameters);
+        matches.put(priority, match);
     }
     
     // TODO Document.
-    public List<Match<T>> mappings()
+    public List<Match<T>> matches()
     {
-        return new ArrayList<Match<T>>(mappings.values());
+        return new ArrayList<Match<T>>(matches.values());
     }
 }

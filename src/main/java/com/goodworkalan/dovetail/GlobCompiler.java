@@ -22,32 +22,23 @@ import java.util.List;
  */
 public final class GlobCompiler
 {
-    /** A factory used to create match tests. */
-    private final MatchTestFactory factory;
-    
     /** The list of match tests to apply when a glob successfully matches. */
-    private final List<MatchTest> matchTests;
+    private final List<MatchTestServer> matchTestServers;
     
-    /**
-     * Create a glob compiler that will create match tests using the given
-     * match test factory, when match tests are specified by providing a class.
-     * 
-     * @param factory A match test factory.
-     */
-    public GlobCompiler(MatchTestFactory factory)
+    // TODO Document.
+    private final Glob glob;
+    
+    // TODO Document.
+    public GlobCompiler(Glob glob)
     {
-        this.factory = factory;
-        this.matchTests = new ArrayList<MatchTest>();
+        this.glob = glob;
+        this.matchTestServers = new ArrayList<MatchTestServer>();
     }
 
-    /**
-     * Create a glob compiler. The glob compiler will be created with a default
-     * match test factory. If match tests are specified by class, the match
-     * tests will be instantiated by calling their default constructor.
-     */
+    // TODO Document.
     public GlobCompiler()
     {
-        this(new SimpleMatchTestFactory());
+        this(new Glob());
     }
 
     /**
@@ -69,7 +60,7 @@ public final class GlobCompiler
      */
     public GlobCompiler test(Class<? extends MatchTest> matchTestClass)
     {
-        matchTests.add(new FactoryBuiltMatchTest(factory, matchTestClass));
+        matchTestServers.add(new FactoryMatchTestServer(matchTestClass));
         return this;
     }
 
@@ -84,7 +75,7 @@ public final class GlobCompiler
      */
     public GlobCompiler test(MatchTest matchTest)
     {
-        matchTests.add(matchTest);
+        matchTestServers.add(new InstanceMatchTestServer(matchTest));
         return this;
     }
 
@@ -349,7 +340,7 @@ public final class GlobCompiler
         default:
             throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
         }
-        return new Glob(compilation.getTests(), pattern, getMatchTests());
+        return glob.extend(new Glob(compilation.getTests(), pattern, getMatchTests()));
     }
 
     /**
@@ -358,10 +349,10 @@ public final class GlobCompiler
      * 
      * @return The list of match tests as an array.
      */
-    private MatchTest[] getMatchTests()
+    private MatchTestServer[] getMatchTests()
     {
-        MatchTest[] array = matchTests.toArray(new MatchTest[matchTests.size()]);
-        matchTests.clear();
+        MatchTestServer[] array = matchTestServers.toArray(new MatchTestServer[matchTestServers.size()]);
+        matchTestServers.clear();
         return array;
     }
 }

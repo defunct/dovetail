@@ -29,7 +29,7 @@ public final class Glob
     private final Test[] tests;
     
     // TODO Document.
-    private final MatchTest[] matchTests;
+    private final MatchTestServer[] matchTestServers;
     
     // TODO Document.
     public static String manyTest(String[] parts)
@@ -45,18 +45,37 @@ public final class Glob
         return builder.toString();
     }
     
+    Glob()
+    {
+        this(new Test[] { new Literal("") }, "", new MatchTestServer[0]);
+    }
+
     // TODO Document.
-    public Glob(Test[] matches, String pattern, MatchTest[] matchTests)
+    Glob(Test[] matches, String pattern, MatchTestServer[] matchTestServers)
     {
         this.tests = matches;
         this.pattern = pattern;
-        this.matchTests = matchTests;
+        this.matchTestServers = matchTestServers;
     }
     
     // TODO Document.
     public int size()
     {
         return tests.length;
+    }
+    
+    // TODO Document.
+    public Glob extend(Glob glob)
+    {
+        Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
+        System.arraycopy(tests, 0, copyTests, 0, tests.length);
+        System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
+        
+        MatchTestServer[] copyMatchTests = new MatchTestServer[matchTestServers.length + glob.matchTestServers.length];
+        System.arraycopy(matchTestServers, 0, copyMatchTests, 0, matchTestServers.length);
+        System.arraycopy(glob.matchTestServers, 0, copyMatchTests, matchTestServers.length, copyMatchTests.length);
+        
+        return new Glob(copyTests, pattern + glob.pattern, copyMatchTests); 
     }
     
     // TODO Document.
@@ -86,11 +105,11 @@ public final class Glob
      *            The parameters to test.
      * @return True if all the match tests in this glob pass.
      */
-    public boolean matchTests(String path, Map<String, String> parameters)
+    public boolean matchTests(MatchTestFactory factory, String path, Map<String, String> parameters)
     {
-        for (MatchTest matchTest : matchTests)
+        for (MatchTestServer matchTestServer : matchTestServers)
         {
-            if (!matchTest.test(path, parameters))
+            if (!matchTestServer.getInstance(factory).test(path, parameters))
             {
                 return false;
             }
@@ -108,7 +127,7 @@ public final class Glob
      *            The path to match.
      * @return A map of the cpatured parameters of null if it does not match.
      */
-    public Map<String, String> _map(String path)
+    public Map<String, String> map(String path)
     {
         GlobTree<Object> tree = new GlobTree<Object>();
         tree.add(this, new Object());

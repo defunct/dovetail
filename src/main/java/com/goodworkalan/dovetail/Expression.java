@@ -176,4 +176,21 @@ implements Test
         hash = hash * 37 + (multiple ? 15485867 : 32452843);
         return hash;
     }
+    
+    /**
+     * Return the expression pattern.
+     * 
+     * @return The expression pattern.
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder ids = new StringBuilder();
+        String separator = "";
+        for (String id : identifiers)
+        {
+            ids.append(separator).append(id);
+        }
+        return "{identifiers: " + ids + ", regex: " + regex.pattern() + ", format: " + sprintf + "}";
+    }
 }
