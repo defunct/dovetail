@@ -73,7 +73,7 @@ public final class Glob
         
         MatchTestServer[] copyMatchTests = new MatchTestServer[matchTestServers.length + glob.matchTestServers.length];
         System.arraycopy(matchTestServers, 0, copyMatchTests, 0, matchTestServers.length);
-        System.arraycopy(glob.matchTestServers, 0, copyMatchTests, matchTestServers.length, copyMatchTests.length);
+        System.arraycopy(glob.matchTestServers, 0, copyMatchTests, matchTestServers.length, glob.matchTestServers.length);
         
         return new Glob(copyTests, pattern + glob.pattern, copyMatchTests); 
     }
