@@ -224,7 +224,7 @@ final class Compilation
         {
             throw ex(new DovetailException(JAVA_IDENTIFIER_START_EXPECTED));
         }
-        else if (capture.length() > 0 && !Character.isJavaIdentifierPart(token))
+        else if (capture.length() > 0 && !(Character.isJavaIdentifierPart(token) || "[]".indexOf(token) > -1))
         {
             throw ex(new DovetailException(JAVA_IDENTIFIER_PART_EXPECTED));
         }
