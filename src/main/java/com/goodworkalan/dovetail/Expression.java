@@ -158,7 +158,7 @@ implements Test
                 && identifiers.equals(other.identifiers)
                 && regex.pattern().equals(other.regex.pattern())
                 && sprintf.equals(other.sprintf)
-                && multiple == multiple;
+                && multiple == other.multiple;
         }
         return false;
     }
