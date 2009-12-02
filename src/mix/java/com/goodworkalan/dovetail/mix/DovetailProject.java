@@ -13,7 +13,7 @@ public class DovetailProject extends ProjectModule {
                 .produces(new Artifact("com.goodworkalan/dovetail/0.7"))
                 .test()
                     .depends()
-                        .artifact(new Artifact("org.testng/testng/5.10"))
+                        .artifact(new Artifact("org.testng/testng/5.10/jdk15"))
                         .end()
                     .end()
                 .end()
