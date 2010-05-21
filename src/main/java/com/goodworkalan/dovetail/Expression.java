@@ -46,41 +46,28 @@ implements Test
     }
 
     // TODO Document.
-    public boolean match(Map<String, String> parameters, String[] parts, int start, int end)
-    {
-        if (min == 0 && end - start == 0)
-        {
+    public boolean match(Map<String, String> parameters, String[] parts, int start, int end) {
+        if (min == 0 && end - start == 0) {
             return true;
         }
-        else
-        {
-            if (multiple)
-            {
-                StringBuilder path = new StringBuilder();
-                for (int i = start; i < end; i++)
-                {
-                    path.append(parts[i]).append("/");
-                }
-                Matcher matcher = regex.matcher(path);
-                if (matcher.matches())
-                {
-                    parameters(matcher, parameters);
-                    return true;
-                }
-                
+        if (multiple) {
+            StringBuilder path = new StringBuilder();
+            for (int i = start; i < end; i++) {
+                path.append(parts[i]).append("/");
             }
-            else if (end - start != 1)
-            {
-                throw new IllegalStateException();
+            Matcher matcher = regex.matcher(path);
+            if (matcher.matches()) {
+                parameters(matcher, parameters);
+                return true;
             }
-            else
-            {
-                Matcher matcher = regex.matcher(parts[start]);
-                if (matcher.matches())
-                {
-                    parameters(matcher, parameters);
-                    return true;
-                }
+
+        } else if (end - start != 1) {
+            throw new IllegalStateException();
+        } else {
+            Matcher matcher = regex.matcher(parts[start]);
+            if (matcher.matches()) {
+                parameters(matcher, parameters);
+                return true;
             }
         }
         return false;
