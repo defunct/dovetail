@@ -49,10 +49,11 @@ public class Globber<T>
     // TODO Document.
     public List<Match<T>> map(String path)
     {
-        MatchBook<T> mapper = new MatchBook<T>();
-        if (descend(mapper, root.getFirstChild(), path.split("/", -1), 0, path)) 
-        {
-            return mapper.matches();
+        if (root.hasChildren()) {
+            MatchBook<T> mapper = new MatchBook<T>();
+            if (descend(mapper, root.getFirstChild(), path.split("/", -1), 0, path)) {
+                return mapper.matches();
+            }
         }
         return Collections.emptyList();
     }
