@@ -10,21 +10,6 @@ import java.util.Map;
  * @author Alan Gutierrez
  */
 public final class Glob {
-	// TODO Document.
-    final static short PROPERTY = 1;
-    
-    // TODO Document.
-    final static short PATTERN = 2;
-
-    // TODO Document.
-    final static short TEST = 3;
-    
-    // TODO Document.
-    final static short GROUP = 4;
-    
-    // TODO Document.
-    final static short DONE = 5;
-    
     // TODO Document.
     private final String pattern;
 
@@ -74,9 +59,8 @@ public final class Glob {
 	}
     
     // TODO Document.
-    public Glob extend(Glob glob)
-    {
-        Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
+	public Glob extend(Glob glob) {
+       Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         
@@ -86,18 +70,16 @@ public final class Glob {
         
         return new Glob(copyTests, pattern + glob.pattern, copyMatchTests); 
     }
-    
-    // TODO Document.
-    public Test get(int i)
-    {
-        return tests[i];
-    }
 
-    // TODO Document.
-    public String getPattern()
-    {
-        return pattern;
-    }
+	// TODO Document.
+	public Test get(int i) {
+		return tests[i];
+	}
+
+	// TODO Document.
+	public String getPattern() {
+		return pattern;
+	}
 
     /**
      * Apply the match tests in this glob to the given path and map of
@@ -114,12 +96,9 @@ public final class Glob {
      *            The parameters to test.
      * @return True if all the match tests in this glob pass.
      */
-    public boolean matchTests(MatchTestFactory factory, String path, Map<String, String> parameters)
-    {
-        for (MatchTestServer matchTestServer : matchTestServers)
-        {
-            if (!matchTestServer.getInstance(factory).test(path, parameters))
-            {
+    public boolean matchTests(MatchTestFactory factory, String path, Map<String, String> parameters) {
+		for (MatchTestServer matchTestServer : matchTestServers) {
+			if (!matchTestServer.getInstance(factory).test(path, parameters)) {
                 return false;
             }
         }
@@ -136,17 +115,15 @@ public final class Glob {
      *            The path to match.
      * @return A map of the cpatured parameters of null if it does not match.
      */
-    public Map<String, String> map(String path)
-    {
-        GlobTree<Object> tree = new GlobTree<Object>();
-        tree.add(this, new Object());
-        List<Match<Object>> mapping = tree.map(path);
-        if (mapping.isEmpty())
-        {
-            return null;
-        }
-        return mapping.get(0).getParameters();
-    }
+	public Map<String, String> map(String path) {
+		GlobTree<Object> tree = new GlobTree<Object>();
+		tree.add(this, new Object());
+		List<Match<Object>> mapping = tree.map(path);
+		if (mapping.isEmpty()) {
+			return null;
+		}
+		return mapping.get(0).getParameters();
+	}
 
     /**
      * Return true if the given path is matched by this glob.
@@ -155,12 +132,11 @@ public final class Glob {
      *            The path to match.
      * @return True if the path matches this glob.
      */
-    public boolean match(String path)
-    {
-        GlobTree<Object> tree = new GlobTree<Object>();
-        tree.add(this, new Object());
-        return tree.match(path);
-    }
+	public boolean match(String path) {
+		GlobTree<Object> tree = new GlobTree<Object>();
+		tree.add(this, new Object());
+		return tree.match(path);
+	}
 
     /**
      * Recreate a path from this glob using the parameters in the given
@@ -172,33 +148,28 @@ public final class Glob {
      *            The parameters used to replace parameter captures in the glob
      *            pattern.
      */
-    public String path(Map<String, String> parameters)
-    {
-        StringBuilder path = new StringBuilder();
-        path.append("/");
-        for (int i = 1, size = tests.length; i < size; i++)
-        {
-            if (path.charAt(path.length() - 1) != '/')
-            {
-                path.append('/');
-            }
-            tests[i].append(path, parameters);
-        }
-        return path.toString();
-    }
-    
-    @Override
-    public String toString()
-    {
-        StringBuilder string = new StringBuilder();
-        String separator = "";
-        for (Test test : tests)
-        {
-            string.append(separator).append(test.toString());
-            separator = "/";
-        }
-        return string.toString();
-    }
+	public String path(Map<String, String> parameters) {
+		StringBuilder path = new StringBuilder();
+		path.append("/");
+		for (int i = 1, size = tests.length; i < size; i++) {
+			if (path.charAt(path.length() - 1) != '/') {
+				path.append('/');
+			}
+			tests[i].append(path, parameters);
+		}
+		return path.toString();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder string = new StringBuilder();
+		String separator = "";
+		for (Test test : tests) {
+			string.append(separator).append(test.toString());
+			separator = "/";
+		}
+		return string.toString();
+	}
 }
 
 /* vim: set et sw=4 ts=4 ai tw=78 nowrap: */
