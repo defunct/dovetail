@@ -19,8 +19,7 @@ import java.util.List;
  * 
  * @author Alan Gutierrez
  */
-public final class GlobCompiler
-{
+public final class GlobCompiler {
     /** The list of match tests to apply when a glob successfully matches. */
     private final List<MatchTestServer> matchTestServers;
 
@@ -89,246 +88,172 @@ public final class GlobCompiler
      *            The glob pattern.
      * @return A glob object.
      */
-    public Glob compile(String pattern)
-    {
-        if (pattern == null)
-        {
-            throw new NullPointerException();
-        }
-        if (pattern.trim().length() == 0)
-        {
+	public Glob compile(String pattern) {
+		if (pattern == null) {
+			throw new NullPointerException();
+		}
+		if (pattern.trim().length() == 0) {
             return glob.extend(new Glob(new Test[] { new Literal("") }, pattern, getMatchTests()));
         }
-        if (pattern.charAt(0) != '/')
-        {
+		if (pattern.charAt(0) != '/') {
             throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 1);
         }
         Compilation compilation = new Compilation(pattern);
         while (compilation.hasMoreTokens())
-        {
-            char token = compilation.nextToken();
-            switch (compilation.getState())
-            {
-            case SEPARATOR:
-                if (token == '/')
-                {
+ {
+			char token = compilation.nextToken();
+			switch (compilation.getState()) {
+			case SEPARATOR:
+				if (token == '/') {
                     throw compilation.ex(new DovetailException(EMPTY_PATH_PART));
-                }
-                else if (token == '(')
-                {
-                    compilation.setState(CompilerState.IDENTIFIERS);
+				} else if (token == '(') {
+					compilation.setState(CompilerState.IDENTIFIERS);
                     compilation.startParenthesisMatching();
-                }
-                else
-                {
+				} else {
                     compilation.append(token);
                     compilation.setState(CompilerState.LITERAL);
                 }
                 break;
-            case LITERAL:
-                if (token == '/')
-                {
-                    compilation.addLiteral();
-                    compilation.setState(CompilerState.SEPARATOR);
-                }
-                else
-                {
-                    compilation.append(token);
-                }
-                break;
-            case IDENTIFIERS:
-                if (token == ' ')
-                {
-                    if (!compilation.isEatWhite())
-                    {
-                        compilation.addIdentifier();
-                        compilation.setState(CompilerState.REGEX);
-                        compilation.startParenthesisMatching();
-                    }
-                }
-                else if (token == ',')
-                {
-                    compilation.addIdentifier();
-                    compilation.startParenthesisMatching();
-                }
-                else if (token == ')')
-                {
-                    compilation.addIdentifier();
-                    compilation.setState(CompilerState.LIMITS_OPEN);
-                    compilation.startParenthesisMatching();
-                }
-                else
-                {
-                    compilation.assertIdentifierCharacter(token);
-                    compilation.append(token);
-                }
-                compilation.setEatWhite();
-                break;
+			case LITERAL:
+				if (token == '/') {
+					compilation.addLiteral();
+					compilation.setState(CompilerState.SEPARATOR);
+				} else {
+					compilation.append(token);
+				}
+				break;
+			case IDENTIFIERS:
+				if (token == ' ') {
+					if (!compilation.isEatWhite()) {
+						compilation.addIdentifier();
+						compilation.setState(CompilerState.REGEX);
+						compilation.startParenthesisMatching();
+					}
+				} else if (token == ',') {
+					compilation.addIdentifier();
+					compilation.startParenthesisMatching();
+				} else if (token == ')') {
+					compilation.addIdentifier();
+					compilation.setState(CompilerState.LIMITS_OPEN);
+					compilation.startParenthesisMatching();
+				} else {
+					compilation.assertIdentifierCharacter(token);
+					compilation.append(token);
+				}
+				compilation.setEatWhite();
+				break;
             case REGEX:
-                if (token == '(')
-                {
-                    compilation.openParenthesis();
-                    compilation.append(token);
-                }
-                else if (token == ')')
-                {
-                    if (compilation.closeParenthesis())
-                    {
-                        compilation.append(token);
-                    }
-                    else
-                    {
-                        compilation.setRegex();
-                        compilation.setState(CompilerState.LIMITS_OPEN);
-                        compilation.startParenthesisMatching();
-                    }
-                }
-                else if (token == '/')
-                {
-                    if (!compilation.isEatWhite() && !compilation.isEscape())
-                    {
+				if (token == '(') {
+					compilation.openParenthesis();
+					compilation.append(token);
+				} else if (token == ')') {
+					if (compilation.closeParenthesis()) {
+						compilation.append(token);
+					} else {
+						compilation.setRegex();
+						compilation.setState(CompilerState.LIMITS_OPEN);
+						compilation.startParenthesisMatching();
+					}
+				} else if (token == '/') {
+					if (!compilation.isEatWhite() && !compilation.isEscape()) {
                         throw compilation.ex(new DovetailException(UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION));
                     }
                     compilation.addExpression();
                     compilation.setState(CompilerState.SEPARATOR);
-                }
-                else if (token == ' ')
-                {
-                    if (!compilation.isEatWhite())
-                    {
+				} else if (token == ' ') {
+					if (!compilation.isEatWhite()) {
                         compilation.setRegex();
                         compilation.setState(CompilerState.SPRINTF);
                         compilation.startParenthesisMatching();
                     }
-                }
-                else
-                {
+				} else {
                     compilation.append(token);
                 }
                 compilation.setEscapeIf('\\');
                 compilation.setEatWhite();
                 break;
             case SPRINTF:
-                if (token == '(')
-                {
+				if (token == '(') {
                     compilation.openParenthesis();
-                    if (compilation.isEscape())
-                    {
-                        compilation.backspace();
-                    }
+					if (compilation.isEscape()) {
+						compilation.backspace();
+					}
                     compilation.append(token);
-                }
-                else if (token == ')')
-                {
-                    if (compilation.closeParenthesis())
-                    {
-                        if (compilation.isEscape())
-                        {
+				} else if (token == ')') {
+					if (compilation.closeParenthesis()) {
+						if (compilation.isEscape()) {
                             compilation.backspace();
                         }
                         compilation.append(token);
-                    }
-                    else
-                    {
+					} else {
                         compilation.setFormat();
                         compilation.setState(CompilerState.LIMITS_OPEN);
                         compilation.startParenthesisMatching();
                     }
-                }
-                else if (token == '/')
-                {
-                    if (compilation.isEscape())
-                    {
+				} else if (token == '/') {
+					if (compilation.isEscape()) {
                         compilation.backspace();
                         compilation.append(token);
-                    }
-                    else
-                    {
+					} else {
                         throw compilation.ex(new DovetailException(UNESCAPED_FORWARD_SLASH_IN_FORMAT));
-                    }
-                }
-                else if (token == ' ')
-                {
-                    if (!compilation.isEatWhite())
-                    {
+					}
+				} else if (token == ' ') {
+					if (!compilation.isEatWhite()) {
                         compilation.setFormat();
                         compilation.setState(CompilerState.LIMITS_OPEN);
                         compilation.startParenthesisMatching();
-                    }
-                }
-                else
-                {
-                    compilation.append(token);
-                }
+					}
+				} else {
+					compilation.append(token);
+				}
                 compilation.setEscapeIf('%');
                 compilation.setEatWhite();
                 break;
             case LIMITS_OPEN:
-                if (token == '?')
-                {
-                    compilation.setLimits(0, 1);
-                    compilation.setState(CompilerState.COMPLETE);
-                }
-                else if (token == '+')
-                {
-                    compilation.setLimits(1, Integer.MAX_VALUE);
-                    compilation.setMultiple(true);
-                    compilation.setState(CompilerState.COMPLETE);
-                }
-                else if (token == '*')
-                {
-                    compilation.setLimits(0, Integer.MAX_VALUE);
-                    compilation.setMultiple(true);
-                    compilation.setState(CompilerState.COMPLETE);
-                }
-                else if (token == '[')
-                {
-                    compilation.setMultiple(true);
-                    compilation.setState(CompilerState.LIMITS);
-                }
-                else if (token == '/')
-                {
-                    compilation.setLimits(1, 1);
-                    compilation.addExpression();
-                    compilation.setState(CompilerState.SEPARATOR);
-                }
-                else
-                {
+				if (token == '?') {
+					compilation.setLimits(0, 1);
+					compilation.setState(CompilerState.COMPLETE);
+				} else if (token == '+') {
+					compilation.setLimits(1, Integer.MAX_VALUE);
+					compilation.setMultiple(true);
+					compilation.setState(CompilerState.COMPLETE);
+				} else if (token == '*') {
+					compilation.setLimits(0, Integer.MAX_VALUE);
+					compilation.setMultiple(true);
+					compilation.setState(CompilerState.COMPLETE);
+				} else if (token == '[') {
+					compilation.setMultiple(true);
+					compilation.setState(CompilerState.LIMITS);
+				} else if (token == '/') {
+					compilation.setLimits(1, 1);
+					compilation.addExpression();
+					compilation.setState(CompilerState.SEPARATOR);
+				} else {
                     throw compilation.ex(new DovetailException(LIMIT_OR_SEPARATOR_EXPECTED));
                 }
-                     
                 break;
             case LIMITS:
-                if (Character.isDigit(token))
-                {
-                    compilation.append(token);
-                }
-                else if (token == ',')
-                {
-                    compilation.setMinimum();
-                }
-                else if (token == ']')
-                {
-                    compilation.setLimit();
-                    compilation.setState(CompilerState.COMPLETE);
-                }
-                else
-                {
+				if (Character.isDigit(token)) {
+					compilation.append(token);
+				} else if (token == ',') {
+					compilation.setMinimum();
+				} else if (token == ']') {
+					compilation.setLimit();
+					compilation.setState(CompilerState.COMPLETE);
+				} else {
                     throw compilation.ex(new DovetailException(INVALID_LIMIT_CHARACTER));
                 }
                 break;
             case COMPLETE:
-                if (token != '/')
-                {
+				if (token != '/') {
                     throw compilation.ex(new DovetailException(PATH_SEPARATOR_EXPECTED));
                 }
                 compilation.addExpression();
                 compilation.setState(CompilerState.SEPARATOR);
                 break;
             }
-        }
-        switch (compilation.getState())
-        {
+		}
+		switch (compilation.getState()) {
         case LITERAL:
             compilation.addLiteral();
             break;
@@ -340,12 +265,9 @@ public final class GlobCompiler
             compilation.addExpression();
             break;
         default:
-            if (pattern.trim() == "/")
-            {
-                compilation.addLiteral();
-            }
-            else
-            {
+			if (pattern.trim() == "/") {
+				compilation.addLiteral();
+			} else {
                 throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
             }
         }
@@ -358,8 +280,7 @@ public final class GlobCompiler
      * 
      * @return The list of match tests as an array.
      */
-    private MatchTestServer[] getMatchTests()
-    {
+	private MatchTestServer[] getMatchTests() {
         MatchTestServer[] array = matchTestServers.toArray(new MatchTestServer[matchTestServers.size()]);
         matchTestServers.clear();
         return array;
