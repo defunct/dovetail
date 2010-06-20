@@ -148,17 +148,27 @@ final class Compilation {
 		return eatWhite;
 	}
 
-	// TODO Document.
+	/**
+	 * Set eat whitespace flag if the current character is a space.
+	 */
 	public void setEatWhite() {
 		this.eatWhite = glob.charAt(index - 1) == ' ';
 	}
 
-	// TODO Document.
+	/**
+	 * Get whether the current character is escaped.
+	 * 
+	 * @return True if the current character is escaped.
+	 */
 	public boolean isEscape() {
 		return escape;
 	}
 
-	// TODO Document.
+	/**
+	 * Set the escape flag if the character at the previous index matches
+	 * the given character.
+	 * @param escaper
+	 */
 	public void setEscapeIf(char escaper) {
 		escape = glob.charAt(index - 1) == escaper;
 	}

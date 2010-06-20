@@ -30,11 +30,11 @@ public final class Glob {
 		}
 		return builder.toString();
 	}
-    
+
 	/**
-	 * Create an empty glob that matches the space before the root in a path.
-	 * This is used by the glob compiler as the relative glob for a root
-	 * compiler.
+	 * Create an empty glob that matches the space before the root in a path,
+	 * the empty string literal test. This is used by the glob compiler as the
+	 * relative glob for a root compiler.
 	 */
 	Glob() {
 		this(new Range[] { new Literal("") }, "", new MatchTestServer[0]);
@@ -48,15 +48,25 @@ public final class Glob {
     }
     
 	/**
-	 * Get the number of parts in the glob.
+	 * Get the number of tests in the glob.
 	 * 
-	 * @return The number of parts in the glob.
+	 * @return The number of tests in the glob.
 	 */
-	public int size() {
+	int size() {
 		return tests.length;
 	}
-    
-    // TODO Document.
+
+	/**
+	 * Create a new glob by extending this glob by the given glob.
+	 * <p>
+	 * The glob provided will be made relative by removing the initial match
+	 * that matches the root of the a path, then the relativized glob will
+	 * be appended to a copy of this glob.
+	 * 
+	 * @param glob
+	 *            The glob to append to this glob.
+	 * @return The new, extended glob.
+	 */
 	public Glob extend(Glob glob) {
 		Range[] copyTests = new Range[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
@@ -69,12 +79,22 @@ public final class Glob {
         return new Glob(copyTests, pattern + glob.pattern, copyMatchTests); 
     }
 
-	// TODO Document.
-	public Range get(int i) {
+	/**
+	 * Get the test in the list of tests at the given index.
+	 * 
+	 * @param i
+	 *            The index.
+	 * @return The test at the given index.
+	 */
+	Range get(int i) {
 		return tests[i];
 	}
 
-	// TODO Document.
+	/**
+	 * Get the glob pattern.
+	 * 
+	 * @return The glob pattern.
+	 */
 	public String getPattern() {
 		return pattern;
 	}
