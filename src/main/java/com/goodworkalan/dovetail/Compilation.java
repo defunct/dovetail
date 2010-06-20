@@ -165,15 +165,20 @@ final class Compilation {
 	}
 
 	/**
-	 * Set the escape flag if the character at the previous index matches
-	 * the given character.
+	 * Set the escape flag if the current character matches the given escape
+	 * character.
+	 * 
 	 * @param escaper
+	 *            The escape character.
 	 */
 	public void setEscapeIf(char escaper) {
 		escape = glob.charAt(index - 1) == escaper;
 	}
 
-	// TODO Document.
+	/**
+	 * Start parenthesis matching by setting the eat white flag and setting the
+	 * parenthesis count to zero.
+	 */
 	public void startParenthesisMatching() {
 		eatWhite = true;
 		parenthesis = 0;

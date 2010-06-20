@@ -18,8 +18,15 @@ public final class Glob {
     
     // TODO Document.
     private final MatchTestServer[] matchTestServers;
-    
-	// TODO Document.
+
+	/**
+	 * Construct a slash separated relative path using the given list of path
+	 * parts.
+	 * 
+	 * @param parts
+	 *            The list of path parts.
+	 * @return The path parts catenated into a slash separated string.
+	 */
 	public static String manyTest(String[] parts) {
 		StringBuilder builder = new StringBuilder();
 		String separator = "";
@@ -127,13 +134,11 @@ public final class Glob {
      * Test the glob against the given path returning a map of the captured
      * parameters if it matches, null if it does not match.
      * 
-     * FIXME RENAME.
-     * 
      * @param path
      *            The path to match.
      * @return A map of the cpatured parameters of null if it does not match.
      */
-	public Map<String, String> map(String path) {
+	public Map<String, String> match(String path) {
 		GlobTree<Object> tree = new GlobTree<Object>();
 		tree.add(this, new Object());
 		List<Match<Object>> mapping = tree.map(path);
@@ -150,7 +155,7 @@ public final class Glob {
      *            The path to match.
      * @return True if the path matches this glob.
      */
-	public boolean match(String path) {
+	public boolean matches(String path) {
 		GlobTree<Object> tree = new GlobTree<Object>();
 		tree.add(this, new Object());
 		return tree.match(path);
