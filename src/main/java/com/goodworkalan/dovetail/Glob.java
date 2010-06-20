@@ -4,10 +4,13 @@ package com.goodworkalan.dovetail;
 import java.util.List;
 import java.util.Map;
 
-// TODO Document.
-public final class Glob
-{
-    // TODO Document.
+/**
+ * A compiled dovetail pattern.
+ *
+ * @author Alan Gutierrez
+ */
+public final class Glob {
+	// TODO Document.
     final static short PROPERTY = 1;
     
     // TODO Document.
@@ -45,24 +48,30 @@ public final class Glob
         return builder.toString();
     }
     
-    Glob()
-    {
-        this(new Test[] { new Literal("") }, "", new MatchTestServer[0]);
-    }
+	/**
+	 * Create an empty glob that matches the space before the root in a path.
+	 * This is used by the glob compiler as the relative glob for a root
+	 * compiler.
+	 */
+	Glob() {
+		this(new Test[] { new Literal("") }, "", new MatchTestServer[0]);
+	}
 
     // TODO Document.
-    Glob(Test[] matches, String pattern, MatchTestServer[] matchTestServers)
-    {
+	Glob(Test[] matches, String pattern, MatchTestServer[] matchTestServers) {
         this.tests = matches;
         this.pattern = pattern;
         this.matchTestServers = matchTestServers;
     }
     
-    // TODO Document.
-    public int size()
-    {
-        return tests.length;
-    }
+	/**
+	 * Get the number of parts in the glob.
+	 * 
+	 * @return The number of parts in the glob.
+	 */
+	public int size() {
+		return tests.length;
+	}
     
     // TODO Document.
     public Glob extend(Glob glob)

@@ -23,43 +23,47 @@ public final class GlobCompiler
 {
     /** The list of match tests to apply when a glob successfully matches. */
     private final List<MatchTestServer> matchTestServers;
-    
-    // TODO Document.
+
+    /** The relative root glob. */
     private final Glob glob;
-    
-    // TODO Document.
-    public GlobCompiler(Glob glob)
-    {
-        this.glob = glob;
+
+	/**
+	 * Create a glob compiler that will create globs relative to the given root
+	 * glob.
+	 * 
+	 * @param glob
+	 *            The relative root glob.
+	 */
+	public GlobCompiler(Glob glob) {
+		this.glob = glob;
         this.matchTestServers = new ArrayList<MatchTestServer>();
     }
+   
+	/** Create a glob compiler without a relative root. */
+    public GlobCompiler() {
+		this(new Glob());
+	}
 
-    // TODO Document.
-    public GlobCompiler()
-    {
-        this(new Glob());
-    }
-
-    /**
-     * Add a match test that will be applied to the path and the extracted
-     * parameters after a glob matches. If any of match tests associated with a
-     * glob returns false, the glob match will be considered a mismatch.
-     * <p>
-     * And instance of the given match test class will be created using the
-     * match test factory associated with this glob compiler. This gives the
-     * client programmer the opportunity to construct a match test initialized
-     * with application resources, such as a database connection so that a user
-     * name parameter can be sought in a database, and the match rejected if no
-     * such user exists.
-     * 
-     * @param matchTestClass
-     *            The class of a match test to apply to otherwise successful glob
-     *            matches.
-     * @return This glob compiler as part of a chained builder.
-     */
-    public GlobCompiler test(Class<? extends MatchTest> matchTestClass)
-    {
-        matchTestServers.add(new FactoryMatchTestServer(matchTestClass));
+	/**
+	 * Add the type of a match test that will be applied to the path and the
+	 * extracted parameters after a glob matches. If any of match tests
+	 * associated with a glob returns false, the glob match will be considered a
+	 * mismatch.
+	 * <p>
+	 * And instance of the given match test class will be created using the
+	 * match test factory associated with this glob compiler. The factory
+	 * pattern gives the client programmer the opportunity to construct a match
+	 * test initialized with application resources, such as a database
+	 * connection so that a user name parameter can be sought in a database, and
+	 * the match rejected if no such user exists.
+	 * 
+	 * @param matchTestClass
+	 *            The class of a match test to apply to otherwise successful
+	 *            glob matches.
+	 * @return This glob compiler as part of a chained builder.
+	 */
+	public GlobCompiler test(Class<? extends MatchTest> matchTestClass) {
+		matchTestServers.add(new FactoryMatchTestServer(matchTestClass));
         return this;
     }
 
@@ -72,8 +76,7 @@ public final class GlobCompiler
      *            The match test to apply to otherwise successful glob matches.
      * @return This glob compiler as part of a chained builder.
      */
-    public GlobCompiler test(MatchTest matchTest)
-    {
+	public GlobCompiler test(MatchTest matchTest) {
         matchTestServers.add(new InstanceMatchTestServer(matchTest));
         return this;
     }
