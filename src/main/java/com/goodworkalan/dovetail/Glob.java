@@ -10,28 +10,26 @@ import java.util.Map;
  * @author Alan Gutierrez
  */
 public final class Glob {
-    // TODO Document.
+    /** The pattern used to create the glob. */
     private final String pattern;
 
-    /** The array of tests to apply against a path. */
+    /** The array of tests to apply against the path. */
     private final Test[] tests;
     
     // TODO Document.
     private final MatchTestServer[] matchTestServers;
     
-    // TODO Document.
-    public static String manyTest(String[] parts)
-    {
-        StringBuilder builder = new StringBuilder();
-        String separator = "";
-        for (String part : parts)
-        {
-            builder.append(separator);
-            builder.append(part);
-            separator = "/";
-        }
-        return builder.toString();
-    }
+	// TODO Document.
+	public static String manyTest(String[] parts) {
+		StringBuilder builder = new StringBuilder();
+		String separator = "";
+		for (String part : parts) {
+			builder.append(separator);
+			builder.append(part);
+			separator = "/";
+		}
+		return builder.toString();
+	}
     
 	/**
 	 * Create an empty glob that matches the space before the root in a path.
@@ -60,7 +58,7 @@ public final class Glob {
     
     // TODO Document.
 	public Glob extend(Glob glob) {
-       Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
+		Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         

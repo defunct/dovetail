@@ -7,8 +7,7 @@ import java.util.Map;
  * 
  * FIXME Rename Test.
  */
-interface Test
-{
+interface Test {
     /**
      * Return true if the glob matches the string parts from the ranges
      * specified by the start inclusive and end exclusive.
