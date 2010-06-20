@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 
  * @author Alan Gutierrez
  */
-final class Expression implements Test {
+final class Expression implements Range {
 	// TODO Document.
     private final List<String> identifiers;
     

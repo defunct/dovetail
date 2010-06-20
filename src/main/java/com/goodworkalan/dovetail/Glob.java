@@ -14,7 +14,7 @@ public final class Glob {
     private final String pattern;
 
     /** The array of tests to apply against the path. */
-    private final Test[] tests;
+    private final Range[] tests;
     
     // TODO Document.
     private final MatchTestServer[] matchTestServers;
@@ -37,11 +37,11 @@ public final class Glob {
 	 * compiler.
 	 */
 	Glob() {
-		this(new Test[] { new Literal("") }, "", new MatchTestServer[0]);
+		this(new Range[] { new Literal("") }, "", new MatchTestServer[0]);
 	}
 
     // TODO Document.
-	Glob(Test[] matches, String pattern, MatchTestServer[] matchTestServers) {
+	Glob(Range[] matches, String pattern, MatchTestServer[] matchTestServers) {
         this.tests = matches;
         this.pattern = pattern;
         this.matchTestServers = matchTestServers;
@@ -58,7 +58,7 @@ public final class Glob {
     
     // TODO Document.
 	public Glob extend(Glob glob) {
-		Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
+		Range[] copyTests = new Range[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         
@@ -70,7 +70,7 @@ public final class Glob {
     }
 
 	// TODO Document.
-	public Test get(int i) {
+	public Range get(int i) {
 		return tests[i];
 	}
 
@@ -162,7 +162,7 @@ public final class Glob {
 	public String toString() {
 		StringBuilder string = new StringBuilder();
 		String separator = "";
-		for (Test test : tests) {
+		for (Range test : tests) {
 			string.append(separator).append(test.toString());
 			separator = "/";
 		}

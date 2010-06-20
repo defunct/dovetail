@@ -48,7 +48,7 @@ public class GlobTree<T> {
     }
 
 	// TODO Document.
-	private Node<T> getChild(Node<T> parent, Test match) {
+	private Node<T> getChild(Node<T> parent, Range match) {
 		Node<T> child = null;
 		for (Node<T> node : parent) {
 			if (node.getMatch().equals(match)) {
