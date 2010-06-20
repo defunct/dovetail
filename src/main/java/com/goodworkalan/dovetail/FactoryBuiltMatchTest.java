@@ -3,8 +3,7 @@ package com.goodworkalan.dovetail;
 import java.util.Map;
 
 // TODO Document.
-public class FactoryBuiltMatchTest implements MatchTest
-{
+public class FactoryBuiltMatchTest implements MatchTest {
     // TODO Document.
     private final MatchTestFactory factory;
     
@@ -12,15 +11,13 @@ public class FactoryBuiltMatchTest implements MatchTest
     private final Class<? extends MatchTest> matchTestClass;
     
     // TODO Document.
-    public FactoryBuiltMatchTest(MatchTestFactory factory, Class<? extends MatchTest> matchTestClass)
-    {
+    public FactoryBuiltMatchTest(MatchTestFactory factory, Class<? extends MatchTest> matchTestClass) {
         this.factory = factory;
         this.matchTestClass = matchTestClass;
     }
     
-    // TODO Document.
-    public boolean test(String path, Map<String, String> parameters)
-    {
+	// TODO Document.
+	public boolean test(String path, Map<String, String> parameters) {
         return factory.getInstance(matchTestClass).test(path, parameters);
     }
 }
