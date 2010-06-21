@@ -137,14 +137,14 @@ public final class GlobCompiler {
                     compilation.append(token);
                 } else if (token == ')') {
                     if (compilation.closeParenthesis()) {
+                        compilation.setFormat();
+                        compilation.setState(CompilerState.LIMITS_OPEN);
+                        compilation.startParenthesisMatching();
+                    } else {
                         if (compilation.isEscape()) {
                             compilation.backspace();
                         }
                         compilation.append(token);
-                    } else {
-                        compilation.setFormat();
-                        compilation.setState(CompilerState.LIMITS_OPEN);
-                        compilation.startParenthesisMatching();
                     }
                 } else if (token == '/') {
                     if (compilation.isEscape()) {

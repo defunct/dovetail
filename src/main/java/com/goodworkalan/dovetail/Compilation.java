@@ -200,7 +200,7 @@ final class Compilation {
      * @return True if this is the final closing parenthesis.
      */
     public boolean closeParenthesis() {
-        return !(escape || parenthesis-- != 0);
+        return !escape && parenthesis-- == 0;
     }
     
     /**
