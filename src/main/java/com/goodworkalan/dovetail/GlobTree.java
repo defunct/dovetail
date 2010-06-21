@@ -52,6 +52,7 @@ public class GlobTree<T> {
 		return child;
 	}
     
+	// TODO Document.
 	public Globber<T> newGlobber() {
 		return new Globber<T>(root.duplicate());
 	}

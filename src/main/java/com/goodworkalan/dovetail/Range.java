@@ -4,6 +4,8 @@ import java.util.Map;
 
 /**
  * A test against a range of path parts in a glob.
+ * <p>
+ * FIXME Rename test.
  */
 interface Range {
     /**

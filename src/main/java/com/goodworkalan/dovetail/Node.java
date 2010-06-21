@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-final class Node<T> implements Iterable<Node<T>> {
+class Node<T> implements Iterable<Node<T>> {
 	private final Range match;
 
 	private final List<Node<T>> children;
