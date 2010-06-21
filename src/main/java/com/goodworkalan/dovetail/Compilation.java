@@ -35,7 +35,7 @@ final class Compilation {
 	private String sprintf;
 
 	/** The part tests. */
-	private final List<Range> tests;
+	private final List<Test> tests;
 
 	/** The compiler state. */
 	private CompilerState state;
@@ -70,7 +70,7 @@ final class Compilation {
 	public Compilation(String glob) {
 		this.glob = glob;
 		this.capture = new StringBuilder();
-		this.tests = new ArrayList<Range>();
+		this.tests = new ArrayList<Test>();
 		this.state = CompilerState.SEPARATOR;
 		this.identifiers = new ArrayList<String>();
 		this.index = 1;
@@ -345,7 +345,7 @@ final class Compilation {
 	 * 
 	 * @return The list of tests as an array.
 	 */
-	public Range[] getTests() {
-		return tests.toArray(new Range[tests.size()]);
+	public Test[] getTests() {
+		return tests.toArray(new Test[tests.size()]);
 	}
 }

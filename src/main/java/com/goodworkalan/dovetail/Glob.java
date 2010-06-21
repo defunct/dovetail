@@ -14,7 +14,7 @@ public final class Glob {
     private final String pattern;
 
     /** The array of tests to apply against the path. */
-    private final Range[] tests;
+    private final Test[] tests;
 
 	/**
 	 * Construct a slash separated relative path using the given list of path
@@ -41,11 +41,11 @@ public final class Glob {
 	 * relative glob for a root compiler.
 	 */
 	Glob() {
-		this(new Range[] { new Literal("") }, "");
+		this(new Test[] { new Literal("") }, "");
 	}
 
     // TODO Document.
-	Glob(Range[] matches, String pattern) {
+	Glob(Test[] matches, String pattern) {
         this.tests = matches;
         this.pattern = pattern;
     }
@@ -71,7 +71,7 @@ public final class Glob {
 	 * @return The new, extended glob.
 	 */
 	public Glob extend(Glob glob) {
-		Range[] copyTests = new Range[tests.length + glob.tests.length - 1];
+		Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         
@@ -85,7 +85,7 @@ public final class Glob {
 	 *            The index.
 	 * @return The test at the given index.
 	 */
-	Range get(int i) {
+	Test get(int i) {
 		return tests[i];
 	}
 
@@ -155,7 +155,7 @@ public final class Glob {
 	public String toString() {
 		StringBuilder string = new StringBuilder();
 		String separator = "";
-		for (Range test : tests) {
+		for (Test test : tests) {
 			string.append(separator).append(test.toString());
 			separator = "/";
 		}

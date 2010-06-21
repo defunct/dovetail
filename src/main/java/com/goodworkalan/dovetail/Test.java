@@ -4,10 +4,10 @@ import java.util.Map;
 
 /**
  * A test against a range of path parts in a glob.
- * <p>
- * FIXME Rename test.
+ * 
+ * @author Alan Gutierrez
  */
-interface Range {
+interface Test {
     /**
      * Return true if the glob matches the string parts from the ranges
      * specified by the start inclusive and end exclusive.

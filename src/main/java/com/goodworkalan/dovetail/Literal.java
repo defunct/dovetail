@@ -7,7 +7,7 @@ import java.util.Map;
  * 
  * @author Alan Gutierrez
  */
-final class Literal implements Range {
+final class Literal implements Test {
 	/** The literal text to compare against the part. */
 	private final String text;
 

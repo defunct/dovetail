@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * 
  * @author Alan Gutierrez
  */
-final class Expression implements Range {
+final class Expression implements Test {
 	/**
 	 * The identifiers used to reference regular expression capture groups in
 	 * group order.
