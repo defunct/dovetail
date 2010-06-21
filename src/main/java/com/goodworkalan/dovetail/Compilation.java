@@ -184,19 +184,29 @@ final class Compilation {
 		parenthesis = 0;
 	}
 
-	// TODO Document.
+	/**
+	 * Increases the parenthesis count if we are not currently escaping.
+	 */
 	public void openParenthesis() {
 		if (!escape) {
 			parenthesis++;
 		}
     }
-    
-    // TODO Document.
+
+	/**
+	 * Decrease the parenthesis count if we are not currently escaping and
+	 * return whether the currently parenthesis opening has completely closed.
+	 * 
+	 * @return True if this is the final closing parenthesis.
+	 */
 	public boolean closeParenthesis() {
-		return escape || parenthesis-- != 0;
+		return !(escape || parenthesis-- != 0);
 	}
     
-	// TODO Document.
+	/**
+	 * Compile a regular expression for an expression test using the current
+	 * contents of the capture buffer and reset the buffer.
+	 */
 	public void setRegex() {
 		try {
 			regex = Pattern.compile(capture.toString());
@@ -206,13 +216,24 @@ final class Compilation {
 		capture.setLength(0);
 	}
 
-	// TODO Document.
+	/**
+	 * Use the current contents of the capture buffer for a sprintf format.
+	 */
 	public void setFormat() {
 		sprintf = capture.toString();
 		capture.setLength(0);
 	}
 
-	// TODO Document.
+	/**
+	 * Assert that the given character is a valid Java identifier character that
+	 * can be used to build a Java identifier in the capture buffer. If the
+	 * capture buffer is empty, the given character is expected to be a Java
+	 * identifier start characters, otherwise the given character is expected to
+	 * be a Java identifier part.
+	 * 
+	 * @param token
+	 *            The Java identifier character.
+	 */
 	public void assertIdentifierCharacter(char token) {
 		if (capture.length() == 0 && !Character.isJavaIdentifierStart(token)) {
 			throw ex(new DovetailException(JAVA_IDENTIFIER_START_EXPECTED));
@@ -226,18 +247,26 @@ final class Compilation {
 		this.multiple = deep;
 	}
 
-	// TODO Document.
+	/**
+	 * Adds a literal test using the current contents of the capture buffer as
+	 * the literal string to the list of test.
+	 */
 	public void addLiteral() {
 		tests.add(new Literal(capture.toString()));
 		capture.setLength(0);
 	}
 
-	// TODO Document.
+	/** Removes the last character from the capture buffer. */
 	public void backspace() {
 		capture.setLength(capture.length() - 1);
 	}
-    
-	// TODO Document.
+
+	/**
+	 * Appends the given character to the capture buffer.
+	 * 
+	 * @param token
+	 *            The character to append.
+	 */
 	public void append(char token) {
 		capture.append(token);
 	}
@@ -265,7 +294,7 @@ final class Compilation {
 		if (maximum == -1) {
 			maximum = Integer.MAX_VALUE;
 		}
-       Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, multiple);
+		Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, multiple);
         tests.add(expression);
         identifiers.clear();
         regex = null;

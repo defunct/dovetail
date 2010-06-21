@@ -148,11 +148,11 @@ public final class GlobCompiler {
 					compilation.append(token);
 				} else if (token == ')') {
 					if (compilation.closeParenthesis()) {
-						compilation.append(token);
-					} else {
 						compilation.setRegex();
 						compilation.setState(CompilerState.LIMITS_OPEN);
 						compilation.startParenthesisMatching();
+					} else {
+						compilation.append(token);
 					}
 				} else if (token == '/') {
 					if (!compilation.isEatWhite() && !compilation.isEscape()) {

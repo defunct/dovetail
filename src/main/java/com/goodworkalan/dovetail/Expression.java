@@ -9,27 +9,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * An expression that matches a part or sub path in a path pattern. This class
- * includes a constructor that will parse the pattern.
+ * An expression that matches a part or sub path in a path pattern.
  * 
  * @author Alan Gutierrez
  */
 final class Expression implements Range {
-	// TODO Document.
+	/**
+	 * The identifiers used to reference regular expression capture groups in
+	 * group order.
+	 */
     private final List<String> identifiers;
     
-    // TODO Document.
+    /** The regular expression. */
     private final Pattern regex;
-    
+
+	/**
+	 * The format used to create the path part when creating generating the path
+	 * from a parameter map.
+	 */
     private final String sprintf;
     
-    // TODO Document.
+    /** The minimum number of path parts this expression can match. */
     private final int min;
     
-    // TODO Document.
+    /** The maximum number of path parts this expression can match. */
     private final int max;
     
-    // TODO Document.
+    /** Whether this . */
     private final boolean multiple;
     
     // TODO Document.
