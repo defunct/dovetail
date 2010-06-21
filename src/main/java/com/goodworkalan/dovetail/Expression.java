@@ -14,19 +14,19 @@ import java.util.regex.Pattern;
  * @author Alan Gutierrez
  */
 final class Expression implements Test {
-	/**
-	 * The identifiers used to reference regular expression capture groups in
-	 * group order.
-	 */
+    /**
+     * The identifiers used to reference regular expression capture groups in
+     * group order.
+     */
     private final List<String> identifiers;
     
     /** The regular expression. */
     private final Pattern regex;
 
-	/**
-	 * The format used to create the path part when creating generating the path
-	 * from a parameter map.
-	 */
+    /**
+     * The format used to create the path part when creating generating the path
+     * from a parameter map.
+     */
     private final String sprintf;
     
     /** The minimum number of path parts this expression can match. */
@@ -76,91 +76,91 @@ final class Expression implements Test {
         return false;
     }
 
-	// TODO Document.
-	private boolean parameters(Matcher matcher, Map<String, String> parameters) {
-		if (matcher.matches()) {
-			if (matcher.groupCount() == 0) {
-				if (identifiers.size() != 1) {
+    // TODO Document.
+    private boolean parameters(Matcher matcher, Map<String, String> parameters) {
+        if (matcher.matches()) {
+            if (matcher.groupCount() == 0) {
+                if (identifiers.size() != 1) {
                     throw new DovetailException(MISMATCHED_IDENTIFIERS).add(1, identifiers.size());
                 }
-				parameters.put(identifiers.get(0), matcher.group());
-			} else {
-				if (identifiers.size() != matcher.groupCount()) {
+                parameters.put(identifiers.get(0), matcher.group());
+            } else {
+                if (identifiers.size() != matcher.groupCount()) {
                     throw new DovetailException(MISMATCHED_IDENTIFIERS).add(matcher.groupCount(), identifiers.size());
-				}
-				for (int i = 0; i < matcher.groupCount(); i++) {
+                }
+                for (int i = 0; i < matcher.groupCount(); i++) {
                     parameters.put(identifiers.get(i), matcher.group(i + 1));
                 }
             }
             return true;
         }
         return false;
-	}
+    }
 
-	// TODO Document.
-	public int getMin() {
-		return min;
-	}
+    // TODO Document.
+    public int getMin() {
+        return min;
+    }
 
-	// TODO Document.
-	public int getMax() {
-		return max;
-	}
+    // TODO Document.
+    public int getMax() {
+        return max;
+    }
     
-	// TODO Document.
-	public void append(StringBuilder path, Map<String, String> parameters) {
-		Object[] args = new Object[identifiers.size()];
-		for (int i = 0; i < identifiers.size(); i++) {
-			args[i] = parameters.get(identifiers.get(i));
-			if (args[i] == null) {
+    // TODO Document.
+    public void append(StringBuilder path, Map<String, String> parameters) {
+        Object[] args = new Object[identifiers.size()];
+        for (int i = 0; i < identifiers.size(); i++) {
+            args[i] = parameters.get(identifiers.get(i));
+            if (args[i] == null) {
                 throw new DovetailException(FORMAT_PARAMETER_IS_NULL).add(identifiers.get(i));
             }
         }
         path.append(String.format(sprintf, args));
     }
 
-	// TODO Document.
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj instanceof Expression) {
-			Expression other = (Expression) obj;
-			return min == other.min && max == other.max
-					&& identifiers.equals(other.identifiers)
-					&& regex.pattern().equals(other.regex.pattern())
-					&& sprintf.equals(other.sprintf)
-					&& multiple == other.multiple;
-		}
-		return false;
-	}
+    // TODO Document.
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Expression) {
+            Expression other = (Expression) obj;
+            return min == other.min && max == other.max
+                    && identifiers.equals(other.identifiers)
+                    && regex.pattern().equals(other.regex.pattern())
+                    && sprintf.equals(other.sprintf)
+                    && multiple == other.multiple;
+        }
+        return false;
+    }
 
-	// TODO Document.
-	@Override
-	public int hashCode() {
-		int hash = 1;
-		hash = hash * 37 + max;
-		hash = hash * 37 + min;
-		hash = hash * 37 + identifiers.hashCode();
-		hash = hash * 37 + regex.pattern().hashCode();
-		hash = hash * 37 + sprintf.hashCode();
-		hash = hash * 37 + (multiple ? 15485867 : 32452843);
-		return hash;
-	}
+    // TODO Document.
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 37 + max;
+        hash = hash * 37 + min;
+        hash = hash * 37 + identifiers.hashCode();
+        hash = hash * 37 + regex.pattern().hashCode();
+        hash = hash * 37 + sprintf.hashCode();
+        hash = hash * 37 + (multiple ? 15485867 : 32452843);
+        return hash;
+    }
 
-	/**
-	 * Return the expression pattern.
-	 * 
-	 * @return The expression pattern.
-	 */
-	@Override
-	public String toString() {
-		StringBuilder ids = new StringBuilder();
-		String separator = "";
-		for (String id : identifiers) {
-			ids.append(separator).append(id);
-		}
+    /**
+     * Return the expression pattern.
+     * 
+     * @return The expression pattern.
+     */
+    @Override
+    public String toString() {
+        StringBuilder ids = new StringBuilder();
+        String separator = "";
+        for (String id : identifiers) {
+            ids.append(separator).append(id);
+        }
         return "{identifiers: " + ids + ", regex: " + regex.pattern() + ", format: " + sprintf + "}";
     }
 }

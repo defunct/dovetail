@@ -16,14 +16,14 @@ public class Globber<T> {
     /** The root node of the tree. */
     private final Node<T> root;
     
-	/**
-	 * Create a new instace of a globber with the given root glob node and the
-	 * given match test factory.
-	 * 
-	 * @param root
-	 *            The root node of the tree.
-	 */
-	Globber(Node<T> root) {
+    /**
+     * Create a new instace of a globber with the given root glob node and the
+     * given match test factory.
+     * 
+     * @param root
+     *            The root node of the tree.
+     */
+    Globber(Node<T> root) {
         this.root = root;
     }
     
@@ -33,12 +33,12 @@ public class Globber<T> {
      * @param path The path to test.
      * @return True of a path in the glob tree matches the given path.
      */
-	public boolean match(String path) {
+    public boolean match(String path) {
         return ! map(path).isEmpty();
     }
 
     // TODO Document.
-	public List<Match<T>> map(String path) {
+    public List<Match<T>> map(String path) {
         if (root.hasChildren()) {
             MatchBook<T> mapper = new MatchBook<T>();
             if (descend(mapper, root.getFirstChild(), path.split("/", -1), 0, path)) {
@@ -54,7 +54,7 @@ public class Globber<T> {
         int matchesLeft = node.getMatch().getMin() + node.getMatchesLeft();
         int min = node.getMatch().getMin();
         int max = Math.min(partsLeft - matchesLeft + 1, node.getMatch().getMax());
-		for (int i = min; i <= max; i++) {
+        for (int i = min; i <= max; i++) {
             if (match(mapper.duplicate(), node, parts, partIndex, i, path)) {
                 return true;
             }
@@ -67,16 +67,16 @@ public class Globber<T> {
         if (length == 0 || node.getMatch().match(mapper.getParameters(), parts, partIndex, partIndex + length)) {
             partIndex += length;
 
-			if (partIndex == parts.length) {
+            if (partIndex == parts.length) {
                 // TODO If there are matches left, why does this work?
                 mapper.map(0, node.getValue());
                 return node.getMatchesLeft() == 0;
             }
-			if (!node.hasChildren()) {
-				return false;
-			}
+            if (!node.hasChildren()) {
+                return false;
+            }
             boolean matched = false;
-			for (Node<T> child : node) {
+            for (Node<T> child : node) {
                 matched = descend(mapper, child, parts, partIndex, path) || matched;
             }
             return matched;
