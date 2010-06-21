@@ -9,9 +9,6 @@ import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLAS
 import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION;
 import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_END_OF_GLOB_EXPESSION;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Creates a glob from a glob pattern.
  * <p>
@@ -20,9 +17,6 @@ import java.util.List;
  * @author Alan Gutierrez
  */
 public final class GlobCompiler {
-    /** The list of match tests to apply when a glob successfully matches. */
-    private final List<MatchTestServer> matchTestServers;
-
     /** The relative root glob. */
     private final Glob glob;
 
@@ -35,50 +29,12 @@ public final class GlobCompiler {
 	 */
 	public GlobCompiler(Glob glob) {
 		this.glob = glob;
-        this.matchTestServers = new ArrayList<MatchTestServer>();
     }
    
 	/** Create a glob compiler without a relative root. */
     public GlobCompiler() {
 		this(new Glob());
 	}
-
-	/**
-	 * Add the type of a match test that will be applied to the path and the
-	 * extracted parameters after a glob matches. If any of match tests
-	 * associated with a glob returns false, the glob match will be considered a
-	 * mismatch.
-	 * <p>
-	 * And instance of the given match test class will be created using the
-	 * match test factory associated with this glob compiler. The factory
-	 * pattern gives the client programmer the opportunity to construct a match
-	 * test initialized with application resources, such as a database
-	 * connection so that a user name parameter can be sought in a database, and
-	 * the match rejected if no such user exists.
-	 * 
-	 * @param matchTestClass
-	 *            The class of a match test to apply to otherwise successful
-	 *            glob matches.
-	 * @return This glob compiler as part of a chained builder.
-	 */
-	public GlobCompiler test(Class<? extends MatchTest> matchTestClass) {
-		matchTestServers.add(new FactoryMatchTestServer(matchTestClass));
-        return this;
-    }
-
-    /**
-     * Add a match test that will be applied to the path and the extracted
-     * parameters after a glob matches. If any of match tests associated with a
-     * glob returns false, the glob match will be considered a mismatch.
-     * 
-     * @param matchTest
-     *            The match test to apply to otherwise successful glob matches.
-     * @return This glob compiler as part of a chained builder.
-     */
-	public GlobCompiler test(MatchTest matchTest) {
-        matchTestServers.add(new InstanceMatchTestServer(matchTest));
-        return this;
-    }
 
     /**
      * Compile a glob from the given glob pattern that will apply the match
@@ -93,7 +49,7 @@ public final class GlobCompiler {
 			throw new NullPointerException();
 		}
 		if (pattern.trim().length() == 0) {
-            return glob.extend(new Glob(new Range[] { new Literal("") }, pattern, getMatchTests()));
+            return glob.extend(new Glob(new Range[] { new Literal("") }, pattern));
         }
 		if (pattern.charAt(0) != '/') {
             throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 1);
@@ -271,18 +227,6 @@ public final class GlobCompiler {
                 throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
             }
         }
-        return glob.extend(new Glob(compilation.getTests(), pattern, getMatchTests()));
-    }
-
-    /**
-     * Convert the list of match tests to an array and clear the match test
-     * list.
-     * 
-     * @return The list of match tests as an array.
-     */
-	private MatchTestServer[] getMatchTests() {
-        MatchTestServer[] array = matchTestServers.toArray(new MatchTestServer[matchTestServers.size()]);
-        matchTestServers.clear();
-        return array;
+        return glob.extend(new Glob(compilation.getTests(), pattern));
     }
 }

@@ -15,9 +15,6 @@ public final class Glob {
 
     /** The array of tests to apply against the path. */
     private final Range[] tests;
-    
-    // TODO Document.
-    private final MatchTestServer[] matchTestServers;
 
 	/**
 	 * Construct a slash separated relative path using the given list of path
@@ -44,14 +41,13 @@ public final class Glob {
 	 * relative glob for a root compiler.
 	 */
 	Glob() {
-		this(new Range[] { new Literal("") }, "", new MatchTestServer[0]);
+		this(new Range[] { new Literal("") }, "");
 	}
 
     // TODO Document.
-	Glob(Range[] matches, String pattern, MatchTestServer[] matchTestServers) {
+	Glob(Range[] matches, String pattern) {
         this.tests = matches;
         this.pattern = pattern;
-        this.matchTestServers = matchTestServers;
     }
     
 	/**
@@ -79,11 +75,7 @@ public final class Glob {
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         
-        MatchTestServer[] copyMatchTests = new MatchTestServer[matchTestServers.length + glob.matchTestServers.length];
-        System.arraycopy(matchTestServers, 0, copyMatchTests, 0, matchTestServers.length);
-        System.arraycopy(glob.matchTestServers, 0, copyMatchTests, matchTestServers.length, glob.matchTestServers.length);
-        
-        return new Glob(copyTests, pattern + glob.pattern, copyMatchTests); 
+        return new Glob(copyTests, pattern + glob.pattern); 
     }
 
 	/**
@@ -105,30 +97,6 @@ public final class Glob {
 	public String getPattern() {
 		return pattern;
 	}
-
-    /**
-     * Apply the match tests in this glob to the given path and map of
-     * parameters.
-     * <p>
-     * FIXME Not quite right. Rethink creation pattern. Tests should be
-     * applied by the tree, they should not be in two places. Glob might become
-     * internal, or only a limited interface, a GlobTree returns a compiler, the
-     * compiler builds the Glob and adds it to the tree.
-     * 
-     * @param path
-     *            The path to text.
-     * @param parameters
-     *            The parameters to test.
-     * @return True if all the match tests in this glob pass.
-     */
-    public boolean matchTests(MatchTestFactory factory, String path, Map<String, String> parameters) {
-		for (MatchTestServer matchTestServer : matchTestServers) {
-			if (!matchTestServer.getInstance(factory).test(path, parameters)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Test the glob against the given path returning a map of the captured

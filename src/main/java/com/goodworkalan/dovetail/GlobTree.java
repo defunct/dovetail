@@ -8,17 +8,6 @@ public class GlobTree<T> {
 	/** The root node of the tree. */
 	private final Node<T> root = new Node<T>(null);
     
-    /** The factory used to create match tests. */
-    private MatchTestFactory matchTestFactory = new SimpleMatchTestFactory();
-    
-	public void setMatchTestFactory(MatchTestFactory factory) {
-		this.matchTestFactory = factory;
-	}
-
-	public MatchTestFactory getMatchTestFactory() {
-		return matchTestFactory;
-	}
-
     /**
      * Map the given glob to the given tree value. When a path given to the
      * tree matches the given glob, the given value will be returned  
@@ -63,12 +52,8 @@ public class GlobTree<T> {
 		return child;
 	}
     
-	public Globber<T> newGlobber(MatchTestFactory factory) {
-		return new Globber<T>(root.duplicate(), factory);
-	}
-
 	public Globber<T> newGlobber() {
-		return new Globber<T>(root.duplicate(), new SimpleMatchTestFactory());
+		return new Globber<T>(root.duplicate());
 	}
 
 	// TODO Document.

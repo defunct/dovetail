@@ -16,21 +16,15 @@ public class Globber<T> {
     /** The root node of the tree. */
     private final Node<T> root;
     
-    /** The factory to use to create match tests. */
-    private final MatchTestFactory factory;
-
 	/**
 	 * Create a new instace of a globber with the given root glob node and the
 	 * given match test factory.
 	 * 
 	 * @param root
 	 *            The root node of the tree.
-	 * @param factory
-	 *            The factory to use to create match tests.
 	 */
-	Globber(Node<T> root, MatchTestFactory factory) {
+	Globber(Node<T> root) {
         this.root = root;
-        this.factory = factory;
     }
     
     /**
@@ -75,9 +69,7 @@ public class Globber<T> {
 
 			if (partIndex == parts.length) {
                 // TODO If there are matches left, why does this work?
-                if (node.getGlob().matchTests(factory, path, mapper.getParameters())) {
-                    mapper.map(0, node.getValue());
-                }
+                mapper.map(0, node.getValue());
                 return node.getMatchesLeft() == 0;
             }
 			if (!node.hasChildren()) {
