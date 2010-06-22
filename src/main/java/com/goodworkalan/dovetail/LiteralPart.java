@@ -7,7 +7,7 @@ import java.util.Map;
  * 
  * @author Alan Gutierrez
  */
-final class Literal implements Test {
+final class LiteralPart implements Part {
     /** The literal text to compare against the part. */
     private final String text;
 
@@ -19,7 +19,7 @@ final class Literal implements Test {
      * @param text
      *            The literal text to compare against the part.
      */
-    public Literal(String text) {
+    public LiteralPart(String text) {
         this.text = text;
     }
 
@@ -79,8 +79,8 @@ final class Literal implements Test {
         if (object == this) {
             return true;
         }
-        if (object instanceof Literal) {
-            Literal literal = (Literal) object;
+        if (object instanceof LiteralPart) {
+            LiteralPart literal = (LiteralPart) object;
             return text.equals(literal.text);
         }
         return false;

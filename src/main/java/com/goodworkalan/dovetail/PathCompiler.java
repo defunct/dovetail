@@ -49,7 +49,7 @@ public final class PathCompiler {
             throw new NullPointerException();
         }
         if (pattern.trim().length() == 0) {
-            return glob.extend(new Path(new Test[] { new Literal("") }, pattern));
+            return glob.extend(new Path(new Part[] { new LiteralPart("") }, pattern));
         }
         if (pattern.charAt(0) != '/') {
             throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 1);

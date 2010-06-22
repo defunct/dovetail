@@ -14,7 +14,7 @@ public final class Path {
     private final String pattern;
 
     /** The array of tests to apply against the path. */
-    private final Test[] tests;
+    private final Part[] tests;
 
     /**
      * Construct a slash separated relative path using the given list of path
@@ -41,11 +41,11 @@ public final class Path {
      * relative glob for a root compiler.
      */
     Path() {
-        this(new Test[] { new Literal("") }, "");
+        this(new Part[] { new LiteralPart("") }, "");
     }
 
     // TODO Document.
-    Path(Test[] matches, String pattern) {
+    Path(Part[] matches, String pattern) {
         this.tests = matches;
         this.pattern = pattern;
     }
@@ -71,7 +71,7 @@ public final class Path {
      * @return The new, extended glob.
      */
     public Path extend(Path glob) {
-        Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
+        Part[] copyTests = new Part[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         
@@ -85,7 +85,7 @@ public final class Path {
      *            The index.
      * @return The test at the given index.
      */
-    Test get(int i) {
+    Part get(int i) {
         return tests[i];
     }
 
@@ -108,7 +108,7 @@ public final class Path {
      */
     public Map<String, String> match(String path) {
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(this, new Object());
+        tree.put(this, new Object());
         List<Match<Object>> mapping = tree.match(path);
         if (mapping.isEmpty()) {
             return null;
@@ -125,7 +125,7 @@ public final class Path {
      */
     public boolean matches(String path) {
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(this, new Object());
+        tree.put(this, new Object());
         return tree.matches(path);
     }
 
@@ -155,7 +155,7 @@ public final class Path {
     public String toString() {
         StringBuilder string = new StringBuilder();
         String separator = "";
-        for (Test test : tests) {
+        for (Part test : tests) {
             string.append(separator).append(test.toString());
             separator = "/";
         }

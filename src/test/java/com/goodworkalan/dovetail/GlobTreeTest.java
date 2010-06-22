@@ -20,14 +20,14 @@ public class GlobTreeTest
     {
         PathTree<Object> tree = new PathTree<Object>();
         Path glob = newGlob("/(account)/optout/(key)/(receipt)");
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
     }
     
     @Test public void shortMatch()
     {
         Path glob = newGlob("/(account)/optout");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/thinknola/optout"));
         assertFalse(tree.matches("/thinknola/optout/snert"));
         assertFalse(tree.matches("/thinknola/snert"));
@@ -38,7 +38,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account)/optout/(key)/(receipt)");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(tree.matches("/thinknola/optout/4XGe1E/1/2"));
         assertFalse(tree.matches("/thinknola/snap/4XGe1E/1"));
@@ -48,7 +48,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account)+/optout/(key)/(receipt)");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/thinknola/optout/4XGe1E/1"));
         assertTrue(tree.matches("/thinknola/path/optout/4XGe1E/1"));
         assertTrue(tree.matches("/one/two/three/optout/4XGe1E/1"));
@@ -60,7 +60,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account)+/optout/(key)/(receipt)/(ignore)+");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(tree.matches("/one/two/three/optout/4XGe1E/1/2"));
         assertFalse(tree.matches("/one/two/three/snap/4XGe1E/1/2"));
@@ -70,7 +70,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(tree.matches("/thinknola.d/optout/4XGe1E/1"));
     }
@@ -79,7 +79,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/an-thinknola/optout/4XGe1E/1"));
         assertFalse(tree.matches("/an-thinknola.d/optout/4XGe1E/1"));
         assertFalse(tree.matches("/example/optout/4XGe1E/1"));
@@ -90,7 +90,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(page)+/optout/(key)/(receipt)/(event)");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         assertTrue(tree.matches("/hello/optout/4XGe1E/1/view"));
         List<Match<Object>> mappings = tree.match("/hello/optout/4XGe1E/1/view");
         assertEquals("view", mappings.get(0).getParameters().get("event"));
@@ -100,7 +100,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account)?/optout/(key)/(receipt)");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         List<Match<Object>> mappings = tree.match("/hello/optout/4XGe1E/1");
         assertFalse(mappings.isEmpty());
         assertEquals("hello", mappings.get(0).getParameters().get("account"));
@@ -114,7 +114,7 @@ public class GlobTreeTest
     {
         Path glob = newGlob("/(account)/optout/(key)/(receipt)/(event)?");
         PathTree<Object> tree = new PathTree<Object>();
-        tree.add(glob, new Object());
+        tree.put(glob, new Object());
         List<Match<Object>> mappings = tree.match("/hello/optout/4XGe1E/1/view");
         assertFalse(mappings.isEmpty());
         assertEquals("view", mappings.get(0).getParameters().get("event"));

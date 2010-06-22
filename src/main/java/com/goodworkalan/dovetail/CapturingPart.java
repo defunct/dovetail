@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * 
  * @author Alan Gutierrez
  */
-final class Expression implements Test {
+final class CapturingPart implements Part {
     /**
      * The identifiers used to reference regular expression capture groups in
      * group order.
@@ -38,7 +38,7 @@ final class Expression implements Test {
     private final boolean multiple;
     
     // TODO Document.
-    public Expression(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean deep) {
+    public CapturingPart(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean deep) {
         this.identifiers = identifiers;
         this.regex = regex;
         this.sprintf = sprintf;
@@ -118,8 +118,8 @@ final class Expression implements Test {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof Expression) {
-            Expression other = (Expression) obj;
+        if (obj instanceof CapturingPart) {
+            CapturingPart other = (CapturingPart) obj;
             return min == other.min && max == other.max
                     && identifiers.equals(other.identifiers)
                     && regex.pattern().equals(other.regex.pattern())

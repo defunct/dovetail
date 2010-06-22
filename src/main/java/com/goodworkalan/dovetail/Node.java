@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 class Node<T> implements Iterable<Node<T>> {
-    private final Test match;
+    private final Part match;
 
     private final List<Node<T>> children;
 
@@ -15,7 +15,7 @@ class Node<T> implements Iterable<Node<T>> {
 
     private int matchesLeft;
 
-    public Node(Test match) {
+    public Node(Part match) {
         this.match = match;
         this.children = new ArrayList<Node<T>>();
         this.matchesLeft = Integer.MAX_VALUE;
@@ -37,7 +37,7 @@ class Node<T> implements Iterable<Node<T>> {
         children.add(child);
     }
 
-    public Test getMatch() {
+    public Part getMatch() {
         return match;
     }
 

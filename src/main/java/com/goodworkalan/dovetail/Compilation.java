@@ -35,7 +35,7 @@ final class Compilation {
     private String sprintf;
 
     /** The part tests. */
-    private final List<Test> tests;
+    private final List<Part> tests;
 
     /** The compiler state. */
     private CompilerState state;
@@ -70,7 +70,7 @@ final class Compilation {
     public Compilation(String glob) {
         this.glob = glob;
         this.capture = new StringBuilder();
-        this.tests = new ArrayList<Test>();
+        this.tests = new ArrayList<Part>();
         this.state = CompilerState.SEPARATOR;
         this.identifiers = new ArrayList<String>();
         this.index = 1;
@@ -78,7 +78,7 @@ final class Compilation {
         this.maximum = -1;
 
         // First test is always an empty string literal.
-        tests.add(new Literal(""));
+        tests.add(new LiteralPart(""));
     }
 
     /**
@@ -259,7 +259,7 @@ final class Compilation {
      * the literal string to the list of test.
      */
     public void addLiteral() {
-        tests.add(new Literal(capture.toString()));
+        tests.add(new LiteralPart(capture.toString()));
         capture.setLength(0);
     }
 
@@ -316,7 +316,7 @@ final class Compilation {
         if (maximum == -1) {
             maximum = Integer.MAX_VALUE;
         }
-        Expression expression = new Expression(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, multiple);
+        CapturingPart expression = new CapturingPart(new ArrayList<String>(identifiers), regex, sprintf, minimum, maximum, multiple);
         tests.add(expression);
         identifiers.clear();
         regex = null;
@@ -375,7 +375,7 @@ final class Compilation {
      * 
      * @return The list of tests as an array.
      */
-    public Test[] getTests() {
-        return tests.toArray(new Test[tests.size()]);
+    public Part[] getTests() {
+        return tests.toArray(new Part[tests.size()]);
     }
 }

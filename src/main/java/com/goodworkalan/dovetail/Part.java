@@ -7,7 +7,7 @@ import java.util.Map;
  * 
  * @author Alan Gutierrez
  */
-interface Test {
+interface Part {
     /**
      * Return true if the glob matches the string parts from the ranges
      * specified by the start inclusive and end exclusive.

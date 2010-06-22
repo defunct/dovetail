@@ -25,7 +25,7 @@ public class PathTree<T> {
      * @param value
      *            The value to map to the path.
      */
-    public void add(Path path, T value) {
+    public void put(Path path, T value) {
         int[] matchesLeft = new int[path.size()];
         matchesLeft[matchesLeft.length - 1] = 0;
         for (int i = matchesLeft.length - 2; i >= 0; i--) {
@@ -47,7 +47,7 @@ public class PathTree<T> {
     }
 
     // TODO Document.
-    private Node<T> getChild(Node<T> parent, Test match) {
+    private Node<T> getChild(Node<T> parent, Part match) {
         Node<T> child = null;
         for (Node<T> node : parent) {
             if (node.getMatch().equals(match)) {
