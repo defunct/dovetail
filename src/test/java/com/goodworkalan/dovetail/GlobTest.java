@@ -17,7 +17,7 @@ public class GlobTest
 {
     @Test public void startWithProperty()
     {
-        Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)");
+        Path glob = new PathCompiler().compile("/(account)/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/thinknola/optout/4XGe1E/1/2"));
         assertFalse(glob.matches("/thinknola/snap/4XGe1E/1"));
@@ -25,7 +25,7 @@ public class GlobTest
     
     @Test public void matchOneOrMore()
     {
-        Glob glob = new GlobCompiler().compile("/(account)+/optout/(key)/(receipt)");
+        Path glob = new PathCompiler().compile("/(account)+/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertTrue(glob.matches("/thinknola/path/optout/4XGe1E/1"));
         assertTrue(glob.matches("/one/two/three/optout/4XGe1E/1"));
@@ -35,7 +35,7 @@ public class GlobTest
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = new GlobCompiler().compile("/(account)+/optout/(key)/(receipt)/(ignore)+");
+        Path glob = new PathCompiler().compile("/(account)+/optout/(key)/(receipt)/(ignore)+");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(glob.matches("/one/two/three/optout/4XGe1E/1/2"));
         assertFalse(glob.matches("/one/two/three/snap/4XGe1E/1/2"));
@@ -43,14 +43,14 @@ public class GlobTest
     
     @Test public void matchRegularExpression()
     {
-        Glob glob = new GlobCompiler().compile("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
+        Path glob = new PathCompiler().compile("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/thinknola.d/optout/4XGe1E/1"));
     }
         
     @Test public void regularExpressionGroup()
     {
-        Glob glob = new GlobCompiler().compile("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
+        Path glob = new PathCompiler().compile("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
         assertTrue(glob.matches("/an-thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/an-thinknola.d/optout/4XGe1E/1"));
         assertFalse(glob.matches("/example/optout/4XGe1E/1"));
@@ -59,7 +59,7 @@ public class GlobTest
     
     @Test public void command()
     {
-        Glob glob = new GlobCompiler().compile("/(page)+/optout/(key)/(receipt)/(event)");
+        Path glob = new PathCompiler().compile("/(page)+/optout/(key)/(receipt)/(event)");
         assertTrue(glob.matches("/hello/optout/4XGe1E/1/view"));
         Map<String, String> parameters = glob.match("/hello/optout/4XGe1E/1/view");
         assertEquals("view", parameters.get("event"));
@@ -67,7 +67,7 @@ public class GlobTest
 
     @Test public void zeroOrOne()
     {
-        Glob glob = new GlobCompiler().compile("/(account)?/optout/(key)/(receipt)");
+        Path glob = new PathCompiler().compile("/(account)?/optout/(key)/(receipt)");
         Map<String, String> parameters = glob.match("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
         assertEquals("hello", parameters.get("account"));
@@ -79,7 +79,7 @@ public class GlobTest
 
     @Test public void optionalEvent()
     {
-        Glob glob = new GlobCompiler().compile("/(account)/optout/(key)/(receipt)/(event)?");
+        Path glob = new PathCompiler().compile("/(account)/optout/(key)/(receipt)/(event)?");
         Map<String, String> parameters = glob.match("/hello/optout/4XGe1E/1/view");
         assertNotNull(parameters);
         assertEquals("view", parameters.get("event"));
@@ -90,14 +90,14 @@ public class GlobTest
     
     @Test public void emptyString() 
     {
-        Glob glob = new GlobCompiler().compile("");
+        Path glob = new PathCompiler().compile("");
         assertTrue(glob.matches(""));
     }
     
     @Test
     public void slash()
     {
-        Glob glob = new GlobCompiler().compile("/");
+        Path glob = new PathCompiler().compile("/");
         assertTrue(glob.matches("/"));
     }
     
@@ -105,7 +105,7 @@ public class GlobTest
     {
         try
         {
-            new GlobCompiler().compile("hello");
+            new PathCompiler().compile("hello");
         }
         catch (DovetailException e)
         {
@@ -117,14 +117,14 @@ public class GlobTest
     
     @Test(expectedExceptions=NullPointerException.class) public void compileNullPointer() 
     {
-        new GlobCompiler().compile(null);
+        new PathCompiler().compile(null);
     }
     
     @Test(expectedExceptions=DovetailException.class) public void emptyPathPart() 
     {
         try
         {
-            new GlobCompiler().compile("//hello");
+            new PathCompiler().compile("//hello");
         }
         catch (DovetailException e)
         {
@@ -136,7 +136,7 @@ public class GlobTest
     
     @Test public void eatWhiteAfterParenthesis()
     {
-        Glob glob = new GlobCompiler().compile("/( account)/optout/(key)/(receipt)");
+        Path glob = new PathCompiler().compile("/( account)/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/thinknola/optout/4XGe1E/1/2"));
         assertFalse(glob.matches("/thinknola/snap/4XGe1E/1"));
@@ -144,7 +144,7 @@ public class GlobTest
 
     @Test public void multipleIdentifiers()
     {
-        Glob glob = new GlobCompiler().compile("/(bar,baz (.*)-(.*) %s-%s)/foo");
+        Path glob = new PathCompiler().compile("/(bar,baz (.*)-(.*) %s-%s)/foo");
         
         assertTrue(glob.matches("/a-b/foo"));
         assertFalse(glob.matches("/a+b/foo"));
@@ -159,7 +159,7 @@ public class GlobTest
     
     @Test public void escapedParenthesisInRegex()
     {
-        Glob glob = new GlobCompiler().compile("/(bar \\(.*\\))/foo");
+        Path glob = new PathCompiler().compile("/(bar \\(.*\\))/foo");
         
         assertTrue(glob.matches("/(bar)/foo"));
         assertFalse(glob.matches("/bar/foo"));
@@ -174,7 +174,7 @@ public class GlobTest
     {
         try
         {
-            new GlobCompiler().compile("/(bar (.*)) (%s)/foo");
+            new PathCompiler().compile("/(bar (.*)) (%s)/foo");
         }
         catch (DovetailException e)
         {
@@ -188,7 +188,7 @@ public class GlobTest
     {
         try
         {
-            new GlobCompiler().compile("/(bar \\((.*)\\) (%s)/foo");
+            new PathCompiler().compile("/(bar \\((.*)\\) (%s)/foo");
         }
         catch (DovetailException e)
         {
@@ -200,7 +200,7 @@ public class GlobTest
     
     @Test public void parenthesisInFormat()
     {
-        Glob glob = new GlobCompiler().compile("/(bar \\((.*)\\) (%s))/foo");
+        Path glob = new PathCompiler().compile("/(bar \\((.*)\\) (%s))/foo");
          
         assertTrue(glob.matches("/(bar)/foo"));
         assertFalse(glob.matches("/bar/foo"));
@@ -213,7 +213,7 @@ public class GlobTest
     
     @Test public void escapedParenthesisInFormat()
     {
-        Glob glob = new GlobCompiler().compile("/(bar \\((.*)\\) %(%s%))/foo");
+        Path glob = new PathCompiler().compile("/(bar \\((.*)\\) %(%s%))/foo");
          
         assertTrue(glob.matches("/(bar)/foo"));
         assertFalse(glob.matches("/bar/foo"));

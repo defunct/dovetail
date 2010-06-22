@@ -5,12 +5,12 @@ import java.util.List;
 
 /**
  * Applies the patterns defined in a glob tree to a path. A <code>Globber</code>
- * contains an immutable copy of a glob tree created with {@link GlobTree}.
+ * contains an immutable copy of a glob tree created with {@link PathTree}.
  * 
  * @author Alan Gutierrez
  * 
  * @param <T>
- *            The type of object mapped to a glob.
+ *            The type of object mapped to a path.
  */
 public class Globber<T> {
     /** The root node of the tree. */

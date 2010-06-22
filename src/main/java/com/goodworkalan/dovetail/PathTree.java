@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO Document.
-public class GlobTree<T> {
+public class PathTree<T> {
     /** The root node of the tree. */
     private final Node<T> root = new Node<T>(null);
     
@@ -15,7 +15,7 @@ public class GlobTree<T> {
      * @param glob
      * @param value
      */
-    public void add(Glob glob, T value) {
+    public void add(Path glob, T value) {
         int[] matchesLeft = new int[glob.size()];
         matchesLeft[matchesLeft.length - 1] = 0;
         for (int i = matchesLeft.length - 2; i >= 0; i--) {

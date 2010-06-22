@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A compiled dovetail pattern.
+ * A compiled Dovetail path pattern.
  *
  * @author Alan Gutierrez
  */
-public final class Glob {
-    /** The pattern used to create the glob. */
+public final class Path {
+    /** The pattern used to create the path. */
     private final String pattern;
 
     /** The array of tests to apply against the path. */
@@ -40,12 +40,12 @@ public final class Glob {
      * the empty string literal test. This is used by the glob compiler as the
      * relative glob for a root compiler.
      */
-    Glob() {
+    Path() {
         this(new Test[] { new Literal("") }, "");
     }
 
     // TODO Document.
-    Glob(Test[] matches, String pattern) {
+    Path(Test[] matches, String pattern) {
         this.tests = matches;
         this.pattern = pattern;
     }
@@ -70,12 +70,12 @@ public final class Glob {
      *            The glob to append to this glob.
      * @return The new, extended glob.
      */
-    public Glob extend(Glob glob) {
+    public Path extend(Path glob) {
         Test[] copyTests = new Test[tests.length + glob.tests.length - 1];
         System.arraycopy(tests, 0, copyTests, 0, tests.length);
         System.arraycopy(glob.tests, 1, copyTests, tests.length, glob.tests.length - 1);
         
-        return new Glob(copyTests, pattern + glob.pattern); 
+        return new Path(copyTests, pattern + glob.pattern); 
     }
 
     /**
@@ -107,7 +107,7 @@ public final class Glob {
      * @return A map of the cpatured parameters of null if it does not match.
      */
     public Map<String, String> match(String path) {
-        GlobTree<Object> tree = new GlobTree<Object>();
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(this, new Object());
         List<Match<Object>> mapping = tree.map(path);
         if (mapping.isEmpty()) {
@@ -124,7 +124,7 @@ public final class Glob {
      * @return True if the path matches this glob.
      */
     public boolean matches(String path) {
-        GlobTree<Object> tree = new GlobTree<Object>();
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(this, new Object());
         return tree.match(path);
     }

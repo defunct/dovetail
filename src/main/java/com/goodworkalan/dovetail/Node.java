@@ -11,7 +11,7 @@ class Node<T> implements Iterable<Node<T>> {
 
     private T value;
 
-    private Glob glob;
+    private Path glob;
 
     private int matchesLeft;
 
@@ -49,11 +49,11 @@ class Node<T> implements Iterable<Node<T>> {
         this.value = value;
     }
 
-    public Glob getGlob() {
+    public Path getGlob() {
         return glob;
     }
 
-    public void setGlob(Glob glob) {
+    public void setGlob(Path glob) {
         this.glob = glob;
     }
 

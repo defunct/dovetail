@@ -11,22 +11,22 @@ import org.testng.annotations.Test;
 
 public class GlobTreeTest
 {
-    private Glob newGlob(String pattern)
+    private Path newGlob(String pattern)
     {
-        return new GlobCompiler().compile(pattern);
+        return new PathCompiler().compile(pattern);
     }
 
     @Test public void tree()
     {
-        GlobTree<Object> tree = new GlobTree<Object>();
-        Glob glob = newGlob("/(account)/optout/(key)/(receipt)");
+        PathTree<Object> tree = new PathTree<Object>();
+        Path glob = newGlob("/(account)/optout/(key)/(receipt)");
         tree.add(glob, new Object());
     }
     
     @Test public void shortMatch()
     {
-        Glob glob = newGlob("/(account)/optout");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account)/optout");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout"));
         assertFalse(tree.match("/thinknola/optout/snert"));
@@ -36,8 +36,8 @@ public class GlobTreeTest
  
     @Test public void startWithProperty()
     {
-        Glob glob = newGlob("/(account)/optout/(key)/(receipt)");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account)/optout/(key)/(receipt)");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1"));
         assertFalse(tree.match("/thinknola/optout/4XGe1E/1/2"));
@@ -46,8 +46,8 @@ public class GlobTreeTest
     
     @Test public void matchOneOrMore()
     {
-        Glob glob = newGlob("/(account)+/optout/(key)/(receipt)");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account)+/optout/(key)/(receipt)");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1"));
         assertTrue(tree.match("/thinknola/path/optout/4XGe1E/1"));
@@ -58,8 +58,8 @@ public class GlobTreeTest
     
     @Test public void matchOneOrMoreAny()
     {
-        Glob glob = newGlob("/(account)+/optout/(key)/(receipt)/(ignore)+");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account)+/optout/(key)/(receipt)/(ignore)+");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(tree.match("/one/two/three/optout/4XGe1E/1/2"));
@@ -68,8 +68,8 @@ public class GlobTreeTest
     
     @Test public void matchRegularExpression()
     {
-        Glob glob = newGlob("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/thinknola/optout/4XGe1E/1"));
         assertFalse(tree.match("/thinknola.d/optout/4XGe1E/1"));
@@ -77,8 +77,8 @@ public class GlobTreeTest
     
     @Test public void regularExpressionGroup()
     {
-        Glob glob = newGlob("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/an-thinknola/optout/4XGe1E/1"));
         assertFalse(tree.match("/an-thinknola.d/optout/4XGe1E/1"));
@@ -88,8 +88,8 @@ public class GlobTreeTest
     
     @Test public void command()
     {
-        Glob glob = newGlob("/(page)+/optout/(key)/(receipt)/(event)");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(page)+/optout/(key)/(receipt)/(event)");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         assertTrue(tree.match("/hello/optout/4XGe1E/1/view"));
         List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
@@ -98,8 +98,8 @@ public class GlobTreeTest
 
     @Test public void zeroOrOne()
     {
-        Glob glob = newGlob("/(account)?/optout/(key)/(receipt)");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account)?/optout/(key)/(receipt)");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1");
         assertFalse(mappings.isEmpty());
@@ -112,8 +112,8 @@ public class GlobTreeTest
 
     @Test public void optionalEvent()
     {
-        Glob glob = newGlob("/(account)/optout/(key)/(receipt)/(event)?");
-        GlobTree<Object> tree = new GlobTree<Object>();
+        Path glob = newGlob("/(account)/optout/(key)/(receipt)/(event)?");
+        PathTree<Object> tree = new PathTree<Object>();
         tree.add(glob, new Object());
         List<Match<Object>> mappings = tree.map("/hello/optout/4XGe1E/1/view");
         assertFalse(mappings.isEmpty());

@@ -10,15 +10,15 @@ import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLAS
 import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_END_OF_PATH_EXPESSION;
 
 /**
- * Creates a glob from a glob pattern.
+ * Creates a {@link Path} from a path pattern.
  * <p>
  * Additional tests can be specified using <code>test</code> methods.
  * 
  * @author Alan Gutierrez
  */
-public final class GlobCompiler {
+public final class PathCompiler {
     /** The relative root glob. */
-    private final Glob glob;
+    private final Path glob;
 
     /**
      * Create a glob compiler that will create globs relative to the given root
@@ -27,13 +27,13 @@ public final class GlobCompiler {
      * @param glob
      *            The relative root glob.
      */
-    public GlobCompiler(Glob glob) {
+    public PathCompiler(Path glob) {
         this.glob = glob;
     }
    
     /** Create a glob compiler without a relative root. */
-    public GlobCompiler() {
-        this(new Glob());
+    public PathCompiler() {
+        this(new Path());
     }
 
     /**
@@ -44,12 +44,12 @@ public final class GlobCompiler {
      *            The glob pattern.
      * @return A glob object.
      */
-    public Glob compile(String pattern) {
+    public Path compile(String pattern) {
         if (pattern == null) {
             throw new NullPointerException();
         }
         if (pattern.trim().length() == 0) {
-            return glob.extend(new Glob(new Test[] { new Literal("") }, pattern));
+            return glob.extend(new Path(new Test[] { new Literal("") }, pattern));
         }
         if (pattern.charAt(0) != '/') {
             throw new DovetailException(FIRST_FORWARD_SLASH_MISSING).add(pattern, 1);
@@ -227,6 +227,6 @@ public final class GlobCompiler {
                 throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_PATH_EXPESSION));
             }
         }
-        return glob.extend(new Glob(compilation.getTests(), pattern));
+        return glob.extend(new Path(compilation.getTests(), pattern));
     }
 }
