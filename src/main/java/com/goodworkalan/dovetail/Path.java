@@ -109,7 +109,7 @@ public final class Path {
     public Map<String, String> match(String path) {
         PathTree<Object> tree = new PathTree<Object>();
         tree.add(this, new Object());
-        List<Match<Object>> mapping = tree.map(path);
+        List<Match<Object>> mapping = tree.match(path);
         if (mapping.isEmpty()) {
             return null;
         }
@@ -126,7 +126,7 @@ public final class Path {
     public boolean matches(String path) {
         PathTree<Object> tree = new PathTree<Object>();
         tree.add(this, new Object());
-        return tree.match(path);
+        return tree.matches(path);
     }
 
     /**
