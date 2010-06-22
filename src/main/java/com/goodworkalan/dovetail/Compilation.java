@@ -242,7 +242,14 @@ final class Compilation {
         }
     }
 
-    // TODO Document.
+    /**
+     * Indicate that the pattern matches multiple path parts and should be
+     * tested against a catenated string of the parts, slash separated, with a
+     * trailing slash to simply regular expression authoring.
+     * 
+     * @param deep
+     *            If true, the current expression matches multiple path parts.
+     */
     public void setMultiple(boolean deep) {
         this.multiple = deep;
     }
@@ -271,7 +278,10 @@ final class Compilation {
         capture.append(token);
     }
 
-    // TODO Document.
+    /**
+     * Add an identifier part to the path using the current contents of the
+     * capture buffer and reset the capture buffer.
+     */
     public void addIdentifier() {
         if (capture.length() == 0) {
             throw ex(new DovetailException(IDENTIFER_MISSING));
@@ -280,7 +290,19 @@ final class Compilation {
         capture.setLength(0);
     }
 
-    // TODO Document.
+    /**
+     * Add a regular expression part to the path using the various elements
+     * gathered by the compilation, assigning reasonable defaults for the
+     * elements that were not specified.
+     * <p>
+     * If no regular expression was specified, then a match everything regular
+     * expression, <code>(.*)</code>, is used. If no reassembly pattern is
+     * given, then a single string parameter pattern, <code>%s</code>, is used
+     * for the reassembly pattern. The default minimum is 1 and the default
+     * maximum is the maximum integer value.
+     * <p>
+     * All elements are reset to match the next part.
+     */
     public void addExpression() {
         if (regex == null) {
             regex = Pattern.compile(multiple ? "(.*)/" : ".*");
@@ -304,8 +326,11 @@ final class Compilation {
         maximum = -1;
         parenthesis = 0;
     }
-    
-    // TODO Document.
+
+    /**
+     * Set the minimum limit by parsing the current contents of the capture
+     * buffer as an integer and assigning the value to the minimum limit.
+     */
     public void setMinimum() {
         if (minimum != -1) {
             throw new DovetailException(UNEXPECTED_COMMA_IN_LIMIT);
@@ -321,7 +346,12 @@ final class Compilation {
         capture.setLength(0);
     }
 
-    // TODO Document.
+    /**
+     * Set either the minimum or maximum limit by parsing the current contents
+     * of the capture buffer as an integer. If the minimum has not been
+     * assigned, assign the integer value to the minimum limit, otherwise assign
+     * the value to the maximum limit.
+     */
     public void setLimit() {
         if (minimum == -1) {
             setMinimum();
