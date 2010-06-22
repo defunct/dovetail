@@ -7,7 +7,7 @@ import static com.goodworkalan.dovetail.DovetailException.LIMIT_OR_SEPARATOR_EXP
 import static com.goodworkalan.dovetail.DovetailException.PATH_SEPARATOR_EXPECTED;
 import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_FORMAT;
 import static com.goodworkalan.dovetail.DovetailException.UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION;
-import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_END_OF_GLOB_EXPESSION;
+import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_END_OF_PATH_EXPESSION;
 
 /**
  * Creates a glob from a glob pattern.
@@ -224,7 +224,7 @@ public final class GlobCompiler {
             if (pattern.trim() == "/") {
                 compilation.addLiteral();
             } else {
-                throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_GLOB_EXPESSION));
+                throw compilation.ex(new DovetailException(UNEXPECTED_END_OF_PATH_EXPESSION));
             }
         }
         return glob.extend(new Glob(compilation.getTests(), pattern));

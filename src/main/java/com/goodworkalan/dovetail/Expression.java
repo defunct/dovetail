@@ -1,7 +1,6 @@
 package com.goodworkalan.dovetail;
 
 import static com.goodworkalan.dovetail.DovetailException.FORMAT_PARAMETER_IS_NULL;
-import static com.goodworkalan.dovetail.DovetailException.MISMATCHED_IDENTIFIERS;
 
 import java.util.List;
 import java.util.Map;
@@ -80,14 +79,8 @@ final class Expression implements Test {
     private boolean parameters(Matcher matcher, Map<String, String> parameters) {
         if (matcher.matches()) {
             if (matcher.groupCount() == 0) {
-                if (identifiers.size() != 1) {
-                    throw new DovetailException(MISMATCHED_IDENTIFIERS).add(1, identifiers.size());
-                }
                 parameters.put(identifiers.get(0), matcher.group());
             } else {
-                if (identifiers.size() != matcher.groupCount()) {
-                    throw new DovetailException(MISMATCHED_IDENTIFIERS).add(matcher.groupCount(), identifiers.size());
-                }
                 for (int i = 0; i < matcher.groupCount(); i++) {
                     parameters.put(identifiers.get(i), matcher.group(i + 1));
                 }

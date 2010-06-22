@@ -32,58 +32,43 @@ public final class DovetailException extends RuntimeException {
 
     public final static int IDENTIFER_MISSING = 304;
 
-    /** Unexpected question mark at a given position. */
+    /** Unexpected character while expecting a Java identifier start character. */
     public final static int JAVA_IDENTIFIER_START_EXPECTED = 305;
 
-    // TODO Document.
+    /** Unexpected character while expecting a Java identifier part character. */
     public final static int JAVA_IDENTIFIER_PART_EXPECTED = 306;
 
-    // TODO Document.
+    /** Unescaped forward slash encountered in regular expression of capturing part. */
     public final static int UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION = 307;
 
-    // TODO Document.
+    /** Unable to parse the regular expression of a capturing part. */
     public final static int CANNOT_PARSE_REGULAR_EXPESSION = 308;
 
-    // TODO Document.
+    /** Unexpected character while reading a capturing part limit definition. */
     public final static int INVALID_LIMIT_CHARACTER = 309;
 
-    // TODO Document.
+    /** Unexpected comma while reading a capturing part limit definition. */
     public final static int UNEXPECTED_COMMA_IN_LIMIT = 310;
 
-    // TODO Document.
+    /** The required minimum limit is unspecified. */
     public final static int MINIMUM_LIMIT_REQUIRED = 311;
 
-    // TODO Document.
+    /** Unable to parse a limit value. */
     public final static int CANNOT_PARSE_LIMIT_VALUE = 312;
 
-    /** A limit specifier or path separator is epected. */
+    /** Unexpected character while expecting a capturing part limit definition or path separator. */
     public final static int LIMIT_OR_SEPARATOR_EXPECTED = 313;
 
-    // TODO Document.
-    public final static int CANNOT_SPECIFY_LIMITS_ON_EXACTLY_ONE = 314;
-
-    // TODO Document.
-    public final static int CLOSING_BRACKED_EXPECTED = 315;
-
-    // TODO Document.
+    /** Unexpected character while expecting a path separator. */
     public final static int PATH_SEPARATOR_EXPECTED = 316;
 
-    // TODO Document.
+    /** Unescaped forward slash encountered in reassembly sprintf pattern of capturing part. */
     public final static int UNESCAPED_FORWARD_SLASH_IN_FORMAT = 317;
 
-    // TODO Document.
-    public final static int UNEXPECTED_END_OF_GLOB_EXPESSION = 318;
+    /** Unexpected end of a path expression. */
+    public final static int UNEXPECTED_END_OF_PATH_EXPESSION = 318;
 
-    // TODO Document.
-    public final static int MISMATCHED_IDENTIFIERS = 401;
-
-    // TODO Document.
-    public final static int MATCH_TEST_CONSTRUCTOR_THREW_EXCEPTION = 501;
-
-    // TODO Document.
-    public final static int MATCH_TEST_CONSTRUCTOR_NOT_VISIBLE = 502;
-
-    // TODO Document.
+    /** Reassembly parameter is null. */
     public final static int FORMAT_PARAMETER_IS_NULL = 601;
 
     /** Have not gotten around to creating a meaninful error message. */
