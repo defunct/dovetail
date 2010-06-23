@@ -34,20 +34,59 @@ final class CapturingPart implements Part {
     /** The maximum number of path parts this expression can match. */
     private final int max;
     
-    /** Whether this . */
+    /** Whether this capturing part matches multiple parts or a single part. */
     private final boolean multiple;
-    
-    // TODO Document.
-    public CapturingPart(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean deep) {
+
+    /**
+     * Create a new capturing part.
+     * 
+     * @param identifiers
+     *            The identifiers used to reference regular expression capture
+     *            groups in group order.
+     * @param regex
+     *            The regular expression.
+     * @param sprintf
+     *            The format used to create the path part when creating
+     *            generating the path from a parameter map.
+     * @param min
+     *            The minimum number of path parts this expression can match.
+     * @param max
+     *            The maximum number of path parts this expression can match.
+     * @param multiple
+     *            Whether this capturing part matches multiple parts or a single
+     *            part.
+     */
+    public CapturingPart(List<String> identifiers, Pattern regex, String sprintf, int min, int max, boolean multiple) {
         this.identifiers = identifiers;
         this.regex = regex;
         this.sprintf = sprintf;
         this.min = min;
         this.max = max;
-        this.multiple = deep;
+        this.multiple = multiple;
     }
 
-    // TODO Document.
+    /**
+     * Return true if the capturing part matches the parts from the given start
+     * index to the given end index.
+     * <p>
+     * If the multiple flag is false, the regular expression is applied against
+     * a single part, and if the range denotes any count of parts other than 1,
+     * an <code>IllegalArgumentException</code> is raised.
+     * <p>
+     * If this the multiple flag is true, the regular expression is applied
+     * against a catenated string of the parts, slash separated, with a trailing
+     * slash to simply regular expression authoring.
+     * 
+     * @param parameters
+     *            The map of captured parameters.
+     * @param parts
+     *            The split path parts.
+     * @param start
+     *            The start index.
+     * @param end
+     *            The end index.
+     * @return True if this capturing part matches the given range of parts.
+     */
     public boolean match(Map<String, String> parameters, String[] parts, int start, int end) {
         if (min == 0 && end - start == 0) {
             return true;
@@ -62,7 +101,6 @@ final class CapturingPart implements Part {
                 parameters(matcher, parameters);
                 return true;
             }
-
         } else if (end - start != 1) {
             throw new IllegalStateException();
         } else {
@@ -75,7 +113,17 @@ final class CapturingPart implements Part {
         return false;
     }
 
-    // TODO Document.
+    /**
+     * Populate the given map of parameters with the parameters captured by the
+     * regular expression matcher, if the regular expression matcher is
+     * successful.
+     * 
+     * @param matcher
+     *            The regular expression matcher.
+     * @param parameters
+     *            The map of parameters to populate.
+     * @return True of the regular expression matcher is successful.
+     */
     private boolean parameters(Matcher matcher, Map<String, String> parameters) {
         if (matcher.matches()) {
             if (matcher.groupCount() == 0) {
@@ -90,17 +138,34 @@ final class CapturingPart implements Part {
         return false;
     }
 
-    // TODO Document.
+    /**
+     * Get the minimum number of path parts this part expression can match.
+     * 
+     * @return The minimum number of parts this part expression can match.
+     */
     public int getMin() {
         return min;
     }
 
-    // TODO Document.
+    /**
+     * Get the maximum number of path parts this part expression can match.
+     * 
+     * @return The maximum number of parts this part expression can match.
+     */
     public int getMax() {
         return max;
     }
-    
-    // TODO Document.
+
+    /**
+     * Assemble a path by appending the capturing part text to the given string
+     * builder substituting values from the given parameter map for the capture
+     * placeholders.
+     * 
+     * @param path
+     *            The path under construction.
+     * @param parameters
+     *            The parameters used to populate captures.
+     */
     public void append(StringBuilder path, Map<String, String> parameters) {
         Object[] args = new Object[identifiers.size()];
         for (int i = 0; i < identifiers.size(); i++) {
@@ -112,14 +177,24 @@ final class CapturingPart implements Part {
         path.append(String.format(sprintf, args));
     }
 
-    // TODO Document.
+    /**
+     * This object is equal to the given object if it is also a
+     * <code>CapturingPart</code> and the minimum and maximum match limits, the
+     * identifiers, the regular expression pattern, the reassembly sprintf
+     * format, and the multiple flag of this object are equal to that of the
+     * given object.
+     * 
+     * @param object
+     *            The object to test for equality.
+     * @return True if the object is equal to the given object.
+     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (obj instanceof CapturingPart) {
-            CapturingPart other = (CapturingPart) obj;
+        if (object instanceof CapturingPart) {
+            CapturingPart other = (CapturingPart) object;
             return min == other.min && max == other.max
                     && identifiers.equals(other.identifiers)
                     && regex.pattern().equals(other.regex.pattern())
@@ -129,7 +204,13 @@ final class CapturingPart implements Part {
         return false;
     }
 
-    // TODO Document.
+    /**
+     * Generate a hash code by combining the hash codes of minimum and maximum
+     * match limits, the identifiers, the regular expression pattern, the
+     * reassembly sprintf format, and the multiple flag.
+     * 
+     * @return The hash code.
+     */
     @Override
     public int hashCode() {
         int hash = 1;

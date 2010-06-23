@@ -44,9 +44,17 @@ public final class Path {
         this(new Part[] { new LiteralPart("") }, "");
     }
 
-    // TODO Document.
-    Path(Part[] matches, String pattern) {
-        this.tests = matches;
+    /**
+     * Create a new path expression with the given array of part expressions
+     * compiled from the given path pattern.
+     * 
+     * @param parts
+     *            The part expressions.
+     * @param pattern
+     *            The path pattern.
+     */
+    Path(Part[] parts, String pattern) {
+        this.tests = parts;
         this.pattern = pattern;
     }
     

@@ -14,7 +14,24 @@ import java.util.List;
  */
 public class PathTree<T> {
     /** The root node of the tree. */
-    private final Node<T> root = new Node<T>(null);
+    private final Node<T> root;
+
+    /** Create an empty path association. */
+    public PathTree() {
+        this.root = new Node<T>((Part) null);
+    }
+
+    /**
+     * Create a path association that is a copy of the given path association.
+     * The new path association will not reference any of the objects referenced
+     * by the given path association.
+     * 
+     * @param copy
+     *            The path association to copy.
+     */
+    public PathTree(PathTree<T> copy) {
+        this.root = new Node<T>(copy.root);
+    }
 
     /**
      * Map the given glob to the given tree value. When a path given to the tree
@@ -36,28 +53,37 @@ public class PathTree<T> {
         for (int i = 0; i < path.size(); i++) {
             node = getChild(node, path.get(i));
             descent.add(node);
-            if (node.getMatchesLeft() > matchesLeft[i]) {
-                node.setMatchesLeft(matchesLeft[i]);
+            if (node.matchesLeft > matchesLeft[i]) {
+                node.matchesLeft = matchesLeft[i];
             }
         }
         for (int i = matchesLeft.length - 1; i >= 0 && matchesLeft[i] == 0; i--) {
-            descent.get(i).setValue(value);
-            descent.get(i).setGlob(path);
+            descent.get(i).value = value;
+            descent.get(i).path = path;
         }
     }
 
-    // TODO Document.
-    private Node<T> getChild(Node<T> parent, Part match) {
+    /**
+     * Get the child node that contains the given part, or else add a new child
+     * node to the given part returning the newly created child node.
+     * 
+     * @param parent
+     *            The parent node.
+     * @param part
+     *            The part.
+     * @return The child node that contains the part.
+     */
+    private Node<T> getChild(Node<T> parent, Part part) {
         Node<T> child = null;
-        for (Node<T> node : parent) {
-            if (node.getMatch().equals(match)) {
+        for (Node<T> node : parent.children) {
+            if (node.part.equals(part)) {
                 child = node;
                 break;
             }
         }
         if (child == null) {
-            child = new Node<T>(match);
-            parent.addChild(child);
+            child = new Node<T>(part);
+            parent.children.add(child);
         }
         return child;
     }
@@ -72,47 +98,93 @@ public class PathTree<T> {
         return ! match(path).isEmpty();
     }
 
-    // TODO Document.
+    /**
+     * Return a list of {@link Match} instances, one for each path expression
+     * that matches the given path. The <code>Match</code> will contain both the
+     * value and the captured match parameters.
+     * <p>
+     * The list will contain the values of all the path expressions that match
+     * the given path. The matches values will be returned in the order in which
+     * their path expressions were added to the path association.
+     * <p>
+     * For path expressions that can match multiple parts, the path expression
+     * will be applied so that the multiple path expressions toward the
+     * beginning of the path part will match as much as possible.
+     * 
+     * @param path
+     *            The path to match.
+     * @return A list of matches.
+     */
     public List<Match<T>> match(String path) {
-        if (root.hasChildren()) {
-            MatchBook<T> mapper = new MatchBook<T>();
-            if (descend(mapper, root.getFirstChild(), path.split("/", -1), 0, path)) {
-                return mapper.matches();
+        if (!root.children.isEmpty()) {
+            MatchBook<T> matches = new MatchBook<T>();
+            if (descend(matches, root.children.get(0), path.split("/", -1), 0/*, path*/)) {
+                return matches.matches();
             }
         }
         return Collections.emptyList();
     }
-    
-    // TODO Document.
-    private boolean descend(MatchBook<T> mapper, Node<T> node, String[] parts, int partIndex, String path) {
+
+    /**
+     * Descend the path expression tree comparing the part expression in the
+     * given node against the parts in the range of parts at the given index.
+     * Apply the match so that it attempts to match the maximum number parts
+     * first.
+     * 
+     * @param matches
+     *            The collection of values with matched path expressions.
+     * @param node
+     *            The node to test.
+     * @param parts
+     *            The split path.
+     * @param partIndex
+     *            The part index into the split path.
+     * @return True if the decent matched any nodes.
+     */
+    private boolean descend(MatchBook<T> matches, Node<T> node, String[] parts, int partIndex) {
         int partsLeft = parts.length - partIndex;
-        int matchesLeft = node.getMatch().getMin() + node.getMatchesLeft();
-        int min = node.getMatch().getMin();
-        int max = Math.min(partsLeft - matchesLeft + 1, node.getMatch().getMax());
+        int matchesLeft = node.part.getMin() + node.matchesLeft;
+        int min = node.part.getMin();
+        int max = Math.min(partsLeft - matchesLeft + 1, node.part.getMax());
         for (int i = min; i <= max; i++) {
-            if (match(mapper.duplicate(), node, parts, partIndex, i, path)) {
+            if (match(matches.parameterCopy(), node, parts, partIndex, i)) {
                 return true;
             }
         }
         return false;
     }
 
-    // TODO Document.
-    private boolean match(MatchBook<T> mapper, Node<T> node, String[] parts, int partIndex, int length, String path) {
-        if (length == 0 || node.getMatch().match(mapper.getParameters(), parts, partIndex, partIndex + length)) {
+    /**
+     * Attempt to match the part expression in the given node against the parts
+     * in the range of parts at the given index.
+     * 
+     * @param matches
+     *            The collection of values with matched path expressions.
+     * @param node
+     *            The node to test.
+     * @param parts
+     *            The split path.
+     * @param partIndex
+     *            The part index into the split path.
+     * @param length
+     *            The count of parts in the range.
+     * @return
+     */
+    private boolean match(MatchBook<T> mapper, Node<T> node, String[] parts, int partIndex, int length) {
+        if (length == 0 || node.part.match(mapper.getParameters(), parts, partIndex, partIndex + length)) {
             partIndex += length;
 
             if (partIndex == parts.length) {
                 // TODO If there are matches left, why does this work?
-                mapper.map(0, node.getValue());
-                return node.getMatchesLeft() == 0;
+                mapper.map(0, node.value);
+                return node.matchesLeft == 0;
             }
-            if (!node.hasChildren()) {
+            if (node.children.isEmpty()) {
                 return false;
             }
             boolean matched = false;
-            for (Node<T> child : node) {
-                matched = descend(mapper, child, parts, partIndex, path) || matched;
+            for (Node<T> child : node.children) {
+                matched = descend(mapper, child, parts, partIndex) || matched;
             }
             return matched;
         }

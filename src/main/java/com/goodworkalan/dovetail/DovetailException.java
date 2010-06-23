@@ -21,15 +21,13 @@ public final class DovetailException extends RuntimeException {
     /** A list of arguments to the formatted error message. */
     private final List<Object> arguments = new ArrayList<Object>();
 
-    /** TODO Outgoing! The compiler has been given an empty pattern. */
-    public final static int EMPTY_PATTERN = 301;
-
     /** A pattern must begin with a forward slash. */
     public final static int FIRST_FORWARD_SLASH_MISSING = 302;
 
     /** Unexpected empty path part. */
     public final static int EMPTY_PATH_PART = 303;
 
+    /** Identifier is missing. */
     public final static int IDENTIFER_MISSING = 304;
 
     /** Unexpected character while expecting a Java identifier start character. */

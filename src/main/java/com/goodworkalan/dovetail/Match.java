@@ -4,19 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The results of an individual match of a path against a glob tree.
+ * The value and captured parameters of an individual match of a path against a
+ * path association.
  * 
  * @author Alan Gutierrez
  * 
  * @param <T>
- *            The type to which globs are mapped.
+ *            The type of object mapped to the path.
  */
 public class Match<T> {
     /** The mapped object. */
     private final T object;
-
-    /** The mapping priority. */
-    private final int priority;
 
     /** The parameters extracted from the match. */
     private final Map<String, String> parameters;
@@ -25,26 +23,29 @@ public class Match<T> {
      * Create a match of the given
      * 
      * @param object
-     * @param priority
+     *            The mapped object.
      * @param mapOfParameters
+     *            The captured parameters.
      */
-    public Match(T object, int priority, Map<String, String> mapOfParameters) {
+    public Match(T object,Map<String, String> mapOfParameters) {
         this.object = object;
-        this.priority = priority;
         this.parameters = new HashMap<String, String>(mapOfParameters);
     }
 
-    // TODO Document.
+    /**
+     * Get the mapped object.
+     * 
+     * @return The mapped object.
+     */
     public T getObject() {
         return object;
     }
 
-    // TODO Document.
-    public int getPriority() {
-        return priority;
-    }
-
-    // TODO Document.
+    /**
+     * Get the captured parameters.
+     * 
+     * @return The parameters captured by the match.
+     */
     public Map<String, String> getParameters() {
         return parameters;
     }

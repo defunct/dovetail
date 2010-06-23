@@ -25,19 +25,20 @@ class MatchBook<T> {
     private final SortedMap<Integer, Match<T>> matches;
 
     /**
-     * Create an empty tree mapper.
+     * Create an empty match collection.
      */
     public MatchBook() {
         this.parameters = new HashMap<String, String>();
-        this.matches = new TreeMap<Integer, Match<T>>(Collections
-                .reverseOrder());
+        this.matches = new TreeMap<Integer, Match<T>>(Collections.reverseOrder());
     }
     
     /**
-     * Create a copy of a tree mapper.
+     * Create a copy of a match collection.
      * 
-     * @param mappings The mapping list.
-     * @param parameters The current state of the working parameter map.
+     * @param mappings
+     *            The mapping list.
+     * @param parameters
+     *            The current state of the working parameter map.
      */
     private MatchBook(SortedMap<Integer, Match<T>> mappings, Map<String, String> parameters) {
         this.matches = mappings;
@@ -66,14 +67,15 @@ class MatchBook<T> {
     }
 
     /**
-     * Create a type-safe clone of this tree mapper with it's own copy of the
-     * working parameter to capture the parameters matched so far. The duplicate
-     * will share the list of mappings with this tree mapper, so that when a
+     * Create a copy of this match collection with it's own copy of the working
+     * parameter to capture the parameters matched so far. The duplicate will
+     * share the list of mappings with this match collection, so that when a
      * match is discovered, it is added to the common list.
      * 
-     * @return A duplicate of this tree mapper.
+     * @return A match collection with a copy of the parameters collected by
+     *         this match collection.
      */
-    public MatchBook<T> duplicate() {
+    public MatchBook<T> parameterCopy() {
         return new MatchBook<T>(matches, parameters);
     }
 
@@ -86,11 +88,15 @@ class MatchBook<T> {
      *            The object mapped to the glob.
      */
     public void map(int priority, T object) {
-        Match<T> match = new Match<T>(object, priority, parameters);
+        Match<T> match = new Match<T>(object, parameters);
         matches.put(priority, match);
     }
 
-    // TODO Document.
+    /**
+     * Get the matched values as a list of matches.
+     * 
+     * @return The list of matched values.
+     */
     public List<Match<T>> matches() {
         return new ArrayList<Match<T>>(matches.values());
     }

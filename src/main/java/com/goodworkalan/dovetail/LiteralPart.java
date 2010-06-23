@@ -97,7 +97,15 @@ final class LiteralPart implements Part {
         return text.hashCode();
     }
 
-    // TODO Document.
+    /**
+     * Assemble a path by appending the literal part text to the given string
+     * builder.
+     * 
+     * @param path
+     *            The path under construction.
+     * @param parameters
+     *            The parameters used to populate captures.
+     */
     public void append(StringBuilder path, Map<String, String> parameters) {
         path.append(text);
     }
