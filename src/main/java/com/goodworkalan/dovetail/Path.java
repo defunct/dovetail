@@ -141,8 +141,6 @@ public final class Path {
      * Recreate a path from this glob using the parameters in the given
      * parameter map to replace the parameter captures in glob pattern.
      * 
-     * @param path
-     *            The path buffer.
      * @param parameters
      *            The parameters used to replace parameter captures in the glob
      *            pattern.
