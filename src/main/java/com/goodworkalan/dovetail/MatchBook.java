@@ -88,8 +88,10 @@ class MatchBook<T> {
      *            The object mapped to the glob.
      */
     public void map(int priority, T object) {
-        Match<T> match = new Match<T>(object, parameters);
-        matches.put(priority, match);
+        if (!matches.containsKey(priority)) {
+            Match<T> match = new Match<T>(object, parameters);
+            matches.put(priority, match);
+        }
     }
 
     /**

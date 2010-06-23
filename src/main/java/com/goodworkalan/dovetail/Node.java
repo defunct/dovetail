@@ -41,6 +41,12 @@ class Node<T> {
 
     /** The maximum number of matches possible following this node. */
     public int matchesLeft;
+    
+    /**
+     * The priority or -1 if this node is not the terminal part of a path
+     * expression.
+     */
+    public int priority;
 
     /**
      * Create a tree node containing the given part.
@@ -52,6 +58,7 @@ class Node<T> {
         this.part = part;
         this.children = new ArrayList<Node<T>>();
         this.matchesLeft = Integer.MAX_VALUE;
+        this.priority = -1;
     }
 
     /**
@@ -67,6 +74,7 @@ class Node<T> {
         this.value = copy.value;
         this.path = copy.path;
         this.matchesLeft = copy.matchesLeft;
+        this.priority = copy.priority;
         for (Node<T> child : copy.children) {
             this.children.add(new Node<T>(child));
         }

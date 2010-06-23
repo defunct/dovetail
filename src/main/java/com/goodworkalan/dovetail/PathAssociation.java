@@ -16,6 +16,9 @@ public class PathAssociation<T> {
     /** The root node of the tree. */
     private final Node<T> root;
 
+    /** The priority which increases with each addition of a path expression. */
+    private int priority;
+    
     /** Create an empty path association. */
     public PathAssociation() {
         this.root = new Node<T>((Part) null);
@@ -31,6 +34,7 @@ public class PathAssociation<T> {
      */
     public PathAssociation(PathAssociation<T> copy) {
         this.root = new Node<T>(copy.root);
+        this.priority = copy.priority;
     }
 
     /**
@@ -60,7 +64,9 @@ public class PathAssociation<T> {
         for (int i = matchesLeft.length - 1; i >= 0 && matchesLeft[i] == 0; i--) {
             descent.get(i).value = value;
             descent.get(i).path = path;
+            descent.get(i).priority = priority;
         }
+        priority++;
     }
 
     /**
@@ -118,9 +124,8 @@ public class PathAssociation<T> {
     public List<Match<T>> match(String path) {
         if (!root.children.isEmpty()) {
             MatchBook<T> matches = new MatchBook<T>();
-            if (descend(matches, root.children.get(0), path.split("/", -1), 0/*, path*/)) {
-                return matches.matches();
-            }
+            descend(matches, root.children.get(0), path.split("/", -1), 0/*, path*/);
+            return matches.matches();
         }
         return Collections.emptyList();
     }
@@ -141,17 +146,15 @@ public class PathAssociation<T> {
      *            The part index into the split path.
      * @return True if the decent matched any nodes.
      */
-    private boolean descend(MatchBook<T> matches, Node<T> node, String[] parts, int partIndex) {
+    private void descend(MatchBook<T> matches, Node<T> node, String[] parts, int partIndex) {
         int partsLeft = parts.length - partIndex;
         int matchesLeft = node.part.getMin() + node.matchesLeft;
         int min = node.part.getMin();
-        int max = Math.min(partsLeft - matchesLeft + 1, node.part.getMax());
+//        int max = Math.min(partsLeft - matchesLeft + 1, node.part.getMax());
+        int max = Math.min(partsLeft, Math.min(partsLeft - matchesLeft + 1, node.part.getMax()));
         for (int i = min; i <= max; i++) {
-            if (match(matches.parameterCopy(), node, parts, partIndex, i)) {
-                return true;
-            }
+            match(matches.parameterCopy(), node, parts, partIndex, i);
         }
-        return false;
     }
 
     /**
@@ -170,24 +173,19 @@ public class PathAssociation<T> {
      *            The count of parts in the range.
      * @return
      */
-    private boolean match(MatchBook<T> mapper, Node<T> node, String[] parts, int partIndex, int length) {
-        if (length == 0 || node.part.match(mapper.getParameters(), parts, partIndex, partIndex + length)) {
+    private void match(MatchBook<T> matches, Node<T> node, String[] parts, int partIndex, int length) {
+        if (length == 0 || node.part.match(matches.getParameters(), parts, partIndex, partIndex + length)) {
             partIndex += length;
 
             if (partIndex == parts.length) {
-                // TODO If there are matches left, why does this work?
-                mapper.map(0, node.value);
-                return node.matchesLeft == 0;
+                if (node.priority != -1) {
+                    matches.map(node.priority, node.value);
+                }
             }
-            if (node.children.isEmpty()) {
-                return false;
-            }
-            boolean matched = false;
+
             for (Node<T> child : node.children) {
-                matched = descend(mapper, child, parts, partIndex) || matched;
+                descend(matches, child, parts, partIndex);
             }
-            return matched;
         }
-        return false;
     }
 }
