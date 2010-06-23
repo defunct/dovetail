@@ -12,12 +12,12 @@ import java.util.List;
  * @param <T>
  *            The type of object mapped to the path.
  */
-public class PathTree<T> {
+public class PathAssociation<T> {
     /** The root node of the tree. */
     private final Node<T> root;
 
     /** Create an empty path association. */
-    public PathTree() {
+    public PathAssociation() {
         this.root = new Node<T>((Part) null);
     }
 
@@ -29,7 +29,7 @@ public class PathTree<T> {
      * @param copy
      *            The path association to copy.
      */
-    public PathTree(PathTree<T> copy) {
+    public PathAssociation(PathAssociation<T> copy) {
         this.root = new Node<T>(copy.root);
     }
 

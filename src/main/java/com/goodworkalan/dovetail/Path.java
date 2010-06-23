@@ -115,7 +115,7 @@ public final class Path {
      * @return A map of the cpatured parameters of null if it does not match.
      */
     public Map<String, String> match(String path) {
-        PathTree<Object> tree = new PathTree<Object>();
+        PathAssociation<Object> tree = new PathAssociation<Object>();
         tree.put(this, new Object());
         List<Match<Object>> mapping = tree.match(path);
         if (mapping.isEmpty()) {
@@ -132,7 +132,7 @@ public final class Path {
      * @return True if the path matches this glob.
      */
     public boolean matches(String path) {
-        PathTree<Object> tree = new PathTree<Object>();
+        PathAssociation<Object> tree = new PathAssociation<Object>();
         tree.put(this, new Object());
         return tree.matches(path);
     }
