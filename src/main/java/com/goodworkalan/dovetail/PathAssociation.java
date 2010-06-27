@@ -144,7 +144,6 @@ public class PathAssociation<T> {
      *            The split path.
      * @param partIndex
      *            The part index into the split path.
-     * @return True if the decent matched any nodes.
      */
     private void descend(MatchBook<T> matches, Node<T> node, String[] parts, int partIndex) {
         int partsLeft = parts.length - partIndex;
@@ -171,7 +170,6 @@ public class PathAssociation<T> {
      *            The part index into the split path.
      * @param length
      *            The count of parts in the range.
-     * @return
      */
     private void match(MatchBook<T> matches, Node<T> node, String[] parts, int partIndex, int length) {
         if (length == 0 || node.part.match(matches.getParameters(), parts, partIndex, partIndex + length)) {

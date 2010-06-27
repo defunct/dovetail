@@ -27,8 +27,8 @@ final class LiteralPart implements Part {
      * Return true if the literal matches the string parts from the ranges
      * specified by the start inclusive and end exclusive.
      * 
-     * @param mapper
-     *            A state for captures.
+     * @param parameters
+     *            The map of parameters.
      * @param parts
      *            The component parts of a URL path.
      * @param start
