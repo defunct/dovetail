@@ -1,8 +1,10 @@
 /* Copyright Alan Gutierrez 2006 */
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.*;
-import static com.goodworkalan.dovetail.DovetailException.FIRST_FORWARD_SLASH_MISSING;
+import static com.goodworkalan.dovetail.Path.EMPTY_PATH_PART;
+import static com.goodworkalan.dovetail.Path.FIRST_FORWARD_SLASH_MISSING;
+import static com.goodworkalan.dovetail.Path.LIMIT_OR_SEPARATOR_EXPECTED;
+import static com.goodworkalan.dovetail.Path.UNESCAPED_FORWARD_SLASH_IN_FORMAT;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -12,6 +14,8 @@ import static org.testng.Assert.assertTrue;
 import java.util.Map;
 
 import org.testng.annotations.Test;
+
+import com.goodworkalan.danger.Danger;
 
 public class GlobTest
 {
@@ -101,7 +105,8 @@ public class GlobTest
         assertTrue(glob.matches("/"));
     }
     
-    @Test(expectedExceptions=DovetailException.class) public void errorNotLeadingSlash() 
+    @Test(expectedExceptions = Danger.class)
+    public void errorNotLeadingSlash() 
     {
         try
         {
@@ -120,7 +125,8 @@ public class GlobTest
         new PathCompiler().compile(null);
     }
     
-    @Test(expectedExceptions=DovetailException.class) public void emptyPathPart() 
+    @Test(expectedExceptions = Danger.class)
+    public void emptyPathPart() 
     {
         try
         {
@@ -170,7 +176,9 @@ public class GlobTest
         assertEquals(glob.path(parameters), "/(bar)/foo");
     }
     
-    @Test(expectedExceptions = DovetailException.class) public void limitOrSeparatorExpected()
+    // TODO Document.
+    @Test(expectedExceptions = Danger.class)
+    public void limitOrSeparatorExpected()
     {
         try
         {
@@ -184,7 +192,8 @@ public class GlobTest
         }
     }
     
-    @Test(expectedExceptions = DovetailException.class) public void unescapedForwardSlash()
+    @Test(expectedExceptions = Danger.class) 
+    public void unescapedForwardSlash()
     {
         try
         {

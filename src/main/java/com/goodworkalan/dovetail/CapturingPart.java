@@ -1,11 +1,13 @@
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.FORMAT_PARAMETER_IS_NULL;
+import static com.goodworkalan.dovetail.Path.FORMAT_PARAMETER_IS_NULL;
 
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.goodworkalan.danger.Danger;
 
 /**
  * An expression that matches a part or sub path in a path pattern.
@@ -171,7 +173,7 @@ final class CapturingPart implements Part {
         for (int i = 0; i < identifiers.size(); i++) {
             args[i] = parameters.get(identifiers.get(i));
             if (args[i] == null) {
-                throw new DovetailException(FORMAT_PARAMETER_IS_NULL).add(identifiers.get(i));
+                throw new Danger(Path.class, FORMAT_PARAMETER_IS_NULL, identifiers.get(i));
             }
         }
         path.append(String.format(sprintf, args));

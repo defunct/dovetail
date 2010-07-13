@@ -16,6 +16,57 @@ public final class Path {
     /** The array of tests to apply against the path. */
     private final Part[] tests;
 
+    /** A pattern must begin with a forward slash. */
+    public final static String FIRST_FORWARD_SLASH_MISSING = "302";
+
+    /** Unexpected empty path part. */
+    public final static String EMPTY_PATH_PART = "303";
+
+    /** Identifier is missing. */
+    public final static String IDENTIFER_MISSING = "304";
+
+    /** Unexpected character while expecting a Java identifier start character. */
+    public final static String JAVA_IDENTIFIER_START_EXPECTED = "305";
+
+    /** Unexpected character while expecting a Java identifier part character. */
+    public final static String JAVA_IDENTIFIER_PART_EXPECTED = "306";
+
+    /** Unescaped forward slash encountered in regular expression of capturing part. */
+    public final static String UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION = "307";
+
+    /** Unable to parse the regular expression of a capturing part. */
+    public final static String CANNOT_PARSE_REGULAR_EXPESSION = "308";
+
+    /** Unexpected character while reading a capturing part limit definition. */
+    public final static String INVALID_LIMIT_CHARACTER = "309";
+
+    /** Unexpected comma while reading a capturing part limit definition. */
+    public final static String UNEXPECTED_COMMA_IN_LIMIT = "310";
+
+    /** The required minimum limit is unspecified. */
+    public final static String MINIMUM_LIMIT_REQUIRED = "311";
+
+    /** Unable to parse a limit value. */
+    public final static String CANNOT_PARSE_LIMIT_VALUE = "312";
+
+    /** Unexpected character while expecting a capturing part limit definition or path separator. */
+    public final static String LIMIT_OR_SEPARATOR_EXPECTED = "313";
+
+    /** Unexpected character while expecting a path separator. */
+    public final static String PATH_SEPARATOR_EXPECTED = "316";
+
+    /** Unescaped forward slash encountered in reassembly sprintf pattern of capturing part. */
+    public final static String UNESCAPED_FORWARD_SLASH_IN_FORMAT = "317";
+
+    /** Unexpected end of a path expression. */
+    public final static String UNEXPECTED_END_OF_PATH_EXPESSION = "318";
+
+    /** Reassembly parameter is null. */
+    public final static String FORMAT_PARAMETER_IS_NULL = "601";
+
+    /** Have not gotten around to creating a meaninful error message. */
+    public final static String USELESS_ERROR_CODE = "0";
+
     /**
      * Construct a slash separated relative path using the given list of path
      * parts.

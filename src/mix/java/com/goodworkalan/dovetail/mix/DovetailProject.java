@@ -19,8 +19,9 @@ public class DovetailProject implements ProjectModule {
     public void build(Builder builder) {
         builder
             .cookbook(JavaProject.class)
-                .produces("com.github.bigeasy.dovetail/dovetail/0.7")
+                .produces("com.github.bigeasy.dovetail/dovetail/0.7.0.1")
                 .depends()
+                    .production("com.github.bigeasy.danger/danger/0.+3")
                     .development("org.testng/testng-jdk15/5.10")
                     .end()
                 .end()

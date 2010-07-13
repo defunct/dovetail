@@ -1,17 +1,19 @@
 package com.goodworkalan.dovetail;
 
-import static com.goodworkalan.dovetail.DovetailException.CANNOT_PARSE_LIMIT_VALUE;
-import static com.goodworkalan.dovetail.DovetailException.CANNOT_PARSE_REGULAR_EXPESSION;
-import static com.goodworkalan.dovetail.DovetailException.JAVA_IDENTIFIER_PART_EXPECTED;
-import static com.goodworkalan.dovetail.DovetailException.JAVA_IDENTIFIER_START_EXPECTED;
-import static com.goodworkalan.dovetail.DovetailException.IDENTIFER_MISSING;
-import static com.goodworkalan.dovetail.DovetailException.MINIMUM_LIMIT_REQUIRED;
-import static com.goodworkalan.dovetail.DovetailException.UNEXPECTED_COMMA_IN_LIMIT;
+import static com.goodworkalan.dovetail.Path.CANNOT_PARSE_LIMIT_VALUE;
+import static com.goodworkalan.dovetail.Path.CANNOT_PARSE_REGULAR_EXPESSION;
+import static com.goodworkalan.dovetail.Path.IDENTIFER_MISSING;
+import static com.goodworkalan.dovetail.Path.JAVA_IDENTIFIER_PART_EXPECTED;
+import static com.goodworkalan.dovetail.Path.JAVA_IDENTIFIER_START_EXPECTED;
+import static com.goodworkalan.dovetail.Path.MINIMUM_LIMIT_REQUIRED;
+import static com.goodworkalan.dovetail.Path.UNEXPECTED_COMMA_IN_LIMIT;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import com.goodworkalan.danger.Danger;
 
 /**
  * A structure to maintain the state of the compilation of a glob pattern.
@@ -100,15 +102,13 @@ final class Compilation {
     }
 
     /**
-     * Add the glob and the 1 based position of the current character to the
-     * format arguments of the {@link DovetailException}.
+     * Throw a {@link Danger}.
      * 
-     * @param e
-     *            An exception.
-     * @return The given exception.
+     * @param code
+     *            The message code.
      */
-    public DovetailException ex(DovetailException e) {
-        return e.add(glob, index);
+    public void ex(String code) {
+        throw new Danger(Path.class, code, glob, index);
     }
 
     /**
@@ -211,7 +211,7 @@ final class Compilation {
         try {
             regex = Pattern.compile(capture.toString());
         } catch (PatternSyntaxException e) {
-            throw ex(new DovetailException(CANNOT_PARSE_REGULAR_EXPESSION));
+            throw new Danger(Path.class, CANNOT_PARSE_REGULAR_EXPESSION, glob, index);
         }
         capture.setLength(0);
     }
@@ -236,9 +236,9 @@ final class Compilation {
      */
     public void assertIdentifierCharacter(char token) {
         if (capture.length() == 0 && !Character.isJavaIdentifierStart(token)) {
-            throw ex(new DovetailException(JAVA_IDENTIFIER_START_EXPECTED));
+            throw new Danger(Path.class, JAVA_IDENTIFIER_START_EXPECTED, glob, index);
         } else if (capture.length() > 0 && !(Character.isJavaIdentifierPart(token) || "[]".indexOf(token) > -1)) {
-            throw ex(new DovetailException(JAVA_IDENTIFIER_PART_EXPECTED)).add(token, glob, index - 1);
+            throw new Danger(Path.class, JAVA_IDENTIFIER_PART_EXPECTED, token, glob, index - 1);
         }
     }
 
@@ -284,7 +284,7 @@ final class Compilation {
      */
     public void addIdentifier() {
         if (capture.length() == 0) {
-            throw ex(new DovetailException(IDENTIFER_MISSING));
+            throw new Danger(Path.class, IDENTIFER_MISSING, glob, index);
         }
         identifiers.add(capture.toString());
         capture.setLength(0);
@@ -333,15 +333,15 @@ final class Compilation {
      */
     public void setMinimum() {
         if (minimum != -1) {
-            throw new DovetailException(UNEXPECTED_COMMA_IN_LIMIT);
+            throw new Danger(Path.class, UNEXPECTED_COMMA_IN_LIMIT);
         }
         if (capture.length() == 0) {
-            throw new DovetailException(MINIMUM_LIMIT_REQUIRED);
+            throw new Danger(Path.class, MINIMUM_LIMIT_REQUIRED);
         }
         try {
             minimum = Integer.parseInt(capture.toString());
         } catch (NumberFormatException e) {
-            throw new DovetailException(CANNOT_PARSE_LIMIT_VALUE, e);
+            throw new Danger(Path.class, CANNOT_PARSE_LIMIT_VALUE, e);
         }
         capture.setLength(0);
     }
@@ -363,7 +363,7 @@ final class Compilation {
                 try {
                     maximum = Integer.parseInt(capture.toString());
                 } catch (NumberFormatException e) {
-                    throw new DovetailException(CANNOT_PARSE_LIMIT_VALUE, e);
+                    throw new Danger(e, Path.class, CANNOT_PARSE_LIMIT_VALUE);
                 }
             }
         }

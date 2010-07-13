@@ -21,57 +21,6 @@ public final class DovetailException extends RuntimeException {
     /** A list of arguments to the formatted error message. */
     private final List<Object> arguments = new ArrayList<Object>();
 
-    /** A pattern must begin with a forward slash. */
-    public final static int FIRST_FORWARD_SLASH_MISSING = 302;
-
-    /** Unexpected empty path part. */
-    public final static int EMPTY_PATH_PART = 303;
-
-    /** Identifier is missing. */
-    public final static int IDENTIFER_MISSING = 304;
-
-    /** Unexpected character while expecting a Java identifier start character. */
-    public final static int JAVA_IDENTIFIER_START_EXPECTED = 305;
-
-    /** Unexpected character while expecting a Java identifier part character. */
-    public final static int JAVA_IDENTIFIER_PART_EXPECTED = 306;
-
-    /** Unescaped forward slash encountered in regular expression of capturing part. */
-    public final static int UNESCAPED_FORWARD_SLASH_IN_REGULAR_EXPEESSION = 307;
-
-    /** Unable to parse the regular expression of a capturing part. */
-    public final static int CANNOT_PARSE_REGULAR_EXPESSION = 308;
-
-    /** Unexpected character while reading a capturing part limit definition. */
-    public final static int INVALID_LIMIT_CHARACTER = 309;
-
-    /** Unexpected comma while reading a capturing part limit definition. */
-    public final static int UNEXPECTED_COMMA_IN_LIMIT = 310;
-
-    /** The required minimum limit is unspecified. */
-    public final static int MINIMUM_LIMIT_REQUIRED = 311;
-
-    /** Unable to parse a limit value. */
-    public final static int CANNOT_PARSE_LIMIT_VALUE = 312;
-
-    /** Unexpected character while expecting a capturing part limit definition or path separator. */
-    public final static int LIMIT_OR_SEPARATOR_EXPECTED = 313;
-
-    /** Unexpected character while expecting a path separator. */
-    public final static int PATH_SEPARATOR_EXPECTED = 316;
-
-    /** Unescaped forward slash encountered in reassembly sprintf pattern of capturing part. */
-    public final static int UNESCAPED_FORWARD_SLASH_IN_FORMAT = 317;
-
-    /** Unexpected end of a path expression. */
-    public final static int UNEXPECTED_END_OF_PATH_EXPESSION = 318;
-
-    /** Reassembly parameter is null. */
-    public final static int FORMAT_PARAMETER_IS_NULL = 601;
-
-    /** Have not gotten around to creating a meaninful error message. */
-    public final static int USELESS_ERROR_CODE = 0;
-
     /** The error code. */
     private final int code;
 
