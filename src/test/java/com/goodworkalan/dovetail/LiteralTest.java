@@ -6,8 +6,10 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
+// TODO Document.
 public class LiteralTest
 {
+    // TODO Document.
     @Test
     public void equality()
     {
