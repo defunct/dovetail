@@ -47,7 +47,7 @@ public class GlobTreeTest {
         assertFalse(tree.matches("/thinknola/snap/4XGe1E/1"));
     }
     
-    // TODO Document.
+    /** Test matching one or more parts. */
     @Test
     public void matchOneOrMore() {
         Path glob = newGlob("/(account)+/optout/(key)/(receipt)");
