@@ -7,12 +7,10 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
 
 // TODO Document.
-public class LiteralTest
-{
+public class LiteralTest {
     // TODO Document.
     @Test
-    public void equality()
-    {
+    public void equality() {
         LiteralPart foo = new LiteralPart("foo");
         assertTrue(foo.equals(foo));
         assertFalse(foo.equals(new Object()));

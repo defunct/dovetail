@@ -18,11 +18,10 @@ import org.testng.annotations.Test;
 import com.goodworkalan.danger.Danger;
 
 // TODO Document.
-public class GlobTest
-{
+public class GlobTest {
     // TODO Document.
-    @Test public void startWithProperty()
-    {
+    @Test
+    public void startWithProperty() {
         Path glob = new PathCompiler().compile("/(account)/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/thinknola/optout/4XGe1E/1/2"));
@@ -30,8 +29,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void matchOneOrMore()
-    {
+    @Test
+    public void matchOneOrMore() {
         Path glob = new PathCompiler().compile("/(account)+/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertTrue(glob.matches("/thinknola/path/optout/4XGe1E/1"));
@@ -41,8 +40,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void matchOneOrMoreAny()
-    {
+    @Test
+    public void matchOneOrMoreAny() {
         Path glob = new PathCompiler().compile("/(account)+/optout/(key)/(receipt)/(ignore)+");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1/2"));
         assertTrue(glob.matches("/one/two/three/optout/4XGe1E/1/2"));
@@ -50,16 +49,16 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void matchRegularExpression()
-    {
+    @Test
+    public void matchRegularExpression() {
         Path glob = new PathCompiler().compile("/(account [A-Za-z0-9-]+)/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/thinknola.d/optout/4XGe1E/1"));
     }
         
     // TODO Document.
-    @Test public void regularExpressionGroup()
-    {
+    @Test
+    public void regularExpressionGroup() {
         Path glob = new PathCompiler().compile("/(account an-([A-Za-z0-9-]+))/optout/(key)/(receipt)");
         assertTrue(glob.matches("/an-thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/an-thinknola.d/optout/4XGe1E/1"));
@@ -68,8 +67,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void command()
-    {
+    @Test
+    public void command() {
         Path glob = new PathCompiler().compile("/(page)+/optout/(key)/(receipt)/(event)");
         assertTrue(glob.matches("/hello/optout/4XGe1E/1/view"));
         Map<String, String> parameters = glob.match("/hello/optout/4XGe1E/1/view");
@@ -77,8 +76,8 @@ public class GlobTest
     }
 
     // TODO Document.
-    @Test public void zeroOrOne()
-    {
+    @Test
+    public void zeroOrOne() {
         Path glob = new PathCompiler().compile("/(account)?/optout/(key)/(receipt)");
         Map<String, String> parameters = glob.match("/hello/optout/4XGe1E/1");
         assertNotNull(parameters);
@@ -102,30 +101,25 @@ public class GlobTest
     }    
     
     // TODO Document.
-    @Test public void emptyString() 
-    {
+    @Test
+    public void emptyString() {
         Path glob = new PathCompiler().compile("");
         assertTrue(glob.matches(""));
     }
     
     // TODO Document.
     @Test
-    public void slash()
-    {
+    public void slash() {
         Path glob = new PathCompiler().compile("/");
         assertTrue(glob.matches("/"));
     }
     
     // TODO Document.
     @Test(expectedExceptions = Danger.class)
-    public void errorNotLeadingSlash() 
-    {
-        try
-        {
+    public void errorNotLeadingSlash() {
+        try {
             new PathCompiler().compile("hello");
-        }
-        catch (DovetailException e)
-        {
+        } catch (DovetailException e) {
             assertEquals(e.getCode(), FIRST_FORWARD_SLASH_MISSING);
             assertEquals(e.getMessage(), "A pattern must begin with a forward slash. Pattern hello at position 1.");
             throw e;
@@ -133,21 +127,17 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test(expectedExceptions=NullPointerException.class) public void compileNullPointer() 
-    {
+    @Test(expectedExceptions = NullPointerException.class)
+    public void compileNullPointer() {
         new PathCompiler().compile(null);
     }
     
     // TODO Document.
     @Test(expectedExceptions = Danger.class)
-    public void emptyPathPart() 
-    {
-        try
-        {
+    public void emptyPathPart() {
+        try {
             new PathCompiler().compile("//hello");
-        }
-        catch (DovetailException e)
-        {
+        } catch (DovetailException e) {
             assertEquals(e.getCode(), EMPTY_PATH_PART);
             assertEquals(e.getMessage(), "Unexpected empty path part. Pattern //hello at position 2.");
             throw e;
@@ -155,8 +145,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void eatWhiteAfterParenthesis()
-    {
+    @Test
+    public void eatWhiteAfterParenthesis() {
         Path glob = new PathCompiler().compile("/( account)/optout/(key)/(receipt)");
         assertTrue(glob.matches("/thinknola/optout/4XGe1E/1"));
         assertFalse(glob.matches("/thinknola/optout/4XGe1E/1/2"));
@@ -164,8 +154,8 @@ public class GlobTest
     }
 
     // TODO Document.
-    @Test public void multipleIdentifiers()
-    {
+    @Test
+    public void multipleIdentifiers() {
         Path glob = new PathCompiler().compile("/(bar,baz (.*)-(.*) %s-%s)/foo");
         
         assertTrue(glob.matches("/a-b/foo"));
@@ -180,8 +170,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void escapedParenthesisInRegex()
-    {
+    @Test
+    public void escapedParenthesisInRegex() {
         Path glob = new PathCompiler().compile("/(bar \\(.*\\))/foo");
         
         assertTrue(glob.matches("/(bar)/foo"));
@@ -195,14 +185,10 @@ public class GlobTest
     
     // TODO Document.
     @Test(expectedExceptions = Danger.class)
-    public void limitOrSeparatorExpected()
-    {
-        try
-        {
+    public void limitOrSeparatorExpected() {
+        try {
             new PathCompiler().compile("/(bar (.*)) (%s)/foo");
-        }
-        catch (DovetailException e)
-        {
+        } catch (DovetailException e) {
             assertEquals(e.getCode(), LIMIT_OR_SEPARATOR_EXPECTED);
             assertEquals(e.getMessage(), "A limit specifier or a path separator is expected following a match specification closing parenthesis. Pattern /(bar (.*)) (%s)/foo at position 12.");
             throw e;
@@ -210,15 +196,11 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test(expectedExceptions = Danger.class) 
-    public void unescapedForwardSlash()
-    {
-        try
-        {
+    @Test(expectedExceptions = Danger.class)
+    public void unescapedForwardSlash() {
+        try {
             new PathCompiler().compile("/(bar \\((.*)\\) (%s)/foo");
-        }
-        catch (DovetailException e)
-        {
+        } catch (DovetailException e) {
             assertEquals(e.getCode(), UNESCAPED_FORWARD_SLASH_IN_FORMAT);
             assertEquals(e.getMessage(), "An unescaped forward slash was found in a match specification format. Pattern /(bar \\((.*)\\) (%s)/foo at position 20.");
             throw e;
@@ -226,8 +208,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void parenthesisInFormat()
-    {
+    @Test
+    public void parenthesisInFormat() {
         Path glob = new PathCompiler().compile("/(bar \\((.*)\\) (%s))/foo");
          
         assertTrue(glob.matches("/(bar)/foo"));
@@ -240,8 +222,8 @@ public class GlobTest
     }
     
     // TODO Document.
-    @Test public void escapedParenthesisInFormat()
-    {
+    @Test
+    public void escapedParenthesisInFormat() {
         Path glob = new PathCompiler().compile("/(bar \\((.*)\\) %(%s%))/foo");
          
         assertTrue(glob.matches("/(bar)/foo"));
