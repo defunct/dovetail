@@ -1,7 +1,6 @@
 package com.goodworkalan.dovetail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,7 @@ class MatchBook<T> {
      */
     public MatchBook() {
         this.parameters = new HashMap<String, String>();
-        this.matches = new TreeMap<Integer, Match<T>>(Collections.reverseOrder());
+        this.matches = new TreeMap<Integer, Match<T>>();
     }
     
     /**
